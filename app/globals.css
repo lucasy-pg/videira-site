@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #09090f;
+  --color-foreground: #f4f4f8;
+  --color-card: #111119;
+  --color-card-foreground: #f4f4f8;
+  --color-popover: #111119;
+  --color-popover-foreground: #f4f4f8;
+  --color-primary: #7c3aed;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1c1c2a;
+  --color-secondary-foreground: #f4f4f8;
+  --color-muted: #1e1e2e;
+  --color-muted-foreground: #8b8ba7;
+  --color-accent: #6366f1;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #ef4444;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-input-background: #1c1c2a;
+  --color-ring: #7c3aed;
+
+  --radius-sm: calc(0.75rem - 4px);
+  --radius-md: calc(0.75rem - 2px);
+  --radius-lg: 0.75rem;
+  --radius-xl: calc(0.75rem + 4px);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+::selection {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.font-oswald {
+  font-family: "Oswald", sans-serif;
+}
+
+/* Header desliza e aparece na montagem */
+@keyframes headerIn {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[headerIn_0\.6s_cubic-bezier\(0\.16\,1\,0\.3\,1\)_both\] {
+    animation: none !important;
+  }
+}
+
+/* Ken Burns lento no hero */
+@keyframes heroZoom {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[heroZoom_18s_ease-out_forwards\] {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Scroll reveal (usado pelo componente <Reveal />) — várias variantes de entrada,
+   todas revertem ao sair da viewport (retrigger na volta do scroll também) */
+.reveal {
+  opacity: 0;
+  filter: blur(0px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: blur(0px);
+}
+
+.reveal--up { transform: translateY(28px); }
+.reveal--down { transform: translateY(-28px); }
+.reveal--left { transform: translateX(-40px); }
+.reveal--right { transform: translateX(40px); }
+.reveal--scale { transform: scale(0.92) translateY(12px); }
+.reveal--blur { transform: translateY(16px); filter: blur(10px); }
+.reveal--fade { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Grade de células: fade+rise ao trocar de filtro */
+@keyframes gridIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-grid-in {
+  animation: gridIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-grid-in {
+    animation: none !important;
+  }
+}
+
+/* Indicador ativo do menu — desliza suavemente */
+@keyframes underlineIn {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
