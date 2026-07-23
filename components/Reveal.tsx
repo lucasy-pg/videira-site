@@ -11,7 +11,7 @@ export type RevealVariant = "up" | "down" | "left" | "right" | "scale" | "blur" 
  *
  * `once` desativa o retrigger (usado em elementos que devem aparecer só na
  * primeira vez, como o hero inicial). `variant` escolhe a direção/efeito de
- * entrada. Respeita prefers-reduced-motion (aparece direto, sem animação).
+ * entrada.
  */
 export function Reveal({
   children,
@@ -32,11 +32,6 @@ export function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
 
     const io = new IntersectionObserver(
       ([entry]) => {

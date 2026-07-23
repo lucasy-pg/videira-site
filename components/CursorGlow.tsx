@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 /**
  * Brilho radial violeta que segue o cursor dentro da section pai.
  * A section pai precisa ser `relative` (e de preferência `overflow-hidden`).
- * Só ativa em telas com hover (desktop) e respeita prefers-reduced-motion.
+ * Só ativa em telas com hover (desktop).
  */
 export function CursorGlow({
   color = "124, 58, 237",
@@ -23,9 +23,8 @@ export function CursorGlow({
     const parent = el?.parentElement;
     if (!el || !parent) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if (reduce || !canHover) return;
+    if (!canHover) return;
 
     let raf = 0;
     const onMove = (e: MouseEvent) => {

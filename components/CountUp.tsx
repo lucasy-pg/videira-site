@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 /**
  * Anima um número de 0 até o valor alvo quando entra na viewport.
  * Aceita valores como "6+", "8", "200+" — preserva prefixo/sufixo não numérico.
- * Respeita prefers-reduced-motion (mostra o valor final direto).
  */
 export function CountUp({
   value,
@@ -28,11 +27,6 @@ export function CountUp({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setN(target);
-      return;
-    }
 
     const io = new IntersectionObserver(
       ([entry]) => {

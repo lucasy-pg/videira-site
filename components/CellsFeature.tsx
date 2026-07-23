@@ -18,7 +18,6 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
  * Seção "A Igreja nas Casas" com animação Horizontal Split Meeting:
  * a imagem desliza a partir da esquerda e o texto a partir da direita,
  * encontrando-se no centro quando a seção entra na viewport.
- * Respeita prefers-reduced-motion (aparece direto, sem slide).
  */
 export function CellsFeature() {
   const ref = useRef<HTMLElement>(null);
@@ -27,11 +26,6 @@ export function CellsFeature() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
 
     const io = new IntersectionObserver(
       ([entry]) => setVisible(entry.isIntersecting),

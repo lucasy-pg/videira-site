@@ -4,8 +4,7 @@ import { useRef } from "react";
 
 /**
  * Envolve um CTA e faz o botão "grudar" levemente no cursor ao passar perto,
- * voltando ao lugar com uma mola suave ao sair. Só em desktop com mouse fino;
- * respeita prefers-reduced-motion (fica estático).
+ * voltando ao lugar com uma mola suave ao sair. Só em desktop com mouse fino.
  */
 export function MagneticButton({
   children,
@@ -20,8 +19,7 @@ export function MagneticButton({
 
   const canAnimate = () =>
     typeof window !== "undefined" &&
-    window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!canAnimate() || !ref.current) return;

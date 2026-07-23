@@ -6,7 +6,6 @@ import { useEffect, useRef } from "react";
  * Desloca o conteúdo (tipicamente uma imagem de fundo) num ritmo mais lento
  * que o scroll, criando profundidade. O filho deve estar levemente ampliado
  * (ex: scale-[1.15]) para que o deslocamento não revele as bordas.
- * Respeita prefers-reduced-motion (fica parado).
  */
 export function Parallax({
   children,
@@ -23,7 +22,6 @@ export function Parallax({
     const el = ref.current;
     const parent = el?.parentElement;
     if (!el || !parent) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let raf = 0;
     const onScroll = () => {
