@@ -66,7 +66,7 @@ export function ContactView() {
       <section className="relative overflow-hidden py-28 sm:py-36 border-b border-border">
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal once>
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Fale conosco
             </p>
           </Reveal>
@@ -76,7 +76,7 @@ export function ContactView() {
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Entre em<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
                 Contato
               </span>
             </h1>
@@ -99,7 +99,7 @@ export function ContactView() {
                 <Reveal key={i} delay={i * 90} variant="left">
                   <div className="flex gap-4 group">
                     <div className="w-10 h-10 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:bg-violet-600/20 group-hover:scale-110">
-                      <item.icon size={17} className="text-violet-400" />
+                      <item.icon size={17} className="text-violet-700" />
                     </div>
                     <div>
                       <h3
@@ -144,7 +144,7 @@ export function ContactView() {
                 </h2>
 
                 {sent && (
-                  <div className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-violet-600/10 border border-violet-500/20 text-violet-400 text-sm animate-grid-in">
+                  <div className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-violet-600/10 border border-violet-500/20 text-violet-700 text-sm animate-grid-in">
                     <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-500/20">
                       <Check size={14} />
                     </span>
@@ -241,7 +241,7 @@ export function ContactView() {
                   <button
                     type="submit"
                     disabled={sending || sent}
-                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-xl hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all text-sm disabled:opacity-80 disabled:hover:translate-y-0 disabled:active:scale-100"
+                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm disabled:opacity-80 disabled:hover:translate-y-0 disabled:active:scale-100"
                     style={{ fontFamily: "'Oswald', sans-serif" }}
                   >
                     {sending ? (
@@ -280,7 +280,7 @@ export function ContactView() {
                 Localização
               </h2>
               <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin size={15} className="text-violet-400 flex-shrink-0" />
+                <MapPin size={15} className="text-violet-700 flex-shrink-0" />
                 Rua Augusto de Oliveira Camargo, 257 — Centro, Indaiatuba/SP
               </p>
             </div>
@@ -288,10 +288,10 @@ export function ContactView() {
               href="https://www.google.com/maps/search/?api=1&query=Rua+Augusto+de+Oliveira+Camargo,+257,+Centro,+Indaiatuba+-+SP"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm text-foreground transition-all hover:bg-white/10 hover:-translate-y-0.5 active:scale-95"
+              className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-5 py-2.5 text-sm text-foreground transition-all hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95"
             >
               Como chegar
-              <ArrowRight size={16} className="text-violet-400 transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={16} className="text-violet-700 transition-transform group-hover:translate-x-1" />
             </a>
           </Reveal>
 

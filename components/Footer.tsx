@@ -88,7 +88,7 @@ export function Footer() {
                   >
                     <span className="relative">
                       {item.label}
-                      <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-violet-400 transition-transform duration-300 group-hover:scale-x-100" />
+                      <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-violet-600 transition-transform duration-300 group-hover:scale-x-100" />
                     </span>
                   </Link>
                 </li>

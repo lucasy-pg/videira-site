@@ -58,7 +58,7 @@ export default function RadicaisLivres() {
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&h=900&fit=crop&auto=format"
               alt="Jovens adorando"
-              className="w-full h-full object-cover opacity-30"
+              className="w-full h-full object-cover opacity-70"
             />
           </Parallax>
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
@@ -72,7 +72,7 @@ export default function RadicaisLivres() {
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Radicais<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
                 Livres
               </span>
             </h1>
@@ -87,7 +87,7 @@ export default function RadicaisLivres() {
               <MagneticButton>
                 <Link
                   href="/contato"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
                   style={{ fontFamily: "'Oswald', sans-serif" }}
                 >
                   Fazer Parte
@@ -96,7 +96,7 @@ export default function RadicaisLivres() {
               </MagneticButton>
               <Link
                 href="/celulas"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               >
                 Ver Células de Jovens
               </Link>
@@ -110,7 +110,7 @@ export default function RadicaisLivres() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center max-w-6xl mx-auto">
             <Reveal variant="left">
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 Quem somos
               </p>
               <h2
@@ -148,7 +148,7 @@ export default function RadicaisLivres() {
       <section className="py-20 sm:py-28 border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               O que fazemos
             </p>
             <h2
@@ -163,10 +163,10 @@ export default function RadicaisLivres() {
               <Reveal key={i} delay={i * 90} variant="scale">
                 <div className="bg-background p-10 sm:p-12 h-full group hover:bg-secondary transition-colors">
                   <div className="w-11 h-11 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-violet-600/20 group-hover:scale-110 group-hover:-rotate-6">
-                    <item.icon size={20} className="text-violet-400" />
+                    <item.icon size={20} className="text-violet-700" />
                   </div>
                   <h3
-                    className="text-2xl font-bold uppercase text-foreground mb-3 group-hover:text-violet-400 transition-colors"
+                    className="text-2xl font-bold uppercase text-foreground mb-3 group-hover:text-violet-700 transition-colors"
                     style={{ fontFamily: "'Oswald', sans-serif" }}
                   >
                     {item.title}
@@ -184,7 +184,7 @@ export default function RadicaisLivres() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
             <Reveal className="mb-12">
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 Quando nos encontramos
               </p>
               <h2
@@ -200,7 +200,7 @@ export default function RadicaisLivres() {
                   <div className="py-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 group">
                     <div>
                       <h3
-                        className="text-xl font-bold uppercase text-foreground group-hover:text-violet-400 transition-colors"
+                        className="text-xl font-bold uppercase text-foreground group-hover:text-violet-700 transition-colors"
                         style={{ fontFamily: "'Oswald', sans-serif" }}
                       >
                         {item.day}
@@ -227,7 +227,7 @@ export default function RadicaisLivres() {
               <ImageWithFallback
                 src={src}
                 alt="Radicais Livres"
-                className="w-full h-full object-cover opacity-50 hover:opacity-80 hover:scale-110 transition-all duration-500"
+                className="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-500"
               />
             </div>
           </Reveal>
@@ -236,7 +236,7 @@ export default function RadicaisLivres() {
 
       {/* CTA */}
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 to-indigo-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-background to-indigo-50" />
         <CursorGlow size={300} opacity={0.3} />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
@@ -244,7 +244,7 @@ export default function RadicaisLivres() {
             style={{ fontFamily: "'Oswald', sans-serif" }}
           >
             Você é<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
               bem-vindo aqui
             </span>
           </h2>
@@ -254,7 +254,7 @@ export default function RadicaisLivres() {
           <MagneticButton>
             <Link
               href="/contato"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/60 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Quero Participar

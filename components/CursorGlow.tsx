@@ -11,10 +11,13 @@ export function CursorGlow({
   color = "124, 58, 237",
   size = 320,
   opacity = 0.26,
+  blend = "multiply",
 }: {
   color?: string;
   size?: number;
   opacity?: number;
+  /** "multiply" para seções claras, "screen" para as faixas escuras de CTA. */
+  blend?: "multiply" | "screen";
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -55,7 +58,9 @@ export function CursorGlow({
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-20 hidden opacity-0 mix-blend-screen transition-opacity duration-500 md:block"
+      className={`pointer-events-none absolute inset-0 z-20 hidden opacity-0 transition-opacity duration-500 md:block ${
+        blend === "screen" ? "mix-blend-screen" : "mix-blend-multiply"
+      }`}
       style={{
         background: `radial-gradient(${size}px circle at var(--gx, 50%) var(--gy, 50%), rgba(${color}, ${opacity}), transparent 50%)`,
       }}

@@ -71,14 +71,14 @@ export default function About() {
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600&h=800&fit=crop&auto=format"
               alt="Adoração na igreja"
-              className="w-full h-full object-cover opacity-20"
+              className="w-full h-full object-cover opacity-70"
             />
           </Parallax>
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal once>
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Nossa história
             </p>
           </Reveal>
@@ -105,7 +105,7 @@ export default function About() {
             {mvv.map((item, i) => (
               <Reveal key={i} delay={i * 110} variant="scale">
                 <div className="bg-background p-10 sm:p-14 h-full group hover:bg-secondary transition-colors">
-                  <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4 transition-all group-hover:tracking-[0.2em]">
+                  <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4 transition-all group-hover:tracking-[0.2em]">
                     {item.label}
                   </p>
                   <p className="text-muted-foreground leading-relaxed">{item.text}</p>
@@ -130,7 +130,7 @@ export default function About() {
               </div>
             </Reveal>
             <Reveal variant="right" delay={100}>
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 De onde viemos
               </p>
               <h2
@@ -167,7 +167,7 @@ export default function About() {
               />
             </div>
             <Reveal variant="right" delay={100}>
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 Liderança
               </p>
               <h2
@@ -200,7 +200,7 @@ export default function About() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <Reveal className="mb-12 sm:mb-16">
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 Fundamentos
               </p>
               <h2
@@ -215,7 +215,7 @@ export default function About() {
                 <Reveal key={i} delay={i * 80} variant="right" className="py-8 first:pt-0">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 group">
                     <h3
-                      className="text-xl font-bold uppercase text-foreground group-hover:text-violet-400 group-hover:translate-x-1 transition-all sm:col-span-1"
+                      className="text-xl font-bold uppercase text-foreground group-hover:text-violet-700 group-hover:translate-x-1 transition-all sm:col-span-1"
                       style={{ fontFamily: "'Oswald', sans-serif" }}
                     >
                       {b.title}
@@ -233,7 +233,7 @@ export default function About() {
 
       {/* Join CTA */}
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 to-indigo-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-background to-indigo-50" />
         <CursorGlow size={300} opacity={0.3} />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
@@ -241,7 +241,7 @@ export default function About() {
             style={{ fontFamily: "'Oswald', sans-serif" }}
           >
             Venha Fazer<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
               Parte da Família
             </span>
           </h2>
@@ -252,7 +252,7 @@ export default function About() {
             <MagneticButton>
               <Link
                 href="/contato"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/60 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
                 style={{ fontFamily: "'Oswald', sans-serif" }}
               >
                 Entre em Contato
@@ -261,7 +261,7 @@ export default function About() {
             </MagneticButton>
             <Link
               href="/celulas"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
             >
               Ver Células
             </Link>

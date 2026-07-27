@@ -38,8 +38,8 @@ export function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 animate-[headerIn_0.6s_cubic-bezier(0.16,1,0.3,1)_both] ${
-        scrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border"
+        scrolled || isMenuOpen
+          ? "bg-background/90 backdrop-blur-md border-b border-border"
           : "bg-transparent"
       }`}
     >
@@ -57,12 +57,12 @@ export function Header() {
             </div>
             <div>
               <div
-                className="text-white font-semibold text-base sm:text-lg leading-tight tracking-wide uppercase"
+                className="text-foreground font-semibold text-base sm:text-lg leading-tight tracking-wide uppercase"
                 style={{ fontFamily: "'Oswald', sans-serif" }}
               >
                 Igreja Videira
               </div>
-              <div className="text-[10px] text-white/40 uppercase tracking-widest">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
                 Indaiatuba
               </div>
             </div>
@@ -76,14 +76,14 @@ export function Header() {
                 href={item.path}
                 className={`group relative px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors rounded-md ${
                   isActive(item.path)
-                    ? "text-violet-400"
-                    : "text-white/60 hover:text-white"
+                    ? "text-violet-700"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
                 style={{ fontFamily: "'Oswald', sans-serif" }}
               >
                 {item.label}
                 <span
-                  className={`pointer-events-none absolute left-4 right-4 -bottom-0.5 h-px origin-left bg-gradient-to-r from-violet-400 to-indigo-400 transition-transform duration-300 ${
+                  className={`pointer-events-none absolute left-4 right-4 -bottom-0.5 h-px origin-left bg-gradient-to-r from-violet-600 to-indigo-600 transition-transform duration-300 ${
                     isActive(item.path)
                       ? "scale-x-100"
                       : "scale-x-0 group-hover:scale-x-50"
@@ -93,7 +93,7 @@ export function Header() {
             ))}
             <Link
               href="/contato"
-              className="ml-4 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-500 text-white text-sm font-semibold uppercase tracking-wider rounded-full hover:shadow-lg hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all"
+              className="ml-4 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-500 text-white text-sm font-semibold uppercase tracking-wider rounded-full hover:shadow-lg hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all"
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Participar
@@ -103,7 +103,7 @@ export function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden relative p-2 text-white/70 hover:text-white transition-colors"
+            className="lg:hidden relative p-2 text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Toggle menu"
           >
             <X
@@ -124,15 +124,15 @@ export function Header() {
           }`}
         >
           <div className="overflow-hidden">
-            <div className="pb-6 pt-2 border-t border-white/10">
+            <div className="pb-6 pt-2 border-t border-border">
               {navItems.map((item, i) => (
                 <Link
                   key={item.path}
                   href={item.path}
                   className={`block px-4 py-3 text-base font-medium uppercase tracking-wider transition-all duration-300 ${
                     isActive(item.path)
-                      ? "text-violet-400"
-                      : "text-white/60 hover:text-white hover:translate-x-1"
+                      ? "text-violet-700"
+                      : "text-muted-foreground hover:text-foreground hover:translate-x-1"
                   } ${isMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}
                   style={{
                     fontFamily: "'Oswald', sans-serif",

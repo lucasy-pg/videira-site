@@ -39,7 +39,7 @@ const pillars = [
 const ageGroups = [
   { range: "0 a 3 anos", name: "Berçário", desc: "Cuidado com amor para os pequeninos enquanto os pais participam do culto.", color: "from-pink-500/20 to-rose-500/20", border: "border-pink-500/20", text: "text-pink-400" },
   { range: "4 a 6 anos", name: "Jardim", desc: "Histórias bíblicas, brincadeiras e amizades na medida certa para essa faixa.", color: "from-orange-500/20 to-amber-500/20", border: "border-orange-500/20", text: "text-orange-400" },
-  { range: "7 a 10 anos", name: "Juniores", desc: "Dinâmicas, teatro e atividades criativas para aprofundar a fé de forma divertida.", color: "from-violet-500/20 to-indigo-500/20", border: "border-violet-500/20", text: "text-violet-400" },
+  { range: "7 a 10 anos", name: "Juniores", desc: "Dinâmicas, teatro e atividades criativas para aprofundar a fé de forma divertida.", color: "from-violet-500/20 to-indigo-500/20", border: "border-violet-500/20", text: "text-violet-700" },
   { range: "11 a 14 anos", name: "Pré-Teens", desc: "Transição para a juventude com identidade, propósito e comunidade.", color: "from-cyan-500/20 to-teal-500/20", border: "border-cyan-500/20", text: "text-cyan-400" },
 ];
 
@@ -59,7 +59,7 @@ export default function RadicaisKids() {
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1600&h=900&fit=crop&auto=format"
               alt="Crianças felizes"
-              className="w-full h-full object-cover opacity-25"
+              className="w-full h-full object-cover opacity-70"
             />
           </Parallax>
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
@@ -73,7 +73,7 @@ export default function RadicaisKids() {
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Radicais<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
                 Kids
               </span>
             </h1>
@@ -88,7 +88,7 @@ export default function RadicaisKids() {
               <MagneticButton>
                 <Link
                   href="/contato"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
                   style={{ fontFamily: "'Oswald', sans-serif" }}
                 >
                   Saiba Mais
@@ -97,7 +97,7 @@ export default function RadicaisKids() {
               </MagneticButton>
               <Link
                 href="/sobre"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               >
                 Sobre a Igreja
               </Link>
@@ -120,7 +120,7 @@ export default function RadicaisKids() {
               </div>
             </Reveal>
             <Reveal variant="right" delay={100}>
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 Nossa missão
               </p>
               <h2
@@ -149,7 +149,7 @@ export default function RadicaisKids() {
       <section className="py-20 sm:py-28 border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Como cuidamos
             </p>
             <h2
@@ -164,10 +164,10 @@ export default function RadicaisKids() {
               <Reveal key={i} delay={i * 90} variant="scale">
                 <div className="bg-background p-10 sm:p-12 h-full group hover:bg-secondary transition-colors">
                   <div className="w-11 h-11 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-violet-600/20 group-hover:scale-110 group-hover:-rotate-6">
-                    <item.icon size={20} className="text-violet-400" />
+                    <item.icon size={20} className="text-violet-700" />
                   </div>
                   <h3
-                    className="text-2xl font-bold uppercase text-foreground mb-3 group-hover:text-violet-400 transition-colors"
+                    className="text-2xl font-bold uppercase text-foreground mb-3 group-hover:text-violet-700 transition-colors"
                     style={{ fontFamily: "'Oswald', sans-serif" }}
                   >
                     {item.title}
@@ -184,7 +184,7 @@ export default function RadicaisKids() {
       <section className="py-20 sm:py-28 border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Turmas
             </p>
             <h2
@@ -225,7 +225,7 @@ export default function RadicaisKids() {
               <ImageWithFallback
                 src={src}
                 alt="Radicais Kids"
-                className="w-full h-full object-cover opacity-50 hover:opacity-80 hover:scale-110 transition-all duration-500"
+                className="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-500"
               />
             </div>
           </Reveal>
@@ -236,7 +236,7 @@ export default function RadicaisKids() {
       <section className="py-20 sm:py-28 border-b border-border bg-card">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal variant="scale" className="max-w-3xl mx-auto text-center">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Faça parte do time
             </p>
             <h2
@@ -250,7 +250,7 @@ export default function RadicaisKids() {
             </p>
             <Link
               href="/contato"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
             >
               Quero ser voluntário
               <ArrowRight size={16} />
@@ -261,7 +261,7 @@ export default function RadicaisKids() {
 
       {/* CTA */}
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 to-indigo-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-background to-indigo-50" />
         <CursorGlow size={300} opacity={0.3} />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
@@ -269,7 +269,7 @@ export default function RadicaisKids() {
             style={{ fontFamily: "'Oswald', sans-serif" }}
           >
             Traga seus<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
               filhos no domingo
             </span>
           </h2>
@@ -279,7 +279,7 @@ export default function RadicaisKids() {
           <MagneticButton>
             <Link
               href="/contato"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/60 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Fale Conosco

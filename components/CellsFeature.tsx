@@ -52,7 +52,7 @@ export function CellsFeature() {
           <ImageWithFallback
             src="https://images.unsplash.com/photo-1656370465119-cb8d6735bda3?w=900&h=700&fit=crop&auto=format"
             alt="Grupo de célula reunido"
-            className="w-full h-full object-cover opacity-60 saturate-[0.85]"
+            className="w-full h-full object-cover opacity-90 saturate-[0.85]"
           />
           {/* Integra a foto ao fundo escuro em todos os tamanhos */}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-background/40 lg:bg-gradient-to-r lg:from-background/30 lg:via-transparent lg:to-background" />
@@ -64,7 +64,7 @@ export function CellsFeature() {
           style={slide("right")}
         >
           <div className="max-w-lg">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Sistema de Células
             </p>
             <h2
@@ -80,7 +80,7 @@ export function CellsFeature() {
             <div className="space-y-4 mb-10">
               {cellFeatures.map((item, i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <item.icon size={16} className="text-violet-400 flex-shrink-0" />
+                  <item.icon size={16} className="text-violet-700 flex-shrink-0" />
                   {item.text}
                 </div>
               ))}
@@ -94,7 +94,7 @@ export function CellsFeature() {
               Ver todas as células
               <ArrowRight
                 size={16}
-                className="text-violet-400 group-hover:translate-x-1 transition-transform"
+                className="text-violet-700 group-hover:translate-x-1 transition-transform"
               />
             </Link>
           </div>

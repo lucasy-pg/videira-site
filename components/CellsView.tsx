@@ -40,9 +40,9 @@ const cellGroups = [
 const allTags = ["Todos", "Família", "Jovens", "Adultos"];
 
 const tagStyle: Record<string, string> = {
-  Jovens: "text-violet-400 border-violet-500/20 bg-violet-600/10",
-  Adultos: "text-indigo-400 border-indigo-500/20 bg-indigo-600/10",
-  Família: "text-emerald-400 border-emerald-500/20 bg-emerald-600/10",
+  Jovens: "text-violet-700 border-violet-500/20 bg-violet-600/10",
+  Adultos: "text-indigo-700 border-indigo-500/20 bg-indigo-600/10",
+  Família: "text-emerald-700 border-emerald-500/20 bg-emerald-600/10",
 };
 
 const steps = [
@@ -69,14 +69,14 @@ export function CellsView() {
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1656370465119-cb8d6735bda3?w=1600&h=700&fit=crop&auto=format"
               alt="Célula reunida"
-              className="w-full h-full object-cover opacity-15"
+              className="w-full h-full object-cover opacity-65"
             />
           </Parallax>
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
         </div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal once>
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Sistema de Células
             </p>
           </Reveal>
@@ -86,7 +86,7 @@ export function CellsView() {
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               O Coração<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
                 da Igreja
               </span>
             </h1>
@@ -112,7 +112,7 @@ export function CellsView() {
         </Reveal>
         <Reveal variant="right" delay={100}>
           <div className="p-10 sm:p-14 lg:p-20 flex flex-col justify-center bg-card h-full">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               O que é uma célula?
             </p>
             <h2
@@ -136,7 +136,7 @@ export function CellsView() {
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-4 group">
                   <div className="w-10 h-10 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:bg-violet-600/20 group-hover:scale-110">
-                    <item.icon size={18} className="text-violet-400" />
+                    <item.icon size={18} className="text-violet-700" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-foreground">{item.label}</div>
@@ -153,7 +153,7 @@ export function CellsView() {
       <section className="py-20 sm:py-28 border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
               Como funciona
             </p>
             <h2
@@ -168,7 +168,7 @@ export function CellsView() {
               <Reveal key={s.step} delay={i * 90} variant="scale">
                 <div className="bg-background p-8 sm:p-10 h-full group hover:bg-secondary transition-colors">
                   <div
-                    className="text-5xl font-bold text-violet-600/20 mb-4 leading-none transition-colors group-hover:text-violet-500/40"
+                    className="text-5xl font-bold text-violet-600/25 mb-4 leading-none transition-colors group-hover:text-violet-500/40"
                     style={{ fontFamily: "'Oswald', sans-serif" }}
                   >
                     {s.step}
@@ -192,7 +192,7 @@ export function CellsView() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
             <div>
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 {filtered.length} grupos disponíveis
               </p>
               <h2
@@ -209,7 +209,7 @@ export function CellsView() {
                   onClick={() => setActiveFilter(tag)}
                   className={`px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider border transition-all active:scale-95 ${
                     activeFilter === tag
-                      ? "bg-violet-600 border-violet-600 text-white shadow-lg shadow-violet-900/40"
+                      ? "bg-violet-600 border-violet-600 text-white shadow-lg shadow-violet-600/25"
                       : "border-border text-muted-foreground hover:border-violet-500/40 hover:text-foreground hover:-translate-y-0.5"
                   }`}
                   style={{ fontFamily: "'Oswald', sans-serif" }}
@@ -239,7 +239,7 @@ export function CellsView() {
                 </div>
 
                 <h3
-                  className="text-xl font-bold uppercase text-foreground mb-1 group-hover:text-violet-400 transition-colors"
+                  className="text-xl font-bold uppercase text-foreground mb-1 group-hover:text-violet-700 transition-colors"
                   style={{ fontFamily: "'Oswald', sans-serif" }}
                 >
                   {cell.name}
@@ -247,11 +247,11 @@ export function CellsView() {
 
                 <div className="space-y-1.5 mt-3">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Clock size={12} className="text-violet-400 flex-shrink-0" />
+                    <Clock size={12} className="text-violet-700 flex-shrink-0" />
                     {cell.day} às {cell.time}
                   </div>
                   <div className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <MapPin size={12} className="text-violet-400 flex-shrink-0 mt-0.5" />
+                    <MapPin size={12} className="text-violet-700 flex-shrink-0 mt-0.5" />
                     <span>{cell.address}</span>
                   </div>
                 </div>
@@ -260,7 +260,7 @@ export function CellsView() {
                   href="https://wa.me/5519978201132"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-5 text-xs text-foreground font-medium uppercase tracking-wider group-hover:text-violet-400 transition-colors"
+                  className="inline-flex items-center gap-1.5 mt-5 text-xs text-foreground font-medium uppercase tracking-wider group-hover:text-violet-700 transition-colors"
                   style={{ fontFamily: "'Oswald', sans-serif" }}
                 >
                   Participar
@@ -274,7 +274,7 @@ export function CellsView() {
 
       {/* WhatsApp CTA */}
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 to-indigo-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-background to-indigo-50" />
         <CursorGlow size={300} opacity={0.3} />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
@@ -291,7 +291,7 @@ export function CellsView() {
               href="https://wa.me/5519978201132"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/60 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               <Phone size={18} />

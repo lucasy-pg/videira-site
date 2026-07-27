@@ -59,11 +59,11 @@ export default function Home() {
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=1600&h=900&fit=crop&auto=format"
               alt="Jovens adorando"
-              className="w-full h-full object-cover opacity-40 animate-[heroZoom_18s_ease-out_forwards]"
+              className="w-full h-full object-cover opacity-70 animate-[heroZoom_18s_ease-out_forwards]"
             />
           </Parallax>
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent to-background" />
         </div>
 
         {/* First screen: fits the viewport exactly — title, subtitle, buttons, scroll cue */}
@@ -76,7 +76,7 @@ export default function Home() {
                   style={{ fontFamily: "'Oswald', sans-serif" }}
                 >
                   Apaixonados<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
                     por Jesus.
                   </span>
                 </h1>
@@ -93,7 +93,7 @@ export default function Home() {
                   <MagneticButton>
                     <Link
                       href="/celulas"
-                      className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                      className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
                       style={{ fontFamily: "'Oswald', sans-serif" }}
                     >
                       Encontre sua Célula
@@ -102,9 +102,9 @@ export default function Home() {
                   </MagneticButton>
                   <Link
                     href="/sobre"
-                    className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
                   >
-                    <Play size={16} className="text-violet-400" />
+                    <Play size={16} className="text-violet-700" />
                     Conheça a Igreja
                   </Link>
                 </div>
@@ -130,7 +130,7 @@ export default function Home() {
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <Reveal>
-              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
                 Nossa Essência
               </p>
               <h2
@@ -146,12 +146,12 @@ export default function Home() {
                 <Reveal key={i} delay={i * 110} variant="right" className="py-6 first:pt-0 last:pb-0">
                   <div className="group">
                     <div className="flex gap-5 items-start">
-                      <span className="text-xs text-muted-foreground/40 font-mono w-6 flex-shrink-0 pt-1 transition-colors group-hover:text-violet-400">
+                      <span className="text-xs text-muted-foreground/60 font-mono w-6 flex-shrink-0 pt-1 transition-colors group-hover:text-violet-700">
                         {v.number}
                       </span>
                       <div className="flex-1">
                         <h3
-                          className="text-xl font-bold uppercase text-foreground mb-2 leading-none group-hover:text-violet-400 transition-colors"
+                          className="text-xl font-bold uppercase text-foreground mb-2 leading-none group-hover:text-violet-700 transition-colors"
                           style={{ fontFamily: "'Oswald', sans-serif" }}
                         >
                           {v.title}
@@ -176,7 +176,7 @@ export default function Home() {
       <section className="py-20 sm:py-28 border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12 sm:mb-16">
-            <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-3">
+            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-3">
               Ministérios
             </p>
             <h2
@@ -199,15 +199,15 @@ export default function Home() {
                     <ImageWithFallback
                       src={m.img}
                       alt={m.title}
-                      className="w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-500"
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                     />
                   </div>
                   <div className="relative z-10 p-7">
-                    <span className="text-[10px] text-violet-400 uppercase tracking-widest border border-violet-500/20 bg-violet-600/10 rounded-full px-3 py-1">
+                    <span className="text-[10px] text-violet-700 uppercase tracking-widest border border-violet-500/20 bg-violet-600/10 rounded-full px-3 py-1">
                       {m.tag}
                     </span>
                     <h3
-                      className="text-3xl font-bold uppercase text-foreground mt-4 mb-2 group-hover:text-violet-400 transition-colors"
+                      className="text-3xl font-bold uppercase text-foreground mt-4 mb-2 group-hover:text-violet-700 transition-colors"
                       style={{ fontFamily: "'Oswald', sans-serif" }}
                     >
                       {m.title}
@@ -215,7 +215,7 @@ export default function Home() {
                     <p className="text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
                     <div className="inline-flex items-center gap-1.5 mt-5 text-xs text-foreground font-medium uppercase tracking-wider">
                       Saiba mais
-                      <ArrowRight size={13} className="text-violet-400 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight size={13} className="text-violet-700 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>
@@ -226,30 +226,30 @@ export default function Home() {
       </section>
 
       {/* CTA — full bleed dark purple */}
-      <section className="relative overflow-hidden bg-card border-t border-border">
+      <section className="relative overflow-hidden bg-violet-950">
         <div className="absolute inset-0">
           <ImageWithFallback
             src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600&h=600&fit=crop&auto=format"
             alt="Adoração"
-            className="w-full h-full object-cover opacity-10"
+            className="w-full h-full object-cover opacity-25"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/60 to-indigo-950/60" />
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/90 to-indigo-950/90" />
         </div>
-        <CursorGlow size={300} opacity={0.32} />
+        <CursorGlow size={300} opacity={0.32} blend="screen" />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
           <h2
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold uppercase text-foreground leading-tight mb-6"
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold uppercase text-white leading-tight mb-6"
             style={{ fontFamily: "'Oswald', sans-serif" }}
           >
             Seja bem-vindo<br />à família Videira
           </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-10">
+          <p className="text-white/70 text-lg max-w-xl mx-auto mb-10">
             Não importa onde você está na sua jornada. Aqui tem lugar pra você.
           </p>
           <MagneticButton>
             <Link
               href="/contato"
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/60 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               style={{ fontFamily: "'Oswald', sans-serif" }}
             >
               Quero me conectar
