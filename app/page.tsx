@@ -142,11 +142,10 @@ export default function Home() {
           aria-hidden
         />
         <div className="absolute inset-0 bg-plum/75 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-plum-deep via-plum-deep/55 to-plum-deep/10" />
-        {/* Transição pro fundo bege — sem linha, só dissolução */}
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-bone via-bone/85 to-bone/0" />
+        {/* Escurece à esquerda, onde fica o texto, mantendo a imagem limpa à direita */}
+        <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/85 via-plum-deep/45 to-plum-deep/15" />
 
-        <div className="container relative z-10 mx-auto px-5 pb-44 pt-32 sm:px-8 sm:pt-40 lg:px-12">
+        <div className="container relative z-10 mx-auto px-5 pb-36 pt-32 sm:px-8 sm:pt-40 lg:px-12">
           <Reveal variant="fade" delay={150} once>
             <span className="inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-white/85 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-gold-soft" />
@@ -154,7 +153,7 @@ export default function Home() {
             </span>
           </Reveal>
 
-          <Reveal variant="blur" delay={300} once>
+          <Reveal delay={300} once>
             <h1 className="font-display mt-7 max-w-4xl text-[clamp(2.9rem,8.5vw,6.75rem)] font-semibold leading-[0.94] text-white">
               Um lugar pra
               <span className="block font-normal italic text-gold-soft">
@@ -196,10 +195,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ PONTE — cartão flutuante que costura o hero à página ═══ */}
-      <section className="relative z-20 bg-bone">
+      {/* ═══ PONTE — cartão que cavalga o hero e costura as duas seções ═══
+          `flow-root` é essencial: sem ele a margem negativa do cartão colapsa
+          com a seção e sobe o fundo bege junto, em vez de sobrepor o vídeo. */}
+      <section className="relative z-20 flow-root bg-bone">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <Reveal variant="up" className="-mt-24 sm:-mt-28">
+          <Reveal variant="up" className="-mt-28 sm:-mt-32">
             <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border shadow-[0_30px_70px_-40px_rgba(28,21,35,0.55)] sm:grid-cols-3">
               {visitInfo.map((item) => (
                 <Link
