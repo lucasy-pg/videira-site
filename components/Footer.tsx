@@ -30,31 +30,28 @@ const navItems = [
 
 export function Footer() {
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="bg-plum-deep">
+      <div className="container mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <Reveal className="md:col-span-2" variant="left">
-            <div className="flex items-center gap-3 mb-4 group w-fit">
-              <div className="w-9 h-9 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+            <div className="flex items-center gap-3 mb-5 group w-fit">
+              <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo_icon.png"
                   alt="Igreja Videira"
-                  className="w-8 h-8 object-contain"
+                  className="w-7 h-7 object-contain"
                 />
               </div>
-              <span
-                className="text-foreground font-semibold text-lg uppercase tracking-wide"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
-              >
+              <span className="font-display text-xl font-semibold text-white">
                 Igreja Videira
               </span>
             </div>
-            <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
-              Uma comunidade neopentecostal em células da graça, conectando
-              vidas e transformando corações em Indaiatuba.
+            <p className="text-white/60 leading-relaxed max-w-sm">
+              Uma comunidade em células da graça, conectando vidas e
+              transformando corações em Indaiatuba.
             </p>
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex items-center gap-3 mt-8">
               {socials.map((s) => (
                 <a
                   key={s.label}
@@ -62,7 +59,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-9 h-9 bg-secondary rounded-full flex items-center justify-center text-muted-foreground hover:text-white hover:bg-violet-600 hover:-translate-y-1 hover:rotate-6 active:scale-90 transition-all duration-300"
+                  className="w-11 h-11 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-plum-deep hover:bg-gold-soft hover:-translate-y-1 active:scale-90 transition-all duration-300"
                 >
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden>
                     <path d={s.path} />
@@ -73,22 +70,19 @@ export function Footer() {
           </Reveal>
 
           <Reveal delay={80}>
-            <h3
-              className="text-foreground font-semibold text-sm uppercase tracking-widest mb-4"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
-            >
-              Links
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-gold-soft mb-5">
+              Navegue
             </h3>
             <ul className="space-y-3">
               {navItems.map((item) => (
                 <li key={item.path}>
                   <Link
                     href={item.path}
-                    className="group inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="group inline-flex items-center text-white/60 hover:text-white transition-colors"
                   >
                     <span className="relative">
                       {item.label}
-                      <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-violet-600 transition-transform duration-300 group-hover:scale-x-100" />
+                      <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-gold-soft transition-transform duration-300 group-hover:scale-x-100" />
                     </span>
                   </Link>
                 </li>
@@ -97,22 +91,23 @@ export function Footer() {
           </Reveal>
 
           <Reveal delay={160}>
-            <h3
-              className="text-foreground font-semibold text-sm uppercase tracking-widest mb-4"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
-            >
-              Contato
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-gold-soft mb-5">
+              Visite
             </h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li>Indaiatuba — SP</li>
-              <li>contato@igrejavideira.com.br</li>
+            <ul className="space-y-3 text-white/60">
+              <li className="text-white/85">Domingo · 10h e 18h</li>
+              <li>
+                R. Augusto de Oliveira Camargo, 257
+                <br />
+                Centro — Indaiatuba/SP
+              </li>
+              <li className="pt-1">contato@igrejavideira.com.br</li>
               <li>(19) 99999-9999</li>
-              <li className="pt-1">Dom: 10h e 18h</li>
             </ul>
           </Reveal>
         </div>
 
-        <Reveal className="mt-10 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+        <Reveal className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/45">
           <span>© 2026 Igreja Videira Indaiatuba. Todos os direitos reservados.</span>
           <span>Feito com amor e graça.</span>
         </Reveal>

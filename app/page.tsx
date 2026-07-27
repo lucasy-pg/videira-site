@@ -1,32 +1,96 @@
 import Link from "next/link";
-import { ArrowRight, Play, ChevronDown } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Baby,
+  Clock,
+  HandHeart,
+  MapPin,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { CursorGlow } from "@/components/CursorGlow";
 import { Reveal } from "@/components/Reveal";
-import { HeroStats } from "@/components/HeroStats";
-import { CellsFeature } from "@/components/CellsFeature";
 import { Parallax } from "@/components/Parallax";
 import { MagneticButton } from "@/components/MagneticButton";
+import { CountUp } from "@/components/CountUp";
+import { CellsFeature } from "@/components/CellsFeature";
 
-const stats = [
-  { value: "6+", label: "Células ativas" },
-  { value: "8", label: "Bairros alcançados" },
-  { value: "1000+", label: "Pessoas conectadas" },
+const IMG = {
+  hero: "https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=1800&h=1200&fit=crop&auto=format",
+  jovens:
+    "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1100&h=1300&fit=crop&auto=format",
+  kids: "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1100&h=1300&fit=crop&auto=format",
+  culto:
+    "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1800&h=1000&fit=crop&auto=format",
+};
+
+/** Informações que todo visitante procura primeiro — ponte entre o hero e a página. */
+const visitInfo = [
+  {
+    icon: Clock,
+    label: "Cultos de domingo",
+    value: "10h da manhã · 18h da noite",
+    href: "/contato",
+    cta: "Planeje sua visita",
+  },
+  {
+    icon: MapPin,
+    label: "Onde nos encontrar",
+    value: "R. Augusto de Oliveira Camargo, 257 — Centro",
+    href: "/contato",
+    cta: "Ver no mapa",
+  },
+  {
+    icon: Users,
+    label: "Durante a semana",
+    value: "26 células espalhadas por Indaiatuba",
+    href: "/celulas",
+    cta: "Achar a mais perto",
+  },
+];
+
+/** Três portas de entrada — o padrão "next steps" das igrejas americanas. */
+const nextSteps = [
+  {
+    icon: HandHeart,
+    tone: "lilac",
+    title: "Venha num domingo",
+    desc: "Chegue do jeito que você está. Tem gente pra te receber e nenhuma cobrança.",
+    href: "/contato",
+    cta: "Como chegar",
+  },
+  {
+    icon: Users,
+    tone: "sand",
+    title: "Entre numa célula",
+    desc: "Grupos pequenos que se reúnem nas casas durante a semana. É onde a amizade de verdade acontece.",
+    href: "/celulas",
+    cta: "Ver as células",
+  },
+  {
+    icon: Baby,
+    tone: "gold",
+    title: "Traga sua família",
+    desc: "Enquanto você adora, seus filhos vivem a fé no nível deles — com segurança e alegria.",
+    href: "/radicais-kids",
+    cta: "Conhecer o Kids",
+  },
 ];
 
 const values = [
   {
-    number: "01",
+    tone: "lilac",
     title: "Graça",
-    desc: "Somos salvos pela graça e vivemos sob ela. Sem religião, sem performances — só o amor incondicional de Deus.",
+    desc: "Somos salvos pela graça e vivemos sob ela. Sem religião, sem performance — só o amor incondicional de Deus.",
   },
   {
-    number: "02",
+    tone: "sand",
     title: "Células",
-    desc: "A igreja acontece nas casas. Pequenos grupos que se cuidam, crescem e multiplicam vida ao redor de Indaiatuba.",
+    desc: "A igreja acontece nas casas. Pequenos grupos que se cuidam, crescem e multiplicam vida em cada bairro.",
   },
   {
-    number: "03",
+    tone: "gold",
     title: "Comunidade",
     desc: "Não somos uma instituição — somos família. Um lugar onde você é visto, conhecido e amado de verdade.",
   },
@@ -34,189 +98,337 @@ const values = [
 
 const ministries = [
   {
-    to: "/radicais-livres",
+    href: "/radicais-livres",
     tag: "15 — 30 anos",
     title: "Radicais Livres",
-    desc: "Jovens apaixonados por Jesus, vivendo a fé sem medo e sem religião. Louvor, palavra e comunidade real.",
-    img: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop&auto=format",
+    desc: "Jovens apaixonados por Jesus, vivendo a fé sem medo e sem religião.",
+    img: IMG.jovens,
   },
   {
-    to: "/radicais-kids",
+    href: "/radicais-kids",
     tag: "0 — 14 anos",
     title: "Radicais Kids",
-    desc: "Um espaço seguro e alegre para crianças encontrarem Jesus, fazerem amigos e crescerem na fé.",
-    img: "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=900&h=500&fit=crop&auto=format",
+    desc: "Um espaço seguro e alegre pra crianças encontrarem Jesus e fazerem amigos.",
+    img: IMG.kids,
   },
 ];
 
+const stats = [
+  { value: "26", label: "Células ativas" },
+  { value: "8", label: "Bairros alcançados" },
+  { value: "1000+", label: "Pessoas conectadas" },
+];
+
+const toneStyles: Record<string, { chip: string; card: string }> = {
+  lilac: { chip: "bg-lilac text-grape", card: "bg-lilac/60" },
+  sand: { chip: "bg-sand text-plum", card: "bg-sand/70" },
+  gold: { chip: "bg-gold-soft text-gold", card: "bg-gold-soft/60" },
+};
+
 export default function Home() {
   return (
-    <div className="bg-background text-foreground">
-      {/* Hero Section — full viewport, cinematic */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-background">
-          <Parallax speed={0.15} className="absolute inset-0 scale-[1.15]">
-            <ImageWithFallback
-              src="https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=1600&h=900&fit=crop&auto=format"
-              alt="Jovens adorando"
-              className="w-full h-full object-cover opacity-70 animate-[heroZoom_18s_ease-out_forwards]"
-            />
-          </Parallax>
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent to-background" />
-        </div>
+    <>
+      {/* ═══ HERO — foto cheia sob um véu ameixa, derretendo no bege da página ═══ */}
+      <section className="relative isolate -mt-16 flex min-h-svh items-center overflow-hidden bg-plum-deep sm:-mt-20">
+        <Parallax speed={0.18} className="absolute inset-0 scale-[1.18]">
+          <ImageWithFallback
+            src={IMG.hero}
+            alt="Comunidade reunida em adoração"
+            className="h-full w-full object-cover animate-[heroZoom_22s_ease-out_forwards]"
+          />
+        </Parallax>
+        <div className="absolute inset-0 bg-plum/75 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-plum-deep via-plum-deep/55 to-plum-deep/10" />
+        {/* Transição pro fundo bege — sem linha, só dissolução */}
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-bone via-bone/85 to-bone/0" />
 
-        {/* First screen: fits the viewport exactly — title, subtitle, buttons, scroll cue */}
-        <div className="relative z-10 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] flex flex-col">
-          <div className="flex-1 min-h-0 flex flex-col justify-center pt-6 sm:pt-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl">
-              <Reveal delay={200} variant="blur" once>
-                <h1
-                  className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none uppercase tracking-tight text-foreground mb-5"
-                  style={{ fontFamily: "'Oswald', sans-serif" }}
+        <div className="container relative z-10 mx-auto px-5 pb-44 pt-32 sm:px-8 sm:pt-40 lg:px-12">
+          <Reveal variant="fade" delay={150} once>
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-white/85 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold-soft" />
+              Indaiatuba · SP
+            </span>
+          </Reveal>
+
+          <Reveal variant="blur" delay={300} once>
+            <h1 className="font-display mt-7 max-w-4xl text-[clamp(2.9rem,8.5vw,6.75rem)] font-semibold leading-[0.94] text-white">
+              Um lugar pra
+              <span className="block font-normal italic text-gold-soft">
+                você pertencer
+              </span>
+            </h1>
+          </Reveal>
+
+          <Reveal delay={620} once>
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/75 sm:text-xl">
+              Somos uma igreja em células espalhada por Indaiatuba. Sem
+              religiosidade e sem cobrança — gente real encontrando Jesus junto,
+              no domingo e no meio da semana.
+            </p>
+          </Reveal>
+
+          <Reveal delay={880} once>
+            <div className="mt-10 flex flex-col gap-3.5 sm:flex-row">
+              <MagneticButton>
+                <Link
+                  href="/celulas"
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
                 >
-                  Apaixonados<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
-                    por Jesus.
-                  </span>
-                </h1>
-              </Reveal>
-
-              <Reveal delay={650} once>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-xl mb-8 leading-relaxed">
-                  Uma comunidade neopentecostal viva, conectada em células pela graça de Deus — em cada bairro, em cada casa.
-                </p>
-              </Reveal>
-
-              <Reveal delay={1100} once>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <MagneticButton>
-                    <Link
-                      href="/celulas"
-                      className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-                      style={{ fontFamily: "'Oswald', sans-serif" }}
-                    >
-                      Encontre sua Célula
-                      <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </MagneticButton>
-                  <Link
-                    href="/sobre"
-                    className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-                  >
-                    <Play size={16} className="text-violet-700" />
-                    Conheça a Igreja
-                  </Link>
-                </div>
-              </Reveal>
+                  Encontre sua célula
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+              </MagneticButton>
+              <Link
+                href="/sobre"
+                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-white/30 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 active:scale-95"
+              >
+                Conheça a igreja
+              </Link>
             </div>
-
-            {/* Stats — só aparecem/animam quando o usuário rola a página */}
-            <div className="max-w-4xl mt-10 sm:mt-12">
-              <HeroStats stats={stats} />
-            </div>
-          </div>
-
-          {/* Scroll indicator */}
-          <div className="flex justify-center pb-6 text-muted-foreground/60 animate-bounce">
-            <ChevronDown size={24} />
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="relative overflow-hidden py-20 sm:py-28 lg:py-36 border-t border-border">
-        <CursorGlow size={260} opacity={0.24} />
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <Reveal>
-              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
-                Nossa Essência
-              </p>
-              <h2
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold uppercase leading-tight text-foreground"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
-              >
-                O que nos<br />
-                move todo dia
-              </h2>
-            </Reveal>
-            <div className="divide-y divide-border">
-              {values.map((v, i) => (
-                <Reveal key={i} delay={i * 110} variant="right" className="py-6 first:pt-0 last:pb-0">
-                  <div className="group">
-                    <div className="flex gap-5 items-start">
-                      <span className="text-xs text-muted-foreground/60 font-mono w-6 flex-shrink-0 pt-1 transition-colors group-hover:text-violet-700">
-                        {v.number}
-                      </span>
-                      <div className="flex-1">
-                        <h3
-                          className="text-xl font-bold uppercase text-foreground mb-2 leading-none group-hover:text-violet-700 transition-colors"
-                          style={{ fontFamily: "'Oswald', sans-serif" }}
-                        >
-                          {v.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                          {v.desc}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
+      {/* ═══ PONTE — cartão flutuante que costura o hero à página ═══ */}
+      <section className="relative z-20 bg-bone">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal variant="up" className="-mt-24 sm:-mt-28">
+            <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border shadow-[0_30px_70px_-40px_rgba(28,21,35,0.55)] sm:grid-cols-3">
+              {visitInfo.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="group bg-card p-7 transition-colors duration-300 hover:bg-lilac/40 sm:p-8"
+                >
+                  <item.icon
+                    size={20}
+                    className="text-grape transition-transform duration-300 group-hover:-translate-y-0.5"
+                  />
+                  <p className="mt-5 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                    {item.label}
+                  </p>
+                  <p className="font-display mt-2 text-lg leading-snug text-foreground">
+                    {item.value}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-grape">
+                    {item.cta}
+                    <ArrowUpRight
+                      size={13}
+                      className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    />
+                  </span>
+                </Link>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Cells Feature — Horizontal Split Meeting */}
-      <CellsFeature />
+      {/* ═══ BOAS-VINDAS — editorial, com washes de cor no fundo ═══ */}
+      <section className="relative overflow-hidden bg-bone pb-28 pt-28 sm:pb-36 sm:pt-36 lg:pb-44 lg:pt-44">
+        <div className="wash -left-40 top-4 h-[30rem] w-[30rem] bg-lilac opacity-80" />
+        <div className="wash -right-32 bottom-0 h-[24rem] w-[24rem] bg-gold-soft opacity-70" />
 
-      {/* Ministries Preview */}
-      <section className="py-20 sm:py-28 border-t border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal className="mb-12 sm:mb-16">
-            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-3">
-              Ministérios
-            </p>
-            <h2
-              className="text-4xl sm:text-5xl font-bold uppercase text-foreground leading-tight"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
-            >
-              Para Cada<br />Fase da Vida
+        <div className="container relative mx-auto grid items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
+          <div>
+            <Reveal>
+              <span className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+                <Sparkles size={13} />
+                Bem-vindo à Videira
+              </span>
+            </Reveal>
+            <Reveal delay={90}>
+              <h2 className="font-display mt-6 text-[clamp(2.25rem,5.2vw,3.9rem)] font-semibold leading-[1.03] text-foreground">
+                Você não precisa ter tudo resolvido{" "}
+                <span className="font-normal italic text-grape">
+                  pra fazer parte.
+                </span>
+              </h2>
+            </Reveal>
+            <Reveal delay={170}>
+              <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
+                <p>
+                  A Videira nasceu da convicção de que a igreja é gente, não
+                  prédio. Por isso a nossa vida acontece em dois lugares: no
+                  domingo, quando a cidade inteira se junta pra adorar — e nas
+                  casas, durante a semana, onde a fé vira amizade.
+                </p>
+                <p>
+                  Não importa se você cresceu na igreja, se está voltando depois
+                  de anos ou se essa é a sua primeira vez. Aqui tem lugar pra
+                  você exatamente como você chegou.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={250}>
+              <Link
+                href="/sobre"
+                className="group mt-9 inline-flex items-center gap-2.5 border-b border-foreground/25 pb-1.5 text-sm font-medium text-foreground transition-colors hover:border-grape hover:text-grape"
+              >
+                Nossa história e o que cremos
+                <ArrowRight
+                  size={15}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </Reveal>
+          </div>
+
+          <Reveal variant="scale" delay={120}>
+            <div className="relative">
+              <div className="absolute -inset-4 -rotate-2 rounded-[2.25rem] bg-lilac/70" />
+              <div className="relative overflow-hidden rounded-[2rem] bg-sand shadow-[0_36px_80px_-45px_rgba(28,21,35,0.6)]">
+                <ImageWithFallback
+                  src="/pastores.png"
+                  alt="Pastores da Igreja Videira Indaiatuba"
+                  className="aspect-[5/6] w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-plum-deep/90 to-plum-deep/0 p-7 pt-16">
+                  <p className="text-[11px] uppercase tracking-[0.24em] text-white/70">
+                    Nossos pastores
+                  </p>
+                  <p className="font-display mt-1 text-2xl text-white">
+                    Aqui você é esperado
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══ PRIMEIROS PASSOS — cards em tons diferentes, bege escorrendo pra areia ═══ */}
+      <section className="bg-gradient-to-b from-bone via-bone to-sand pb-28 sm:pb-36 lg:pb-44">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal className="max-w-2xl">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+              Comece por aqui
+            </span>
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
+              Três jeitos simples de dar o primeiro passo
             </h2>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {ministries.map((m, i) => (
-              <Reveal key={i} delay={i * 120} variant={i % 2 === 0 ? "left" : "right"}>
+          <div className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
+            {nextSteps.map((step, i) => (
+              <Reveal key={step.title} delay={i * 110}>
                 <Link
-                  href={m.to}
-                  className="group relative rounded-2xl overflow-hidden bg-card border border-border hover:border-violet-500/40 hover:-translate-y-1.5 transition-all duration-300 block h-full"
+                  href={step.href}
+                  className="group flex h-full flex-col rounded-[1.75rem] bg-card p-8 shadow-[0_20px_50px_-38px_rgba(28,21,35,0.55)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-40px_rgba(28,21,35,0.6)] lg:p-9"
                 >
-                  <CursorGlow size={200} opacity={0.26} />
-                  <div className="h-52 sm:h-64 overflow-hidden bg-muted">
-                    <ImageWithFallback
-                      src={m.img}
-                      alt={m.title}
-                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  <span
+                    className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${toneStyles[step.tone].chip}`}
+                  >
+                    <step.icon size={21} />
+                  </span>
+                  <h3 className="font-display mt-7 text-2xl font-semibold text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">
+                    {step.desc}
+                  </p>
+                  <span className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-grape">
+                    {step.cta}
+                    <ArrowRight
+                      size={15}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
                     />
-                  </div>
-                  <div className="relative z-10 p-7">
-                    <span className="text-[10px] text-violet-700 uppercase tracking-widest border border-violet-500/20 bg-violet-600/10 rounded-full px-3 py-1">
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ CÉLULAS — split animado, agora em areia quente ═══ */}
+      <CellsFeature />
+
+      {/* ═══ VALORES — cards coloridos, areia voltando pro bege ═══ */}
+      <section className="bg-gradient-to-b from-sand via-sand to-bone py-28 sm:py-36 lg:py-44">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal className="max-w-2xl">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+              Nossa essência
+            </span>
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
+              O que nos move{" "}
+              <span className="font-normal italic text-grape">todo dia</span>
+            </h2>
+          </Reveal>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
+            {values.map((v, i) => (
+              <Reveal key={v.title} delay={i * 110}>
+                <div
+                  className={`h-full rounded-[1.75rem] p-9 transition-transform duration-300 hover:-translate-y-1.5 lg:p-10 ${toneStyles[v.tone].card}`}
+                >
+                  <span className="font-display text-5xl font-semibold leading-none text-foreground/15">
+                    0{i + 1}
+                  </span>
+                  <h3 className="font-display mt-7 text-2xl font-semibold text-foreground">
+                    {v.title}
+                  </h3>
+                  <p className="mt-3 leading-relaxed text-foreground/65">
+                    {v.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ MINISTÉRIOS — cards grandes com foto ═══ */}
+      <section className="relative overflow-hidden bg-bone pb-28 sm:pb-36 lg:pb-44">
+        <div className="wash -right-40 top-10 h-[26rem] w-[26rem] bg-lilac opacity-70" />
+        <div className="container relative mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal className="max-w-2xl">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+              Ministérios
+            </span>
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
+              Para cada fase da vida
+            </h2>
+          </Reveal>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:gap-6">
+            {ministries.map((m, i) => (
+              <Reveal
+                key={m.title}
+                delay={i * 130}
+                variant={i === 0 ? "left" : "right"}
+              >
+                <Link
+                  href={m.href}
+                  className="group relative block h-full overflow-hidden rounded-[2rem] bg-plum-deep"
+                >
+                  <ImageWithFallback
+                    src={m.img}
+                    alt={m.title}
+                    className="aspect-[4/5] w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-95 sm:aspect-[5/4] lg:aspect-[4/3]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-plum-deep via-plum-deep/45 to-plum-deep/0" />
+                  <div className="absolute inset-x-0 bottom-0 p-8 lg:p-10">
+                    <span className="inline-block rounded-full border border-white/25 bg-white/10 px-3.5 py-1 text-[10px] uppercase tracking-[0.22em] text-white/85 backdrop-blur-sm">
                       {m.tag}
                     </span>
-                    <h3
-                      className="text-3xl font-bold uppercase text-foreground mt-4 mb-2 group-hover:text-violet-700 transition-colors"
-                      style={{ fontFamily: "'Oswald', sans-serif" }}
-                    >
+                    <h3 className="font-display mt-4 text-[clamp(1.9rem,3.4vw,2.75rem)] font-semibold leading-tight text-white">
                       {m.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
-                    <div className="inline-flex items-center gap-1.5 mt-5 text-xs text-foreground font-medium uppercase tracking-wider">
+                    <p className="mt-2 max-w-sm leading-relaxed text-white/70">
+                      {m.desc}
+                    </p>
+                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-gold-soft">
                       Saiba mais
-                      <ArrowRight size={13} className="text-violet-700 group-hover:translate-x-1 transition-transform" />
-                    </div>
+                      <ArrowRight
+                        size={15}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </span>
                   </div>
                 </Link>
               </Reveal>
@@ -225,39 +437,60 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA — full bleed dark purple */}
-      <section className="relative overflow-hidden bg-violet-950">
-        <div className="absolute inset-0">
-          <ImageWithFallback
-            src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600&h=600&fit=crop&auto=format"
-            alt="Adoração"
-            className="w-full h-full object-cover opacity-25"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/90 to-indigo-950/90" />
+      {/* ═══ FECHAMENTO — números + convite, escurecendo direto pro rodapé ═══ */}
+      <section className="relative overflow-hidden rounded-t-[2.5rem] bg-plum-deep lg:rounded-t-[4rem]">
+        <ImageWithFallback
+          src={IMG.culto}
+          alt="Culto de domingo"
+          className="absolute inset-0 h-full w-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-plum/70 via-plum-deep/85 to-plum-deep" />
+
+        <div className="container relative mx-auto px-5 py-28 sm:px-8 sm:py-36 lg:px-12 lg:py-44">
+          <div className="grid gap-16 lg:grid-cols-3 lg:gap-10">
+            {stats.map((s, i) => (
+              <Reveal
+                key={s.label}
+                delay={i * 120}
+                className="text-center lg:text-left"
+              >
+                <CountUp
+                  value={s.value}
+                  className="font-display block text-[clamp(3.5rem,7vw,5.5rem)] font-semibold leading-none text-gold-soft"
+                />
+                <p className="mt-3 text-[11px] uppercase tracking-[0.26em] text-white/55">
+                  {s.label}
+                </p>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal variant="scale" className="mt-24 text-center sm:mt-32">
+            <h2 className="font-display mx-auto max-w-3xl text-[clamp(2.4rem,6vw,4.75rem)] font-semibold leading-[1.02] text-white">
+              Seja bem-vindo à{" "}
+              <span className="font-normal italic text-gold-soft">
+                família Videira
+              </span>
+            </h2>
+            <p className="mx-auto mt-7 max-w-lg text-lg leading-relaxed text-white/70">
+              Não importa onde você está na sua jornada. Manda uma mensagem,
+              aparece num domingo — a gente te espera.
+            </p>
+            <MagneticButton>
+              <Link
+                href="/contato"
+                className="group mt-11 inline-flex items-center gap-2.5 rounded-full bg-bone px-9 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_20px_45px_-18px_rgba(0,0,0,0.7)] active:scale-95"
+              >
+                Quero me conectar
+                <ArrowRight
+                  size={17}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </MagneticButton>
+          </Reveal>
         </div>
-        <CursorGlow size={300} opacity={0.32} blend="screen" />
-        <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
-          <h2
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold uppercase text-white leading-tight mb-6"
-            style={{ fontFamily: "'Oswald', sans-serif" }}
-          >
-            Seja bem-vindo<br />à família Videira
-          </h2>
-          <p className="text-white/70 text-lg max-w-xl mx-auto mb-10">
-            Não importa onde você está na sua jornada. Aqui tem lugar pra você.
-          </p>
-          <MagneticButton>
-            <Link
-              href="/contato"
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
-            >
-              Quero me conectar
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </MagneticButton>
-        </Reveal>
       </section>
-    </div>
+    </>
   );
 }
