@@ -141,9 +141,8 @@ export default function Home() {
           playsInline
           aria-hidden
         />
-        <div className="absolute inset-0 bg-plum/75 mix-blend-multiply" />
-        {/* Escurece à esquerda, onde fica o texto, mantendo a imagem limpa à direita */}
-        <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/85 via-plum-deep/45 to-plum-deep/15" />
+        {/* Escurece só à esquerda, pro texto ficar legível — vídeo limpo à direita */}
+        <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/80 via-plum-deep/30 to-plum-deep/0" />
 
         <div className="container relative z-10 mx-auto px-5 pb-36 pt-32 sm:px-8 sm:pt-40 lg:px-12">
           <Reveal variant="fade" delay={150} once>
