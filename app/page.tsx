@@ -11,13 +11,11 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Reveal } from "@/components/Reveal";
-import { Parallax } from "@/components/Parallax";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CountUp } from "@/components/CountUp";
 import { CellsFeature } from "@/components/CellsFeature";
 
 const IMG = {
-  hero: "https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=1800&h=1200&fit=crop&auto=format",
   jovens:
     "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1100&h=1300&fit=crop&auto=format",
   kids: "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1100&h=1300&fit=crop&auto=format",
@@ -130,13 +128,19 @@ export default function Home() {
     <>
       {/* ═══ HERO — foto cheia sob um véu ameixa, derretendo no bege da página ═══ */}
       <section className="relative isolate -mt-16 flex min-h-svh items-center overflow-hidden bg-plum-deep sm:-mt-20">
-        <Parallax speed={0.18} className="absolute inset-0 scale-[1.18]">
-          <ImageWithFallback
-            src={IMG.hero}
-            alt="Comunidade reunida em adoração"
-            className="h-full w-full object-cover animate-[heroZoom_22s_ease-out_forwards]"
-          />
-        </Parallax>
+        {/* Filmagem real de um culto, muda e em loop, atrás do véu ameixa.
+            O poster (30 KB) pinta a capa na hora; o vídeo entra por cima quando
+            carrega. Só H.264 — AV1 e VP9 saíram maiores nesse material. */}
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/capa-inicio.mp4"
+          poster="/capa-inicio-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden
+        />
         <div className="absolute inset-0 bg-plum/75 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-tr from-plum-deep via-plum-deep/55 to-plum-deep/10" />
         {/* Transição pro fundo bege — sem linha, só dissolução */}

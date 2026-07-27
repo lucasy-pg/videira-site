@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# fontes de vídeo (originais pesados — só os derivados comprimidos vão pro repo)
+public/*.MOV
+public/*.mov
