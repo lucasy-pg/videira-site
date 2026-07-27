@@ -19,6 +19,7 @@ const darkHeroRoutes = ["/"];
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
 
   // O menu guarda a rota em que foi aberto: ao navegar, ele fecha sozinho
@@ -28,11 +29,22 @@ export function Header() {
   const toggleMenu = () => setMenu({ open: !isMenuOpen, path: pathname });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 24);
+      // Só esconde depois de passar a altura do próprio header, senão ele
+      // pisca ao menor scroll perto do topo.
+      setHidden(y > lastY && y > 120);
+      lastY = y;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Some ao descer, volta ao subir — mas nunca some com o menu mobile aberto.
+  const isHidden = hidden && !isMenuOpen;
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -46,6 +58,8 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 animate-[headerIn_0.6s_cubic-bezier(0.16,1,0.3,1)_both] transition-all duration-500 ${
+        isHidden ? "-translate-y-full" : "translate-y-0"
+      } ${
         onDark
           ? "bg-transparent"
           : "bg-bone/85 shadow-[0_1px_0_rgba(28,21,35,0.06)] backdrop-blur-xl"

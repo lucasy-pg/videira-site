@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 @theme {
-  /* ---- Base: neutros quentes, nunca branco puro ---- */
-  --color-background: #fbf7f1;
+  /* ---- Base: branco quente, bem claro — o roxo mora só nos cards/acentos ---- */
+  --color-background: #fdfbf7;
   --color-foreground: #1c1523;
   --color-card: #ffffff;
   --color-card-foreground: #1c1523;
@@ -25,9 +25,9 @@
   --color-ring: #6d28d9;
 
   /* ---- Paleta nomeada (washes e faixas) ---- */
-  --color-bone: #fbf7f1;
-  --color-sand: #f3e9dc;
-  --color-clay: #ead9c6;
+  --color-bone: #fdfbf7;
+  --color-sand: #f8f3ea;
+  --color-clay: #f1e8d9;
   --color-lilac: #efe8fc;
   --color-grape: #6d28d9;
   --color-plum: #2c1250;
@@ -123,12 +123,4 @@ body {
 @keyframes underlineIn {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
-}
-
-/* Washes radiais suaves que dão cor ao fundo sem criar blocos */
-.wash {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
 }

@@ -4,6 +4,7 @@ import {
   ArrowUpRight,
   Baby,
   Clock,
+  Globe2,
   HandHeart,
   MapPin,
   Sparkles,
@@ -78,17 +79,14 @@ const nextSteps = [
 
 const values = [
   {
-    tone: "lilac",
     title: "Graça",
     desc: "Somos salvos pela graça e vivemos sob ela. Sem religião, sem performance — só o amor incondicional de Deus.",
   },
   {
-    tone: "sand",
     title: "Células",
     desc: "A igreja acontece nas casas. Pequenos grupos que se cuidam, crescem e multiplicam vida em cada bairro.",
   },
   {
-    tone: "gold",
     title: "Comunidade",
     desc: "Não somos uma instituição — somos família. Um lugar onde você é visto, conhecido e amado de verdade.",
   },
@@ -117,10 +115,10 @@ const stats = [
   { value: "1000+", label: "Pessoas conectadas" },
 ];
 
-const toneStyles: Record<string, { chip: string; card: string }> = {
-  lilac: { chip: "bg-lilac text-grape", card: "bg-lilac/60" },
-  sand: { chip: "bg-sand text-plum", card: "bg-sand/70" },
-  gold: { chip: "bg-gold-soft text-gold", card: "bg-gold-soft/60" },
+const toneStyles: Record<string, { chip: string }> = {
+  lilac: { chip: "bg-lilac text-grape" },
+  sand: { chip: "bg-sand text-plum" },
+  gold: { chip: "bg-gold-soft text-gold" },
 };
 
 export default function Home() {
@@ -191,7 +189,7 @@ export default function Home() {
       <section className="relative z-20 bg-bone pt-14 sm:pt-16">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal variant="up">
-            <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border shadow-[0_30px_70px_-40px_rgba(28,21,35,0.55)] sm:grid-cols-3">
+            <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border sm:grid-cols-3">
               {visitInfo.map((item) => (
                 <Link
                   key={item.label}
@@ -222,11 +220,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ BOAS-VINDAS — editorial, com washes de cor no fundo ═══ */}
+      {/* ═══ BOAS-VINDAS — fundo neutro e quieto, a cor mora só no card ═══ */}
       <section className="relative overflow-hidden bg-bone pb-28 pt-28 sm:pb-36 sm:pt-36 lg:pb-44 lg:pt-44">
-        <div className="wash -left-40 top-4 h-[30rem] w-[30rem] bg-lilac opacity-80" />
-        <div className="wash -right-32 bottom-0 h-[24rem] w-[24rem] bg-gold-soft opacity-70" />
-
         <div className="container relative mx-auto grid items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
           <div>
             <Reveal>
@@ -246,15 +241,20 @@ export default function Home() {
             <Reveal delay={170}>
               <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
                 <p>
-                  A Videira nasceu da convicção de que a igreja é gente, não
-                  prédio. Por isso a nossa vida acontece em dois lugares: no
-                  domingo, quando a cidade inteira se junta pra adorar — e nas
-                  casas, durante a semana, onde a fé vira amizade.
+                  O nome vem de uma promessa: <em className="italic text-foreground">
+                  &quot;Eu sou a videira, vocês são os ramos&quot;</em> (João
+                  15:5) — ramo isolado não dá fruto. Foi com essa convicção que
+                  o pastor Aluízio Silva plantou uma igreja que se multiplicou
+                  em casas ao redor do mundo: a fé acontece primeiro nas
+                  famílias, em grupos pequenos, antes de acontecer nos
+                  prédios.
                 </p>
                 <p>
-                  Não importa se você cresceu na igreja, se está voltando depois
-                  de anos ou se essa é a sua primeira vez. Aqui tem lugar pra
-                  você exatamente como você chegou.
+                  Em Indaiatuba, isso vira rotina: domingo de portas abertas
+                  pra cidade inteira, semana inteira de células nos bairros.
+                  Não importa se você cresceu na igreja, se está voltando
+                  depois de anos ou se essa é a sua primeira vez — aqui tem
+                  lugar pra você exatamente como você chegou.
                 </p>
               </div>
             </Reveal>
@@ -274,21 +274,37 @@ export default function Home() {
 
           <Reveal variant="scale" delay={120}>
             <div className="relative">
-              <div className="absolute -inset-4 -rotate-2 rounded-[2.25rem] bg-lilac/70" />
-              <div className="relative overflow-hidden rounded-[2rem] bg-sand shadow-[0_36px_80px_-45px_rgba(28,21,35,0.6)]">
-                <ImageWithFallback
-                  src="/pastores.png"
-                  alt="Pastores da Igreja Videira Indaiatuba"
-                  className="aspect-[5/6] w-full object-cover"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-plum-deep/90 to-plum-deep/0 p-7 pt-16">
-                  <p className="text-[11px] uppercase tracking-[0.24em] text-white/70">
-                    Nossos pastores
-                  </p>
-                  <p className="font-display mt-1 text-2xl text-white">
-                    Aqui você é esperado
-                  </p>
+              <div className="overflow-hidden rounded-[2rem] bg-plum-deep p-9 sm:p-11">
+                <Globe2 size={22} className="text-gold-soft" />
+                <p className="font-display mt-6 text-[1.65rem] leading-snug text-white sm:text-3xl">
+                  Um só chamado,{" "}
+                  <span className="italic text-gold-soft">
+                    espalhado em 30 países.
+                  </span>
+                </p>
+                <div className="mt-10 grid grid-cols-2 gap-6 border-t border-white/15 pt-8">
+                  <div>
+                    <p className="font-display text-4xl text-gold-soft">
+                      1997
+                    </p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/55">
+                      início em Goiânia
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-display text-4xl text-gold-soft">
+                      1.300+
+                    </p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/55">
+                      igrejas Videira
+                    </p>
+                  </div>
                 </div>
+                <p className="mt-8 text-sm leading-relaxed text-white/60">
+                  A Videira Indaiatuba faz parte da rede iniciada pelo pastor
+                  Aluízio Silva — a mesma visão de células, agora com
+                  endereço na nossa cidade.
+                </p>
               </div>
             </div>
           </Reveal>
@@ -312,7 +328,7 @@ export default function Home() {
               <Reveal key={step.title} delay={i * 110}>
                 <Link
                   href={step.href}
-                  className="group flex h-full flex-col rounded-[1.75rem] bg-card p-8 shadow-[0_20px_50px_-38px_rgba(28,21,35,0.55)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-40px_rgba(28,21,35,0.6)] lg:p-9"
+                  className="group flex h-full flex-col rounded-[1.75rem] bg-card p-8 transition-transform duration-300 hover:-translate-y-1.5 lg:p-9"
                 >
                   <span
                     className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${toneStyles[step.tone].chip}`}
@@ -342,7 +358,7 @@ export default function Home() {
       {/* ═══ CÉLULAS — split animado, agora em areia quente ═══ */}
       <CellsFeature />
 
-      {/* ═══ VALORES — cards coloridos, areia voltando pro bege ═══ */}
+      {/* ═══ VALORES — cards neutros, número e texto carregam a diferença ═══ */}
       <section className="bg-gradient-to-b from-sand via-sand to-bone py-28 sm:py-36 lg:py-44">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="max-w-2xl">
@@ -358,9 +374,7 @@ export default function Home() {
           <div className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
             {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 110}>
-                <div
-                  className={`h-full rounded-[1.75rem] p-9 transition-transform duration-300 hover:-translate-y-1.5 lg:p-10 ${toneStyles[v.tone].card}`}
-                >
+                <div className="h-full rounded-[1.75rem] bg-card p-9 transition-transform duration-300 hover:-translate-y-1.5 lg:p-10">
                   <span className="font-display text-5xl font-semibold leading-none text-foreground/15">
                     0{i + 1}
                   </span>
@@ -379,7 +393,6 @@ export default function Home() {
 
       {/* ═══ MINISTÉRIOS — cards grandes com foto ═══ */}
       <section className="relative overflow-hidden bg-bone pb-28 sm:pb-36 lg:pb-44">
-        <div className="wash -right-40 top-10 h-[26rem] w-[26rem] bg-lilac opacity-70" />
         <div className="container relative mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="max-w-2xl">
             <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">

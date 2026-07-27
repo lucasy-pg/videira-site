@@ -50,7 +50,7 @@ export function CellsFeature() {
       <div className="container mx-auto grid items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
         {/* Foto — desliza da esquerda */}
         <div style={slide("left")}>
-          <div className="relative overflow-hidden rounded-[2rem] bg-clay shadow-[0_36px_80px_-45px_rgba(28,21,35,0.55)]">
+          <div className="relative overflow-hidden rounded-[2rem] bg-clay">
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1656370465119-cb8d6735bda3?w=1000&h=1150&fit=crop&auto=format"
               alt="Grupo de célula reunido numa casa"
