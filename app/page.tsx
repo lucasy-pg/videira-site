@@ -145,13 +145,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/80 via-plum-deep/30 to-plum-deep/0" />
 
         <div className="container relative z-10 mx-auto px-5 pb-36 pt-32 sm:px-8 sm:pt-40 lg:px-12">
-          <Reveal variant="fade" delay={150} once>
-            <span className="inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] uppercase tracking-[0.28em] text-white/85 backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold-soft" />
-              Indaiatuba · SP
-            </span>
-          </Reveal>
-
           <Reveal delay={300} once>
             <h1 className="font-display mt-7 max-w-4xl text-[clamp(2.9rem,8.5vw,6.75rem)] font-semibold leading-[0.94] text-white">
               Um lugar pra
@@ -194,12 +187,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ PONTE — cartão que cavalga o hero e costura as duas seções ═══
-          `flow-root` é essencial: sem ele a margem negativa do cartão colapsa
-          com a seção e sobe o fundo bege junto, em vez de sobrepor o vídeo. */}
-      <section className="relative z-20 flow-root bg-bone">
+      {/* ═══ PONTE — cartão de horários/local, já dentro da seção bege ═══ */}
+      <section className="relative z-20 bg-bone pt-14 sm:pt-16">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <Reveal variant="up" className="-mt-28 sm:-mt-32">
+          <Reveal variant="up">
             <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border shadow-[0_30px_70px_-40px_rgba(28,21,35,0.55)] sm:grid-cols-3">
               {visitInfo.map((item) => (
                 <Link
