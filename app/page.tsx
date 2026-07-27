@@ -3,7 +3,7 @@ import { ArrowRight, Play, ChevronDown } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { CursorGlow } from "@/components/CursorGlow";
 import { Reveal } from "@/components/Reveal";
-import { CountUp } from "@/components/CountUp";
+import { HeroStats } from "@/components/HeroStats";
 import { CellsFeature } from "@/components/CellsFeature";
 import { Parallax } from "@/components/Parallax";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -53,7 +53,7 @@ export default function Home() {
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section — full viewport, cinematic */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden">
+      <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-background">
           <Parallax speed={0.15} className="absolute inset-0 scale-[1.15]">
             <ImageWithFallback
@@ -66,72 +66,61 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
         </div>
 
-        <div className="relative z-10 flex-1 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center pt-24 pb-16">
-          <div className="max-w-4xl">
-            <Reveal delay={80} variant="blur" once>
-              <h1
-                className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none uppercase tracking-tight text-foreground mb-6"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
-              >
-                Apaixonados<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
-                  por Jesus.
-                </span>
-              </h1>
-            </Reveal>
-
-            <Reveal delay={160} once>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed">
-                Uma comunidade neopentecostal viva, conectada em células pela graça de Deus — em cada bairro, em cada casa.
-              </p>
-            </Reveal>
-
-            <Reveal delay={240} once>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <MagneticButton>
-                  <Link
-                    href="/celulas"
-                    className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-                    style={{ fontFamily: "'Oswald', sans-serif" }}
-                  >
-                    Encontre sua Célula
-                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </MagneticButton>
-                <Link
-                  href="/sobre"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+        {/* First screen: fits the viewport exactly — title, subtitle, buttons, scroll cue */}
+        <div className="relative z-10 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] flex flex-col">
+          <div className="flex-1 min-h-0 flex flex-col justify-center pt-6 sm:pt-10 container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl">
+              <Reveal delay={200} variant="blur" once>
+                <h1
+                  className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none uppercase tracking-tight text-foreground mb-5"
+                  style={{ fontFamily: "'Oswald', sans-serif" }}
                 >
-                  <Play size={16} className="text-violet-400" />
-                  Conheça a Igreja
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-        </div>
+                  Apaixonados<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+                    por Jesus.
+                  </span>
+                </h1>
+              </Reveal>
 
-        {/* Stats bar */}
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="flex flex-wrap gap-8 sm:gap-16">
-            {stats.map((s, i) => (
-              <Reveal key={i} delay={320 + i * 90} variant="scale" once>
-                <div>
-                  <CountUp
-                    value={s.value}
-                    className="block text-3xl sm:text-4xl font-bold text-foreground font-oswald"
-                  />
-                  <div className="text-xs text-muted-foreground uppercase tracking-widest mt-1">
-                    {s.label}
-                  </div>
+              <Reveal delay={650} once>
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-xl mb-8 leading-relaxed">
+                  Uma comunidade neopentecostal viva, conectada em células pela graça de Deus — em cada bairro, em cada casa.
+                </p>
+              </Reveal>
+
+              <Reveal delay={1100} once>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <MagneticButton>
+                    <Link
+                      href="/celulas"
+                      className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-900/50 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                      style={{ fontFamily: "'Oswald', sans-serif" }}
+                    >
+                      Encontre sua Célula
+                      <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </MagneticButton>
+                  <Link
+                    href="/sobre"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/5 border border-white/15 text-foreground font-medium rounded-full hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+                  >
+                    <Play size={16} className="text-violet-400" />
+                    Conheça a Igreja
+                  </Link>
                 </div>
               </Reveal>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground/40 animate-bounce">
-          <ChevronDown size={20} />
+            {/* Stats — só aparecem/animam quando o usuário rola a página */}
+            <div className="max-w-4xl mt-10 sm:mt-12">
+              <HeroStats stats={stats} />
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="flex justify-center pb-6 text-muted-foreground/60 animate-bounce">
+            <ChevronDown size={24} />
+          </div>
         </div>
       </section>
 

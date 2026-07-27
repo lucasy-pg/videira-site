@@ -36,6 +36,16 @@ const beliefs = [
   },
 ];
 
+const pastors = {
+  names: "Pastor Nome & Pastora Nome",
+  role: "Pastores titulares",
+  bio: [
+    "Edite aqui com a história real do casal: como se conheceram, o chamado para o ministério e há quanto tempo estão à frente da Videira.",
+    "Pode incluir também um pouco do coração deles pela igreja e pela cidade de Indaiatuba.",
+  ],
+  img: "/pastores.png",
+};
+
 const mvv = [
   {
     label: "Missão",
@@ -139,6 +149,46 @@ export default function About() {
                 <p>
                   Nosso nome &quot;Videira&quot; reflete nossa identidade em Cristo: <em>&quot;Eu sou a videira; vocês são os ramos&quot;</em> (João 15:5). Estamos conectados a Jesus e uns aos outros, produzindo frutos que glorificam a Deus.
                 </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Pastors */}
+      <section className="py-20 sm:py-28 lg:py-36 border-b border-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
+            <div className="rounded-2xl overflow-hidden bg-muted aspect-[4/5]">
+              <ImageWithFallback
+                src={pastors.img}
+                alt={pastors.names}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <Reveal variant="right" delay={100}>
+              <p className="text-xs text-violet-400 uppercase tracking-widest font-medium mb-4">
+                Liderança
+              </p>
+              <h2
+                className="text-4xl sm:text-5xl font-bold uppercase leading-tight text-foreground mb-6"
+                style={{ fontFamily: "'Oswald', sans-serif" }}
+              >
+                Nossos Pastores
+              </h2>
+              <p
+                className="text-2xl text-foreground font-semibold mb-1"
+                style={{ fontFamily: "'Oswald', sans-serif" }}
+              >
+                {pastors.names}
+              </p>
+              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6">
+                {pastors.role}
+              </p>
+              <div className="space-y-4 text-muted-foreground leading-relaxed">
+                {pastors.bio.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
               </div>
             </Reveal>
           </div>
