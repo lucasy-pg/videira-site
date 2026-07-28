@@ -43,7 +43,7 @@ export function Footer() {
                   className="w-7 h-7 object-contain"
                 />
               </div>
-              <span className="font-display text-xl font-semibold text-white">
+              <span className="font-display text-xl font-medium text-white">
                 Igreja Videira
               </span>
             </div>
@@ -59,7 +59,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-11 h-11 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-plum-deep hover:bg-gold-soft hover:-translate-y-1 active:scale-90 transition-all duration-300"
+                  className="w-11 h-11 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-plum-deep hover:bg-grape-light hover:-translate-y-1 active:scale-90 transition-all duration-300"
                 >
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden>
                     <path d={s.path} />
@@ -70,7 +70,7 @@ export function Footer() {
           </Reveal>
 
           <Reveal delay={80}>
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-gold-soft mb-5">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-grape-light mb-5">
               Navegue
             </h3>
             <ul className="space-y-3">
@@ -82,7 +82,7 @@ export function Footer() {
                   >
                     <span className="relative">
                       {item.label}
-                      <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-gold-soft transition-transform duration-300 group-hover:scale-x-100" />
+                      <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-grape-light transition-transform duration-300 group-hover:scale-x-100" />
                     </span>
                   </Link>
                 </li>
@@ -91,15 +91,15 @@ export function Footer() {
           </Reveal>
 
           <Reveal delay={160}>
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-gold-soft mb-5">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-grape-light mb-5">
               Visite
             </h3>
             <ul className="space-y-3 text-white/60">
               <li className="text-white/85">Domingo · 10h e 18h</li>
               <li>
-                R. Augusto de Oliveira Camargo, 257
+                R. Augusto de Oliveira Camargo, 257 - Centro
                 <br />
-                Centro — Indaiatuba/SP
+                Indaiatuba/SP
               </li>
               <li className="pt-1">contato@igrejavideira.com.br</li>
               <li>(19) 99999-9999</li>

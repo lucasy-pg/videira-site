@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
  * Só ativa em telas com hover (desktop).
  */
 export function CursorGlow({
-  color = "124, 58, 237",
+  color = "109, 40, 217",
   size = 320,
   opacity = 0.26,
   blend = "multiply",

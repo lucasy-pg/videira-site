@@ -68,11 +68,10 @@ export default function RadicaisLivres() {
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal variant="blur" once>
             <h1
-              className="text-6xl sm:text-7xl lg:text-9xl font-bold uppercase leading-none text-foreground mb-4"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
+              className="font-display text-6xl sm:text-7xl lg:text-9xl font-medium leading-none text-foreground mb-4"
             >
               Radicais<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
+              <span className="text-grape">
                 Livres
               </span>
             </h1>
@@ -87,8 +86,7 @@ export default function RadicaisLivres() {
               <MagneticButton>
                 <Link
                   href="/contato"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-                  style={{ fontFamily: "'Oswald', sans-serif" }}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-grape text-white font-semibold rounded-full hover:shadow-2xl hover:shadow-grape/25 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
                 >
                   Fazer Parte
                   <ArrowRight size={18} />
@@ -110,12 +108,11 @@ export default function RadicaisLivres() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center max-w-6xl mx-auto">
             <Reveal variant="left">
-              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
                 Quem somos
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold uppercase leading-tight text-foreground mb-6"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground mb-6"
               >
                 Fé sem<br />Formalidade
               </h2>
@@ -148,12 +145,11 @@ export default function RadicaisLivres() {
       <section className="py-20 sm:py-28 border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12">
-            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
               O que fazemos
             </p>
             <h2
-              className="text-4xl sm:text-5xl font-bold uppercase text-foreground"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
+              className="font-display text-4xl sm:text-5xl font-medium text-foreground"
             >
               Vida em<br />Movimento
             </h2>
@@ -162,12 +158,11 @@ export default function RadicaisLivres() {
             {activities.map((item, i) => (
               <Reveal key={i} delay={i * 90} variant="scale">
                 <div className="bg-background p-10 sm:p-12 h-full group hover:bg-secondary transition-colors">
-                  <div className="w-11 h-11 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-violet-600/20 group-hover:scale-110 group-hover:-rotate-6">
-                    <item.icon size={20} className="text-violet-700" />
+                  <div className="w-11 h-11 rounded-xl bg-lilac border border-grape/15 flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-lilac group-hover:scale-110 group-hover:-rotate-6">
+                    <item.icon size={20} className="text-grape" />
                   </div>
                   <h3
-                    className="text-2xl font-bold uppercase text-foreground mb-3 group-hover:text-violet-700 transition-colors"
-                    style={{ fontFamily: "'Oswald', sans-serif" }}
+                    className="font-display text-2xl font-medium text-foreground mb-3 group-hover:text-grape transition-colors"
                   >
                     {item.title}
                   </h3>
@@ -184,12 +179,11 @@ export default function RadicaisLivres() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
             <Reveal className="mb-12">
-              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
                 Quando nos encontramos
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold uppercase text-foreground"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-4xl sm:text-5xl font-medium text-foreground"
               >
                 Agenda
               </h2>
@@ -200,8 +194,7 @@ export default function RadicaisLivres() {
                   <div className="py-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 group">
                     <div>
                       <h3
-                        className="text-xl font-bold uppercase text-foreground group-hover:text-violet-700 transition-colors"
-                        style={{ fontFamily: "'Oswald', sans-serif" }}
+                        className="font-display text-xl font-medium text-foreground group-hover:text-grape transition-colors"
                       >
                         {item.day}
                       </h3>
@@ -236,15 +229,14 @@ export default function RadicaisLivres() {
 
       {/* CTA */}
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-background to-indigo-50" />
+        <div className="absolute inset-0 bg-sand" />
         <CursorGlow size={300} opacity={0.3} />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold uppercase text-foreground leading-tight mb-6"
-            style={{ fontFamily: "'Oswald', sans-serif" }}
+            className="font-display text-5xl sm:text-6xl lg:text-7xl font-medium text-foreground leading-tight mb-6"
           >
             Você é<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
+            <span className="text-grape">
               bem-vindo aqui
             </span>
           </h2>
@@ -254,8 +246,7 @@ export default function RadicaisLivres() {
           <MagneticButton>
             <Link
               href="/contato"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-grape text-white font-semibold rounded-full hover:shadow-2xl hover:shadow-grape/25 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
             >
               Quero Participar
               <ArrowRight size={18} />

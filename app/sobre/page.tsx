@@ -78,14 +78,13 @@ export default function About() {
         </div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal once>
-            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
               Nossa história
             </p>
           </Reveal>
           <Reveal variant="blur" delay={80} once>
             <h1
-              className="text-6xl sm:text-7xl lg:text-8xl font-bold uppercase leading-none text-foreground max-w-3xl"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
+              className="font-display text-6xl sm:text-7xl lg:text-8xl font-medium leading-none text-foreground max-w-3xl"
             >
               Igreja<br />Videira
             </h1>
@@ -105,7 +104,7 @@ export default function About() {
             {mvv.map((item, i) => (
               <Reveal key={i} delay={i * 110} variant="scale">
                 <div className="bg-background p-10 sm:p-14 h-full group hover:bg-secondary transition-colors">
-                  <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4 transition-all group-hover:tracking-[0.2em]">
+                  <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4 transition-all group-hover:tracking-[0.2em]">
                     {item.label}
                   </p>
                   <p className="text-muted-foreground leading-relaxed">{item.text}</p>
@@ -130,12 +129,11 @@ export default function About() {
               </div>
             </Reveal>
             <Reveal variant="right" delay={100}>
-              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
                 De onde viemos
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold uppercase leading-tight text-foreground mb-8"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground mb-8"
               >
                 Nossa História
               </h2>
@@ -167,18 +165,16 @@ export default function About() {
               />
             </div>
             <Reveal variant="right" delay={100}>
-              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
                 Liderança
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold uppercase leading-tight text-foreground mb-6"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground mb-6"
               >
                 Nossos Pastores
               </h2>
               <p
-                className="text-2xl text-foreground font-semibold mb-1"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-2xl text-foreground font-medium mb-1"
               >
                 {pastors.names}
               </p>
@@ -200,12 +196,11 @@ export default function About() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <Reveal className="mb-12 sm:mb-16">
-              <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
                 Fundamentos
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold uppercase leading-tight text-foreground"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground"
               >
                 No Que Cremos
               </h2>
@@ -215,8 +210,7 @@ export default function About() {
                 <Reveal key={i} delay={i * 80} variant="right" className="py-8 first:pt-0">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 group">
                     <h3
-                      className="text-xl font-bold uppercase text-foreground group-hover:text-violet-700 group-hover:translate-x-1 transition-all sm:col-span-1"
-                      style={{ fontFamily: "'Oswald', sans-serif" }}
+                      className="font-display text-xl font-medium text-foreground group-hover:text-grape group-hover:translate-x-1 transition-all sm:col-span-1"
                     >
                       {b.title}
                     </h3>
@@ -233,15 +227,14 @@ export default function About() {
 
       {/* Join CTA */}
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-background to-indigo-50" />
+        <div className="absolute inset-0 bg-sand" />
         <CursorGlow size={300} opacity={0.3} />
         <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
-            className="text-5xl sm:text-6xl font-bold uppercase text-foreground leading-tight mb-6"
-            style={{ fontFamily: "'Oswald', sans-serif" }}
+            className="font-display text-5xl sm:text-6xl font-medium text-foreground leading-tight mb-6"
           >
             Venha Fazer<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
+            <span className="text-grape">
               Parte da Família
             </span>
           </h2>
@@ -252,8 +245,7 @@ export default function About() {
             <MagneticButton>
               <Link
                 href="/contato"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-2xl hover:shadow-violet-600/35 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-grape text-white font-semibold rounded-full hover:shadow-2xl hover:shadow-grape/25 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
               >
                 Entre em Contato
                 <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />

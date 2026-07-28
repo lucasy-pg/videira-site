@@ -58,7 +58,7 @@ export function ContactView() {
   };
 
   const inputClass =
-    "w-full px-4 py-3 bg-secondary border border-border rounded-xl text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors";
+    "w-full px-4 py-3 bg-secondary border border-border rounded-xl text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-grape focus:ring-1 focus:ring-grape transition-colors";
 
   return (
     <div className="bg-background text-foreground">
@@ -66,17 +66,16 @@ export function ContactView() {
       <section className="relative overflow-hidden py-28 sm:py-36 border-b border-border">
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal once>
-            <p className="text-xs text-violet-700 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
               Fale conosco
             </p>
           </Reveal>
           <Reveal variant="blur" delay={80} once>
             <h1
-              className="text-6xl sm:text-7xl lg:text-8xl font-bold uppercase leading-none text-foreground"
-              style={{ fontFamily: "'Oswald', sans-serif" }}
+              className="font-display text-6xl sm:text-7xl lg:text-8xl font-medium leading-none text-foreground"
             >
               Entre em<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">
+              <span className="text-grape">
                 Contato
               </span>
             </h1>
@@ -98,13 +97,12 @@ export function ContactView() {
               {contactInfo.map((item, i) => (
                 <Reveal key={i} delay={i * 90} variant="left">
                   <div className="flex gap-4 group">
-                    <div className="w-10 h-10 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:bg-violet-600/20 group-hover:scale-110">
-                      <item.icon size={17} className="text-violet-700" />
+                    <div className="w-10 h-10 rounded-xl bg-lilac border border-grape/15 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:bg-lilac group-hover:scale-110">
+                      <item.icon size={17} className="text-grape" />
                     </div>
                     <div>
                       <h3
                         className="text-sm font-bold uppercase tracking-wide text-foreground mb-2"
-                        style={{ fontFamily: "'Oswald', sans-serif" }}
                       >
                         {item.label}
                       </h3>
@@ -119,10 +117,9 @@ export function ContactView() {
               ))}
 
               <Reveal delay={contactInfo.length * 90} variant="left">
-                <div className="mt-8 p-6 rounded-2xl bg-card border border-border transition-colors hover:border-violet-500/40">
+                <div className="mt-8 p-6 rounded-2xl bg-card border border-border transition-colors hover:border-grape/35">
                   <h3
                     className="text-base font-bold uppercase text-foreground mb-2"
-                    style={{ fontFamily: "'Oswald', sans-serif" }}
                   >
                     Primeira Visita?
                   </h3>
@@ -137,15 +134,14 @@ export function ContactView() {
             <Reveal variant="right" delay={120} className="lg:col-span-3">
               <div className="bg-card border border-border rounded-2xl p-8 sm:p-10">
                 <h2
-                  className="text-3xl sm:text-4xl font-bold uppercase text-foreground mb-8"
-                  style={{ fontFamily: "'Oswald', sans-serif" }}
+                  className="font-display text-3xl sm:text-4xl font-medium text-foreground mb-8"
                 >
                   Envie sua Mensagem
                 </h2>
 
                 {sent && (
-                  <div className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-violet-600/10 border border-violet-500/20 text-violet-700 text-sm animate-grid-in">
-                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-500/20">
+                  <div className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-lilac border border-grape/15 text-grape text-sm animate-grid-in">
+                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-lilac">
                       <Check size={14} />
                     </span>
                     Mensagem enviada! Entraremos em contato em breve.
@@ -241,8 +237,7 @@ export function ContactView() {
                   <button
                     type="submit"
                     disabled={sending || sent}
-                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white font-semibold uppercase tracking-wider rounded-full hover:shadow-xl hover:shadow-violet-600/30 hover:-translate-y-0.5 active:scale-95 transition-all text-sm disabled:opacity-80 disabled:hover:translate-y-0 disabled:active:scale-100"
-                    style={{ fontFamily: "'Oswald', sans-serif" }}
+                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-grape text-white font-semibold rounded-full hover:shadow-xl hover:shadow-grape/25 hover:-translate-y-0.5 active:scale-95 transition-all text-sm disabled:opacity-80 disabled:hover:translate-y-0 disabled:active:scale-100"
                   >
                     {sending ? (
                       <>
@@ -274,13 +269,12 @@ export function ContactView() {
           <Reveal className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <h2
-                className="text-3xl sm:text-4xl font-bold uppercase text-foreground"
-                style={{ fontFamily: "'Oswald', sans-serif" }}
+                className="font-display text-3xl sm:text-4xl font-medium text-foreground"
               >
                 Localização
               </h2>
               <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin size={15} className="text-violet-700 flex-shrink-0" />
+                <MapPin size={15} className="text-grape flex-shrink-0" />
                 Rua Augusto de Oliveira Camargo, 257 — Centro, Indaiatuba/SP
               </p>
             </div>
@@ -291,12 +285,12 @@ export function ContactView() {
               className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-5 py-2.5 text-sm text-foreground transition-all hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95"
             >
               Como chegar
-              <ArrowRight size={16} className="text-violet-700 transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={16} className="text-grape transition-transform group-hover:translate-x-1" />
             </a>
           </Reveal>
 
           <Reveal variant="scale">
-            <div className="overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-violet-500/40">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-grape/35">
               <iframe
                 title="Mapa da Igreja Videira — Rua Augusto de Oliveira Camargo, 257, Centro, Indaiatuba/SP"
                 src="https://www.google.com/maps?q=Rua+Augusto+de+Oliveira+Camargo,+257,+Centro,+Indaiatuba+-+SP&z=16&hl=pt-BR&output=embed"

@@ -1,105 +1,188 @@
-"use client";
-
 import Link from "next/link";
-import { ArrowRight, Home, MapPin, Users } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { ImageWithFallback } from "@/components/ImageWithFallback";
-
-const cellFeatures = [
-  { icon: Users, text: "Grupos de 8 a 15 pessoas" },
-  { icon: MapPin, text: "Espalhadas por toda Indaiatuba" },
-  { icon: Home, text: "Abertas para quem quiser começar" },
-];
-
-const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+import { ArrowRight } from "lucide-react";
+import { cellGroups, neighborhoods } from "@/lib/cells";
 
 /**
- * Seção "A igreja acontece nas casas" com animação Horizontal Split Meeting:
- * a foto desliza a partir da esquerda e o texto a partir da direita,
- * encontrando-se no centro quando a seção entra na viewport.
+ * Os quatro momentos de uma noite de célula.
+ *
+ * A copy aqui existe pra derrubar UMA objeção específica: "não sei o que
+ * acontece lá dentro". Entrar na casa de um desconhecido é o pedido mais
+ * pesado do site inteiro — mais pesado que ir num culto —, então cada card
+ * responde o que a pessoa está com medo de perguntar (vou ter que falar em
+ * público? preciso saber cantar? e se eu discordar?). Se um dia essa copy for
+ * reescrita, manter esse critério: descrever, nunca vender.
+ *
+ * A rampa de cor é escuro→claro de propósito: a noite começa quieta e termina
+ * no café. É a MESMA matiz em quatro luminosidades, nunca quatro cores —
+ * cor categórica em blocos grandes já foi reprovada neste projeto antes.
+ */
+const night = [
+  {
+    n: "01",
+    title: "Boas-vindas",
+    desc: "Você chega, alguém abre a porta e te apresenta pro grupo. Dá pra só observar na primeira vez.",
+    /* O "não precisa" é o dispositivo desta seção: igreja quase nunca diz o
+       que você NÃO precisa ter, saber ou levar, e é justamente isso que trava
+       quem nunca foi. Sai de dentro do parágrafo pra virar escaneável. */
+    free: "Não precisa falar em público",
+    card: "bg-plum-deep",
+    text: "text-white",
+    body: "text-white/70",
+    ghost: "text-white/[0.07]",
+    chip: "border-white/20 text-white/65",
+  },
+  {
+    n: "02",
+    title: "Adoração",
+    desc: "Duas ou três músicas, no violão mesmo. Uns cantam, outros só ficam ouvindo — os dois são normais.",
+    free: "Não precisa saber cantar",
+    card: "bg-plum",
+    text: "text-white",
+    body: "text-white/70",
+    ghost: "text-white/[0.07]",
+    chip: "border-white/20 text-white/65",
+  },
+  {
+    n: "03",
+    title: "Palavra",
+    desc: "Alguém abre um texto curto da Bíblia e a conversa fica aberta. Dá pra perguntar, discordar ou só escutar.",
+    free: "Não precisa conhecer a Bíblia",
+    card: "bg-grape",
+    text: "text-white",
+    body: "text-white/75",
+    ghost: "text-white/[0.10]",
+    chip: "border-white/25 text-white/75",
+  },
+  {
+    n: "04",
+    title: "Comunhão",
+    desc: "Café, bolo e conversa solta. É a parte que costuma durar mais — e é onde a amizade de verdade começa.",
+    free: "Não precisa levar nada",
+    card: "bg-grape-light",
+    text: "text-plum-deep",
+    body: "text-plum-deep/70",
+    ghost: "text-plum-deep/[0.12]",
+    chip: "border-plum-deep/25 text-plum-deep/65",
+  },
+];
+
+/**
+ * "A igreja acontece nas casas" + a noite de célula, numa seção só.
+ *
+ * A coluna da esquerda fica pregada (`lg:sticky` + `lg:self-start` — sem o
+ * self-start o item de grid estica e nunca gruda) enquanto os quatro cards
+ * empilham à direita.
+ *
+ * O empilhamento é CSS puro: os quatro cards são IRMÃOS dentro do mesmo pai,
+ * cada um `sticky` com `top` um pouco maior que o anterior. Sticky é limitado
+ * pelo bloco do PAI, não pelo próprio card — por isso o card 01 continua
+ * grudado enquanto 02, 03 e 04 sobem por cima. Se alguém envolver esses cards
+ * em wrappers individuais, o efeito morre na hora.
+ *
+ * Cuidado: `transform` e `will-change: transform` num ancestral quebram
+ * `position: sticky`. Por isso esta seção NÃO usa <Reveal> (que aplica os
+ * dois) — o próprio scroll já é o movimento aqui.
  */
 export function CellsFeature() {
-  const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.3 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  const slide = (dir: "left" | "right") => ({
-    transform: visible
-      ? "translateX(0)"
-      : `translateX(${dir === "left" ? "-115%" : "115%"})`,
-    transition: `transform 950ms ${EASE}`,
-    willChange: "transform",
-  });
-
   return (
-    <section
-      ref={ref}
-      className="relative overflow-hidden bg-sand pb-28 sm:pb-36 lg:pb-44"
-    >
-      <div className="container mx-auto grid items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
-        {/* Foto — desliza da esquerda */}
-        <div style={slide("left")}>
-          <div className="relative overflow-hidden rounded-[2rem] bg-clay">
-            <ImageWithFallback
-              src="https://images.unsplash.com/photo-1656370465119-cb8d6735bda3?w=1000&h=1150&fit=crop&auto=format"
-              alt="Grupo de célula reunido numa casa"
-              className="aspect-[4/5] w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-plum-deep/50 via-plum-deep/10 to-plum-deep/0" />
-          </div>
-        </div>
-
-        {/* Texto — desliza da direita */}
-        <div style={slide("right")}>
-          <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+    <section className="bg-bone py-24 sm:py-28 lg:py-32">
+      <div className="container mx-auto grid gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
+        {/* Coluna pregada — o que é uma célula.
+            Vem PRIMEIRO no DOM e é jogada pra direita só no desktop
+            (`lg:order-2`). No mobile a ordem do DOM é a que vale, e a manchete
+            precisa vir antes dos cards — leitor de tela e celular leem a
+            explicação primeiro, a pilha depois. */}
+        <div className="lg:sticky lg:top-24 lg:order-2 lg:self-start">
+          <span className="block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
             Sistema de células
           </span>
-          <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
+          <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
             A igreja acontece{" "}
-            <span className="font-normal italic text-grape">nas casas</span>
+            <span className="block font-normal italic text-grape">
+              nas casas
+            </span>
           </h2>
-          <p className="mt-7 text-lg leading-relaxed text-muted-foreground">
-            As células são pequenos grupos que se reúnem nas casas durante a
-            semana. É onde a comunidade acontece de verdade — amizades
-            profundas, cuidado mútuo e crescimento espiritual em cada bairro de
-            Indaiatuba.
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+            Toda semana, em casas espalhadas pela cidade, grupos de 8 a 15
+            pessoas se reúnem pra comer junto, conversar e cuidar uns dos
+            outros. É assim que a gente é igreja no meio da semana.
           </p>
 
-          <ul className="mt-9 space-y-3.5">
-            {cellFeatures.map((item) => (
-              <li
-                key={item.text}
-                className="flex items-center gap-3.5 text-foreground/75"
-              >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-lilac text-grape">
-                  <item.icon size={16} />
-                </span>
-                {item.text}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-6 text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">
+              {cellGroups.length} células
+            </span>{" "}
+            em{" "}
+            <span className="font-medium text-foreground">
+              {neighborhoods.length} bairros
+            </span>{" "}
+            de Indaiatuba, abertas pra quem quiser começar.
+          </p>
 
           <Link
             href="/celulas"
-            className="group mt-10 inline-flex items-center gap-2.5 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
+            className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
           >
-            Ver todas as células
+            Achar a célula mais perto de você
             <ArrowRight
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
+
+        </div>
+
+        {/* Pilha — como é a noite. Visualmente à esquerda no desktop. */}
+        <div className="lg:order-1">
+          {/* Mesmo elemento e mesmas classes da eyebrow da coluna vizinha —
+              como as duas ficam lado a lado, `<p>` de um lado e `<span>` do
+              outro desalinhavam a linha de base em ~6px. */}
+          <span className="mb-7 block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            Como é uma noite
+          </span>
+
+          {night.map((m, i) => (
+            <div
+              key={m.n}
+              // Cada card gruda um pouco mais abaixo que o anterior: é essa
+              // diferença que deixa a faixa do card de baixo aparecendo.
+              className="sticky pb-5"
+              style={{ top: `${7 + i * 1.15}rem` }}
+            >
+              {/* Altura fixa e `justify-between` de propósito: o card precisa
+                  encher a área visível pra que só UM seja lido por vez — com
+                  card baixo aparecem três de uma vez e o efeito de pilha some. */}
+              <div
+                className={`relative flex min-h-[22rem] flex-col justify-between overflow-hidden rounded-[1.75rem] p-8 shadow-[0_18px_50px_-30px_rgba(24,9,41,0.55)] sm:min-h-[26rem] sm:p-10 ${m.card}`}
+              >
+                {/* O número sangra pela borda de propósito: pequeno e alinhado
+                    ele deixava um vazio morto no miolo do card. Grande e
+                    cortado, o próprio tipo vira a textura do fundo. É
+                    decorativo — `aria-hidden`, a ordem já está no texto. */}
+                <span
+                  aria-hidden
+                  className={`font-display pointer-events-none absolute -right-6 -top-10 select-none text-[13rem] font-medium leading-none ${m.ghost}`}
+                >
+                  {m.n}
+                </span>
+
+                <span
+                  className={`relative w-fit rounded-full border px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] ${m.chip}`}
+                >
+                  {m.free}
+                </span>
+
+                <div className="relative">
+                  <h3 className={`font-display text-2xl font-medium ${m.text}`}>
+                    {m.title}
+                  </h3>
+                  <p className={`mt-3 max-w-md leading-relaxed ${m.body}`}>
+                    {m.desc}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

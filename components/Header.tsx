@@ -14,9 +14,6 @@ const navItems = [
   { path: "/contato", label: "Contato" },
 ];
 
-/** Rotas cujo hero é escuro e full-bleed — o header flutua por cima em branco. */
-const darkHeroRoutes = ["/"];
-
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -51,52 +48,29 @@ export function Header() {
     return pathname.startsWith(path);
   };
 
-  // Flutuando sobre o hero escuro: texto claro, fundo transparente.
-  const onDark =
-    darkHeroRoutes.includes(pathname) && !scrolled && !isMenuOpen;
-
   return (
+    // Nenhum hero é full-bleed escuro — o vídeo da Home mora num retângulo
+    // com margem. O header sempre senta no bone; a única mudança no scroll é
+    // o fio de sombra que separa da página.
     <header
-      className={`fixed inset-x-0 top-0 z-50 animate-[headerIn_0.6s_cubic-bezier(0.16,1,0.3,1)_both] transition-all duration-500 ${
-        isHidden ? "-translate-y-full" : "translate-y-0"
-      } ${
-        onDark
-          ? "bg-transparent"
-          : "bg-bone/85 shadow-[0_1px_0_rgba(28,21,35,0.06)] backdrop-blur-xl"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 animate-[headerIn_0.6s_cubic-bezier(0.16,1,0.3,1)_both] bg-bone/85 backdrop-blur-xl transition-all duration-500 ${isHidden ? "-translate-y-full" : "translate-y-0"
+        } ${scrolled ? "shadow-[0_1px_0_rgba(28,21,35,0.08)]" : ""}`}
     >
       <nav className="container mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex h-16 items-center justify-between sm:h-20">
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-3">
-            {/* O mark é branco — sempre num círculo pra ter contraste nos dois fundos */}
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6 sm:h-11 sm:w-11 ${
-                onDark
-                  ? "bg-white/15 backdrop-blur-sm"
-                  : "bg-plum-deep"
-              }`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo_icon.png"
-                alt="Igreja Videira"
-                className="h-6 w-6 object-contain sm:h-7 sm:w-7"
-              />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-colorida.png"
+              alt="Igreja Videira"
+              className="h-9 w-9 object-contain transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6 sm:h-10 sm:w-10"
+            />
             <div className="leading-tight">
-              <div
-                className={`font-display text-lg font-semibold transition-colors duration-500 sm:text-xl ${
-                  onDark ? "text-white" : "text-foreground"
-                }`}
-              >
+              <div className="font-display text-lg font-medium text-foreground sm:text-xl">
                 Igreja Videira
               </div>
-              <div
-                className={`text-[10px] uppercase tracking-[0.24em] transition-colors duration-500 ${
-                  onDark ? "text-white/55" : "text-muted-foreground"
-                }`}
-              >
+              <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
                 Indaiatuba
               </div>
             </div>
@@ -108,35 +82,23 @@ export function Header() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`group relative rounded-md px-3.5 py-2 text-sm font-medium transition-colors duration-300 ${
-                  isActive(item.path)
-                    ? onDark
-                      ? "text-white"
-                      : "text-grape"
-                    : onDark
-                      ? "text-white/65 hover:text-white"
-                      : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`group relative rounded-md px-3.5 py-2 text-sm font-medium transition-colors duration-300 ${isActive(item.path)
+                  ? "text-grape"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {item.label}
                 <span
-                  className={`pointer-events-none absolute inset-x-3.5 -bottom-0.5 h-px origin-left transition-transform duration-300 ${
-                    onDark ? "bg-gold-soft" : "bg-grape"
-                  } ${
-                    isActive(item.path)
-                      ? "scale-x-100"
-                      : "scale-x-0 group-hover:scale-x-[0.6]"
-                  }`}
+                  className={`pointer-events-none absolute inset-x-3.5 -bottom-0.5 h-px origin-left bg-grape transition-transform duration-300 ${isActive(item.path)
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-[0.6]"
+                    }`}
                 />
               </Link>
             ))}
             <Link
               href="/contato"
-              className={`ml-5 rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 active:scale-95 ${
-                onDark
-                  ? "bg-bone text-plum-deep hover:bg-white"
-                  : "bg-plum-deep text-bone hover:bg-plum"
-              }`}
+              className="ml-5 rounded-full bg-plum-deep px-6 py-2.5 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
             >
               Planeje sua visita
             </Link>
@@ -145,11 +107,7 @@ export function Header() {
           {/* Botão do menu mobile */}
           <button
             onClick={toggleMenu}
-            className={`relative p-2 transition-colors lg:hidden ${
-              onDark
-                ? "text-white/80 hover:text-white"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+            className="relative p-2 text-muted-foreground transition-colors hover:text-foreground lg:hidden"
             aria-label="Abrir menu"
             aria-expanded={isMenuOpen}
           >
@@ -166,9 +124,8 @@ export function Header() {
 
         {/* Navegação mobile */}
         <div
-          className={`grid transition-[grid-template-rows] duration-300 ease-out lg:hidden ${
-            isMenuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-          }`}
+          className={`grid transition-[grid-template-rows] duration-300 ease-out lg:hidden ${isMenuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+            }`}
         >
           <div className="overflow-hidden">
             <div className="pb-7 pt-3">
@@ -176,11 +133,10 @@ export function Header() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className={`font-display block px-2 py-2.5 text-2xl transition-all duration-300 ${
-                    isActive(item.path)
-                      ? "text-grape"
-                      : "text-foreground/70 hover:translate-x-1 hover:text-foreground"
-                  } ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"}`}
+                  className={`font-display block px-2 py-2.5 text-2xl transition-all duration-300 ${isActive(item.path)
+                    ? "text-grape"
+                    : "text-foreground/70 hover:translate-x-1 hover:text-foreground"
+                    } ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"}`}
                   style={{
                     transitionDelay: isMenuOpen ? `${i * 45}ms` : "0ms",
                   }}

@@ -1,17 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:opsz,wght@9..40,300..800&family=Oswald:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* ---- Base: branco quente, bem claro — o roxo mora só nos cards/acentos ---- */
+  /* ═══════════════════════════════════════════════════════════════════
+     UMA cor só: o roxo da videira, em três luminosidades.
+     Tudo o mais é neutro quente. Não existe segunda família de cor no
+     site — sem dourado, sem índigo, sem gradiente de duas cores.
+     A cor aparece em bloco sólido, nunca em névoa.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* ---- Neutros: uma rampa só, do quase-branco ao greige ---- */
   --color-background: #fdfbf7;
   --color-foreground: #1c1523;
   --color-card: #ffffff;
   --color-card-foreground: #1c1523;
   --color-popover: #ffffff;
   --color-popover-foreground: #1c1523;
-  --color-muted: #f3e9dc;
-  --color-muted-foreground: #6a5f72;
-  --color-secondary: #f3e9dc;
+  --color-muted: #edeae3;
+  --color-muted-foreground: #6c6473;
+  --color-secondary: #edeae3;
   --color-secondary-foreground: #1c1523;
   --color-border: rgba(28, 21, 35, 0.09);
   --color-input-background: #ffffff;
@@ -19,26 +25,39 @@
   /* ---- Marca ---- */
   --color-primary: #6d28d9;
   --color-primary-foreground: #ffffff;
-  --color-accent: #8f6212;
+  --color-accent: #6d28d9;
   --color-accent-foreground: #ffffff;
   --color-destructive: #c0392b;
   --color-ring: #6d28d9;
 
-  /* ---- Paleta nomeada (washes e faixas) ---- */
+  /* ---- Faixas neutras (o ritmo da página mora aqui) ----
+     `bone` é a faixa clara, `sand` é a faixa de respiro. O degrau entre
+     as duas precisa ser VISÍVEL — é o que faz o card branco ler como
+     card, em vez de flutuar. Quente sem puxar pro amarelo. */
   --color-bone: #fdfbf7;
-  --color-sand: #f8f3ea;
-  --color-clay: #f1e8d9;
+  --color-sand: #edeae3;
+  --color-clay: #ded9d0;
+
+  /* ---- O acento, em três luminosidades da MESMA matiz ----
+     lilac = tinta de fundo | grape = acento no claro | grape-light = acento no escuro */
   --color-lilac: #efe8fc;
   --color-grape: #6d28d9;
+  --color-grape-light: #c3aef5;
+
+  /* ---- Tintas escuras (preto tirado da própria matiz da marca) ---- */
   --color-plum: #2c1250;
   --color-plum-deep: #180929;
-  --color-gold: #8f6212;
-  --color-gold-soft: #f2e3c9;
 
-  /* ---- Tipografia ---- */
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-oswald: 'Oswald', sans-serif;
+  /* ---- Tipografia ----
+     Duas vozes, e só uma delas fala alto. Newsreader é a serifa que carrega
+     todo o caráter — inclusive o itálico, que é o gesto da casa: toda manchete
+     vira do romano pro itálico exatamente na palavra que é promessa
+     ("você pertencer", "nas casas", "pra fazer parte"). Instrument Sans fica
+     de propósito quieta atrás dela: grotesca neutra, sem redondezas
+     geométricas competindo com a serifa.
+     As famílias chegam por next/font (auto-hospedadas em app/layout.tsx). */
+  --font-display: var(--font-newsreader), Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-instrument-sans), system-ui, -apple-system, sans-serif;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
@@ -57,15 +76,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Fraunces tem eixos SOFT/WONK — deixa o display levemente mais macio */
+/* `font-optical-sizing: auto` é o padrão do browser, mas está explícito aqui
+   porque só funciona porque o eixo `opsz` foi pedido no next/font — sem ele o
+   arquivo vem sem o eixo e a linha vira silenciosamente um no-op. */
 .font-display {
   font-family: var(--font-display);
-  font-variation-settings: 'SOFT' 30, 'WONK' 1;
-  letter-spacing: -0.02em;
-}
-
-.font-oswald {
-  font-family: var(--font-oswald);
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
 }
 
 ::selection {

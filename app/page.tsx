@@ -1,25 +1,16 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Baby,
-  Clock,
-  Globe2,
-  HandHeart,
-  MapPin,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Globe2, Sparkles } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
-import { CountUp } from "@/components/CountUp";
 import { CellsFeature } from "@/components/CellsFeature";
 
 const IMG = {
   jovens:
     "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1100&h=1300&fit=crop&auto=format",
-  kids: "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1100&h=1300&fit=crop&auto=format",
+  /* A foto anterior (blocos de brinquedo em cores primárias) era a coisa mais
+     saturada da página inteira e brigava com a disciplina de uma matiz só. */
+  kids: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1100&h=1300&fit=crop&auto=format",
   culto:
     "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1800&h=1000&fit=crop&auto=format",
 };
@@ -27,23 +18,26 @@ const IMG = {
 /** Informações que todo visitante procura primeiro — ponte entre o hero e a página. */
 const visitInfo = [
   {
-    icon: Clock,
     label: "Cultos de domingo",
     value: "10h da manhã · 18h da noite",
+    img: "https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=900&h=700&fit=crop&auto=format",
+    alt: "Congregação reunida num culto de domingo",
     href: "/contato",
     cta: "Planeje sua visita",
   },
   {
-    icon: MapPin,
     label: "Onde nos encontrar",
-    value: "R. Augusto de Oliveira Camargo, 257 — Centro",
+    value: "R. Augusto de Oliveira Camargo, 257 · Centro",
+    img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=900&h=700&fit=crop&auto=format",
+    alt: "Pessoas reunidas em volta de uma mesa comprida",
     href: "/contato",
     cta: "Ver no mapa",
   },
   {
-    icon: Users,
     label: "Durante a semana",
     value: "26 células espalhadas por Indaiatuba",
+    img: "https://images.unsplash.com/photo-1593896385987-16bcbf9451e5?w=900&h=700&fit=crop&auto=format",
+    alt: "Célula reunida numa casa durante a semana",
     href: "/celulas",
     cta: "Achar a mais perto",
   },
@@ -52,43 +46,22 @@ const visitInfo = [
 /** Três portas de entrada — o padrão "next steps" das igrejas americanas. */
 const nextSteps = [
   {
-    icon: HandHeart,
-    tone: "lilac",
     title: "Venha num domingo",
     desc: "Chegue do jeito que você está. Tem gente pra te receber e nenhuma cobrança.",
     href: "/contato",
     cta: "Como chegar",
   },
   {
-    icon: Users,
-    tone: "sand",
     title: "Entre numa célula",
     desc: "Grupos pequenos que se reúnem nas casas durante a semana. É onde a amizade de verdade acontece.",
     href: "/celulas",
     cta: "Ver as células",
   },
   {
-    icon: Baby,
-    tone: "gold",
     title: "Traga sua família",
     desc: "Enquanto você adora, seus filhos vivem a fé no nível deles — com segurança e alegria.",
     href: "/radicais-kids",
     cta: "Conhecer o Kids",
-  },
-];
-
-const values = [
-  {
-    title: "Graça",
-    desc: "Somos salvos pela graça e vivemos sob ela. Sem religião, sem performance — só o amor incondicional de Deus.",
-  },
-  {
-    title: "Células",
-    desc: "A igreja acontece nas casas. Pequenos grupos que se cuidam, crescem e multiplicam vida em cada bairro.",
-  },
-  {
-    title: "Comunidade",
-    desc: "Não somos uma instituição — somos família. Um lugar onde você é visto, conhecido e amado de verdade.",
   },
 ];
 
@@ -109,131 +82,149 @@ const ministries = [
   },
 ];
 
-const stats = [
-  { value: "26", label: "Células ativas" },
-  { value: "8", label: "Bairros alcançados" },
-  { value: "1000+", label: "Pessoas conectadas" },
-];
-
-const toneStyles: Record<string, { chip: string }> = {
-  lilac: { chip: "bg-lilac text-grape" },
-  sand: { chip: "bg-sand text-plum" },
-  gold: { chip: "bg-gold-soft text-gold" },
-};
-
 export default function Home() {
   return (
     <>
-      {/* ═══ HERO — foto cheia sob um véu ameixa, derretendo no bege da página ═══ */}
-      <section className="relative isolate -mt-16 flex min-h-svh items-center overflow-hidden bg-plum-deep sm:-mt-20">
-        {/* Filmagem real de um culto, muda e em loop, atrás do véu ameixa.
-            O poster (30 KB) pinta a capa na hora; o vídeo entra por cima quando
-            carrega. Só H.264 — AV1 e VP9 saíram maiores nesse material. */}
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          src="/capa-inicio.mp4"
-          poster="/capa-inicio-poster.jpg"
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden
-        />
-        {/* Escurece só à esquerda, pro texto ficar legível — vídeo limpo à direita */}
-        <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/80 via-plum-deep/30 to-plum-deep/0" />
+      {/* ═══ HERO — o vídeo é um BLOCO na página, não o fundo dela ═══
+          A página começa no bone e o vídeo mora dentro de um retângulo com
+          margem, como nas referências. O header fica sólido por cima do bone,
+          em vez de flutuar sobre a filmagem. */}
+      <section className="bg-bone pt-4 sm:pt-6">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="relative isolate flex min-h-[32rem] items-end overflow-hidden rounded-[2rem] bg-plum-deep sm:min-h-[36rem] lg:min-h-[40rem] lg:rounded-[2.5rem]">
+            {/* Filmagem real de um culto, muda e em loop. O poster (30 KB) pinta
+                a capa na hora; o vídeo entra por cima quando carrega. Só H.264 —
+                AV1 e VP9 saíram maiores nesse material. */}
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src="/capa-inicio.mp4"
+              poster="/capa-inicio-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden
+            />
+            {/* O véu muda com o formato do retângulo. No celular ele é retrato e
+                o texto ocupa quase tudo — inclusive o teto claro do galpão —,
+                então o escurecimento sobe alto. No desktop o retângulo é
+                widescreen e o texto vive só no canto inferior esquerdo: aí os
+                dois véus se cruzam nesse canto e o lado direito fica limpo. */}
+            <div className="absolute inset-0 bg-gradient-to-t from-plum-deep/95 via-plum-deep/70 to-plum-deep/40 lg:from-plum-deep/85 lg:via-plum-deep/15 lg:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/45 via-transparent to-transparent lg:from-plum-deep/70 lg:via-plum-deep/10" />
 
-        <div className="container relative z-10 mx-auto px-5 pb-36 pt-32 sm:px-8 sm:pt-40 lg:px-12">
-          <Reveal delay={300} once>
-            <h1 className="font-display mt-7 max-w-4xl text-[clamp(2.9rem,8.5vw,6.75rem)] font-semibold leading-[0.94] text-white">
-              Um lugar pra
-              <span className="block font-normal italic text-gold-soft">
-                você pertencer
-              </span>
-            </h1>
-          </Reveal>
+            <div className="relative z-10 w-full p-7 sm:p-10 lg:p-14">
+              <Reveal delay={300} once>
+                <h1 className="font-display max-w-3xl text-[clamp(2.5rem,6.5vw,5.25rem)] font-medium leading-[0.95] text-white">
+                  Um lugar para
+                  <span className="block font-normal italic text-grape-light">
+                    você pertencer
+                  </span>
+                </h1>
+              </Reveal>
 
-          <Reveal delay={620} once>
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/75 sm:text-xl">
-              Somos uma igreja em células espalhada por Indaiatuba. Sem
-              religiosidade e sem cobrança — gente real encontrando Jesus junto,
-              no domingo e no meio da semana.
-            </p>
-          </Reveal>
+              <Reveal delay={620} once>
+                <p className="mt-6 max-w-lg leading-relaxed text-white/75 sm:text-lg">
+                  Somos uma igreja em células espalhada por Indaiatuba. Sem
+                  religiosidade e sem cobrança — gente real encontrando Jesus
+                  junto, no domingo e no meio da semana.
+                </p>
+              </Reveal>
 
-          <Reveal delay={880} once>
-            <div className="mt-10 flex flex-col gap-3.5 sm:flex-row">
-              <MagneticButton>
-                <Link
-                  href="/celulas"
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
-                >
-                  Encontre sua célula
-                  <ArrowRight
-                    size={17}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                </Link>
-              </MagneticButton>
-              <Link
-                href="/sobre"
-                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-white/30 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 active:scale-95"
-              >
-                Conheça a igreja
-              </Link>
+              <Reveal delay={880} once>
+                <div className="mt-9 flex flex-col gap-3.5 sm:flex-row">
+                  <MagneticButton>
+                    <Link
+                      href="/celulas"
+                      className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
+                    >
+                      Encontre sua célula
+                      <ArrowRight
+                        size={17}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </Link>
+                  </MagneticButton>
+                  <Link
+                    href="/sobre"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-full border border-white/30 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 active:scale-95"
+                  >
+                    Conheça a igreja
+                  </Link>
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* ═══ PONTE — cartão de horários/local, já dentro da seção bege ═══ */}
-      <section className="relative z-20 bg-bone pt-14 sm:pt-16">
+      {/* ═══ PONTE — três portas de entrada, cada uma com a própria foto ═══
+          Mesma composição do hero (foto + véu subindo + texto encostado na
+          base) em escala menor, pra ler como continuação dele e não como uma
+          tabela de avisos colada embaixo. */}
+      {/* `pt-5` é o MESMO valor do `gap-5` entre os cards, de propósito: assim o
+          retângulo do hero e os três cards leem como um arranjo só. Com respiro
+          grande aqui eles ficam órfãos — nem pertencem ao hero, nem à seção
+          seguinte (testado com pt-16 e pt-28: os dois leem como ilha perdida). */}
+      <section className="bg-bone pt-5">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <Reveal variant="up">
-            <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border sm:grid-cols-3">
-              {visitInfo.map((item) => (
+          <div className="grid gap-5 sm:grid-cols-3">
+            {visitInfo.map((item, i) => (
+              <Reveal key={item.label} variant="up" delay={i * 90}>
                 <Link
-                  key={item.label}
                   href={item.href}
-                  className="group bg-card p-7 transition-colors duration-300 hover:bg-lilac/40 sm:p-8"
+                  className="group relative flex aspect-[5/4] items-end overflow-hidden rounded-[1.75rem] bg-plum-deep"
                 >
-                  <item.icon
-                    size={20}
-                    className="text-grape transition-transform duration-300 group-hover:-translate-y-0.5"
+                  <ImageWithFallback
+                    src={item.img}
+                    alt={item.alt}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
                   />
-                  <p className="mt-5 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                    {item.label}
-                  </p>
-                  <p className="font-display mt-2 text-lg leading-snug text-foreground">
-                    {item.value}
-                  </p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-grape">
-                    {item.cta}
-                    <ArrowUpRight
-                      size={13}
-                      className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                    />
-                  </span>
+                  {/* Véu forte de propósito: estes cards são pequenos e a
+                      eyebrow é 11px branca. Com foto clara (céu, parede branca)
+                      um véu suave apaga o texto — conferir sempre trocando a
+                      foto por uma bem clara antes de aliviar estes stops. */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-plum-deep/95 via-plum-deep/75 to-plum-deep/35" />
+
+                  <div className="relative z-10 p-6 sm:p-7">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-white/60">
+                      {item.label}
+                    </p>
+                    <p className="font-display mt-2 text-xl leading-snug text-white">
+                      {item.value}
+                    </p>
+                    <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-bone px-5 py-2.5 text-xs font-semibold text-plum-deep transition-colors duration-300 group-hover:bg-white">
+                      {item.cta}
+                      <ArrowRight
+                        size={14}
+                        className="transition-transform duration-300 group-hover:translate-x-0.5"
+                      />
+                    </span>
+                  </div>
                 </Link>
-              ))}
-            </div>
-          </Reveal>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ═══ BOAS-VINDAS — fundo neutro e quieto, a cor mora só no card ═══ */}
-      <section className="relative overflow-hidden bg-bone pb-28 pt-28 sm:pb-36 sm:pt-36 lg:pb-44 lg:pt-44">
-        <div className="container relative mx-auto grid items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
+      <section className="relative overflow-hidden bg-bone pb-24 pt-24 sm:pb-28 sm:pt-28 lg:pb-32 lg:pt-32">
+        {/* `items-start`: o card escuro é bem mais curto que a coluna de texto,
+            e centralizado ele boiava com vazio em cima E embaixo. Alinhado no
+            topo, o espaço que sobra lê como "a coluna acabou". */}
+        <div className="container relative mx-auto grid items-start gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
           <div>
             <Reveal>
-              <span className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+              <span className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
                 <Sparkles size={13} />
                 Bem-vindo à Videira
               </span>
             </Reveal>
             <Reveal delay={90}>
-              <h2 className="font-display mt-6 text-[clamp(2.25rem,5.2vw,3.9rem)] font-semibold leading-[1.03] text-foreground">
+              <h2 className="font-display mt-6 text-[clamp(2.25rem,5.2vw,3.9rem)] font-medium leading-[1.03] text-foreground">
                 Você não precisa ter tudo resolvido{" "}
-                <span className="font-normal italic text-grape">
+                <span className="block font-normal italic text-grape">
                   pra fazer parte.
                 </span>
               </h2>
@@ -242,7 +233,7 @@ export default function Home() {
               <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
                 <p>
                   O nome vem de uma promessa: <em className="italic text-foreground">
-                  &quot;Eu sou a videira, vocês são os ramos&quot;</em> (João
+                    &quot;Eu sou a videira, vocês são os ramos&quot;</em> (João
                   15:5) — ramo isolado não dá fruto. Foi com essa convicção que
                   o pastor Aluízio Silva plantou uma igreja que se multiplicou
                   em casas ao redor do mundo: a fé acontece primeiro nas
@@ -275,16 +266,16 @@ export default function Home() {
           <Reveal variant="scale" delay={120}>
             <div className="relative">
               <div className="overflow-hidden rounded-[2rem] bg-plum-deep p-9 sm:p-11">
-                <Globe2 size={22} className="text-gold-soft" />
+                <Globe2 size={22} className="text-grape-light" />
                 <p className="font-display mt-6 text-[1.65rem] leading-snug text-white sm:text-3xl">
                   Um só chamado,{" "}
-                  <span className="italic text-gold-soft">
+                  <span className="block italic text-grape-light">
                     espalhado em 30 países.
                   </span>
                 </p>
                 <div className="mt-10 grid grid-cols-2 gap-6 border-t border-white/15 pt-8">
                   <div>
-                    <p className="font-display text-4xl text-gold-soft">
+                    <p className="font-display text-4xl text-grape-light">
                       1997
                     </p>
                     <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/55">
@@ -292,7 +283,7 @@ export default function Home() {
                     </p>
                   </div>
                   <div>
-                    <p className="font-display text-4xl text-gold-soft">
+                    <p className="font-display text-4xl text-grape-light">
                       1.300+
                     </p>
                     <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/55">
@@ -311,15 +302,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ PRIMEIROS PASSOS — cards em tons diferentes, bege escorrendo pra areia ═══ */}
-      <section className="bg-gradient-to-b from-bone via-bone to-sand pb-28 sm:pb-36 lg:pb-44">
+      {/* ═══ PRIMEIROS PASSOS — faixa greige, cards brancos por cima ═══ */}
+      <section className="bg-sand py-24 sm:py-28 lg:py-32">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
               Comece por aqui
             </span>
-            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
-              Três jeitos simples de dar o primeiro passo
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
+              Três jeitos simples de dar{" "}
+              <span className="block font-normal italic text-grape">
+                o primeiro passo
+              </span>
             </h2>
           </Reveal>
 
@@ -330,12 +324,7 @@ export default function Home() {
                   href={step.href}
                   className="group flex h-full flex-col rounded-[1.75rem] bg-card p-8 transition-transform duration-300 hover:-translate-y-1.5 lg:p-9"
                 >
-                  <span
-                    className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${toneStyles[step.tone].chip}`}
-                  >
-                    <step.icon size={21} />
-                  </span>
-                  <h3 className="font-display mt-7 text-2xl font-semibold text-foreground">
+                  <h3 className="font-display text-2xl font-medium text-foreground">
                     {step.title}
                   </h3>
                   <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">
@@ -358,48 +347,18 @@ export default function Home() {
       {/* ═══ CÉLULAS — split animado, agora em areia quente ═══ */}
       <CellsFeature />
 
-      {/* ═══ VALORES — cards neutros, número e texto carregam a diferença ═══ */}
-      <section className="bg-gradient-to-b from-sand via-sand to-bone py-28 sm:py-36 lg:py-44">
-        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
-              Nossa essência
-            </span>
-            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
-              O que nos move{" "}
-              <span className="font-normal italic text-grape">todo dia</span>
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
-            {values.map((v, i) => (
-              <Reveal key={v.title} delay={i * 110}>
-                <div className="h-full rounded-[1.75rem] bg-card p-9 transition-transform duration-300 hover:-translate-y-1.5 lg:p-10">
-                  <span className="font-display text-5xl font-semibold leading-none text-foreground/15">
-                    0{i + 1}
-                  </span>
-                  <h3 className="font-display mt-7 text-2xl font-semibold text-foreground">
-                    {v.title}
-                  </h3>
-                  <p className="mt-3 leading-relaxed text-foreground/65">
-                    {v.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ MINISTÉRIOS — cards grandes com foto ═══ */}
-      <section className="relative overflow-hidden bg-bone pb-28 sm:pb-36 lg:pb-44">
+      {/* ═══ MINISTÉRIOS — volta pro claro, cards grandes com foto ═══ */}
+      <section className="relative overflow-hidden bg-bone py-24 sm:py-28 lg:py-32">
         <div className="container relative mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
               Ministérios
             </span>
-            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-foreground">
-              Para cada fase da vida
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
+              Tem lugar para{" "}
+              <span className="block font-normal italic text-grape">
+                cada fase da vida
+              </span>
             </h2>
           </Reveal>
 
@@ -424,13 +383,13 @@ export default function Home() {
                     <span className="inline-block rounded-full border border-white/25 bg-white/10 px-3.5 py-1 text-[10px] uppercase tracking-[0.22em] text-white/85 backdrop-blur-sm">
                       {m.tag}
                     </span>
-                    <h3 className="font-display mt-4 text-[clamp(1.9rem,3.4vw,2.75rem)] font-semibold leading-tight text-white">
+                    <h3 className="font-display mt-4 text-[clamp(1.9rem,3.4vw,2.75rem)] font-medium leading-tight text-white">
                       {m.title}
                     </h3>
                     <p className="mt-2 max-w-sm leading-relaxed text-white/70">
                       {m.desc}
                     </p>
-                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-gold-soft">
+                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-grape-light">
                       Saiba mais
                       <ArrowRight
                         size={15}
@@ -454,29 +413,14 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-plum/70 via-plum-deep/85 to-plum-deep" />
 
-        <div className="container relative mx-auto px-5 py-28 sm:px-8 sm:py-36 lg:px-12 lg:py-44">
-          <div className="grid gap-16 lg:grid-cols-3 lg:gap-10">
-            {stats.map((s, i) => (
-              <Reveal
-                key={s.label}
-                delay={i * 120}
-                className="text-center lg:text-left"
-              >
-                <CountUp
-                  value={s.value}
-                  className="font-display block text-[clamp(3.5rem,7vw,5.5rem)] font-semibold leading-none text-gold-soft"
-                />
-                <p className="mt-3 text-[11px] uppercase tracking-[0.26em] text-white/55">
-                  {s.label}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal variant="scale" className="mt-24 text-center sm:mt-32">
-            <h2 className="font-display mx-auto max-w-3xl text-[clamp(2.4rem,6vw,4.75rem)] font-semibold leading-[1.02] text-white">
+        <div className="container relative mx-auto px-5 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+          {/* Os números (26 células / 16 bairros) já são ditos, com mais força,
+              na seção dos bairros. Repeti-los aqui como troféu enfraquecia os
+              dois lugares — o fechamento é só convite. */}
+          <Reveal variant="scale" className="text-center">
+            <h2 className="font-display mx-auto max-w-3xl text-[clamp(2.4rem,6vw,4.75rem)] font-medium leading-[1.02] text-white">
               Seja bem-vindo à{" "}
-              <span className="font-normal italic text-gold-soft">
+              <span className="block font-normal italic text-grape-light">
                 família Videira
               </span>
             </h2>
