@@ -21,48 +21,37 @@ const night = [
     n: "01",
     title: "Boas-vindas",
     desc: "Você chega, alguém abre a porta e te apresenta pro grupo. Dá pra só observar na primeira vez.",
-    /* O "não precisa" é o dispositivo desta seção: igreja quase nunca diz o
-       que você NÃO precisa ter, saber ou levar, e é justamente isso que trava
-       quem nunca foi. Sai de dentro do parágrafo pra virar escaneável. */
-    free: "Não precisa falar em público",
     card: "bg-plum-deep",
     text: "text-white",
     body: "text-white/70",
     ghost: "text-white/[0.07]",
-    chip: "border-white/20 text-white/65",
   },
   {
     n: "02",
     title: "Adoração",
     desc: "Duas ou três músicas, no violão mesmo. Uns cantam, outros só ficam ouvindo — os dois são normais.",
-    free: "Não precisa saber cantar",
     card: "bg-plum",
     text: "text-white",
     body: "text-white/70",
     ghost: "text-white/[0.07]",
-    chip: "border-white/20 text-white/65",
   },
   {
     n: "03",
     title: "Palavra",
     desc: "Alguém abre um texto curto da Bíblia e a conversa fica aberta. Dá pra perguntar, discordar ou só escutar.",
-    free: "Não precisa conhecer a Bíblia",
     card: "bg-grape",
     text: "text-white",
     body: "text-white/75",
     ghost: "text-white/[0.10]",
-    chip: "border-white/25 text-white/75",
   },
   {
     n: "04",
     title: "Comunhão",
     desc: "Café, bolo e conversa solta. É a parte que costuma durar mais — e é onde a amizade de verdade começa.",
-    free: "Não precisa levar nada",
     card: "bg-grape-light",
     text: "text-plum-deep",
     body: "text-plum-deep/70",
     ghost: "text-plum-deep/[0.12]",
-    chip: "border-plum-deep/25 text-plum-deep/65",
   },
 ];
 
@@ -166,13 +155,7 @@ export function CellsFeature() {
                   {m.n}
                 </span>
 
-                <span
-                  className={`relative w-fit rounded-full border px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] ${m.chip}`}
-                >
-                  {m.free}
-                </span>
-
-                <div className="relative">
+                <div className="relative mt-auto">
                   <h3 className={`font-display text-2xl font-medium ${m.text}`}>
                     {m.title}
                   </h3>

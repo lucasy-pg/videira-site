@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Globe2, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -15,12 +15,40 @@ const IMG = {
     "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1800&h=1000&fit=crop&auto=format",
 };
 
+/**
+ * Fotos reais da Videira Indaiatuba pra composição de Boas-vindas.
+ *
+ *   principal — dois voluntários recebendo com placa de "Seja bem-vindo"
+ *   abraco    — abraço entre dois membros
+ *
+ * As duas foram escolhidas porque batem com a cena da referência que o
+ * usuário trouxe (Renewal Church): gente na entrada, recepção, acolhimento —
+ * não palco, não multidão. Eram três fotos antes (tinha também uma de
+ * adoração e uma de célula); o usuário pediu pra reduzir pra só estas duas,
+ * no estilo blob da referência.
+ */
+const welcomePhotos = {
+  principal: {
+    src: "/videira-boas-vindas.jpg",
+    alt: "Dois voluntários da Videira recebendo visitantes com placas escritas 'Seja bem-vindo' e 'É um privilégio termos você conosco hoje'",
+  },
+  abraco: {
+    src: "/videira-abraco-1.jpg",
+    alt: "Abraço entre dois membros da Videira",
+  },
+};
+
 /** Informações que todo visitante procura primeiro — ponte entre o hero e a página. */
 const visitInfo = [
   {
     label: "Cultos de domingo",
     value: "10h da manhã · 18h da noite",
-    img: "https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=900&h=700&fit=crop&auto=format",
+    img: "/culto-todos-juntos.JPG",
+    /* A foto é bem mais larga que o card (quase 3:2 num card 5:4), então o
+       `object-cover` recorta uns 17% da largura. O pedido era esconder MAIS
+       o caixote de flores à direita — `object-left` empurra o corte inteiro
+       pro lado direito, cortando o caixote em vez de mostrá-lo por inteiro. */
+    imgClassName: "object-left",
     alt: "Congregação reunida num culto de domingo",
     href: "/contato",
     cta: "Planeje sua visita",
@@ -28,15 +56,22 @@ const visitInfo = [
   {
     label: "Onde nos encontrar",
     value: "R. Augusto de Oliveira Camargo, 257 · Centro",
-    img: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=900&h=700&fit=crop&auto=format",
-    alt: "Pessoas reunidas em volta de uma mesa comprida",
+    img: "/videira-fachada.jpg",
+    /* Foto quase 2:1 (640×332) num card 5:4 — o corte já é grande por conta
+       da proporção. O poste de luz fica em x≈440-460 de 640; `object-left`
+       mostra só até x≈415, sobra o letreiro Videira e a fachada, some o
+       poste e a placa do RKids junto. */
+    imgClassName: "object-right",
+    alt: "Fachada da Videira Indaiatuba à noite, com o letreiro iluminado",
     href: "/contato",
     cta: "Ver no mapa",
   },
   {
     label: "Durante a semana",
     value: "26 células espalhadas por Indaiatuba",
-    img: "https://images.unsplash.com/photo-1593896385987-16bcbf9451e5?w=900&h=700&fit=crop&auto=format",
+    /* Antes era um stock de abraço em círculo, com o alt dizendo "célula numa
+       casa" sem ser isso de fato — a foto real corrige a mentirinha. */
+    img: "/celula-vitor.jpeg",
     alt: "Célula reunida numa casa durante a semana",
     href: "/celulas",
     cta: "Achar a mais perto",
@@ -46,13 +81,13 @@ const visitInfo = [
 /** Três portas de entrada — o padrão "next steps" das igrejas americanas. */
 const nextSteps = [
   {
-    title: "Venha num domingo",
+    title: "Venha um domingo",
     desc: "Chegue do jeito que você está. Tem gente pra te receber e nenhuma cobrança.",
     href: "/contato",
     cta: "Como chegar",
   },
   {
-    title: "Entre numa célula",
+    title: "Entre em uma célula",
     desc: "Grupos pequenos que se reúnem nas casas durante a semana. É onde a amizade de verdade acontece.",
     href: "/celulas",
     cta: "Ver as células",
@@ -114,7 +149,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/45 via-transparent to-transparent lg:from-plum-deep/70 lg:via-plum-deep/10" />
 
             <div className="relative z-10 w-full p-7 sm:p-10 lg:p-14">
-              <Reveal delay={300} once>
+              <Reveal delay={300}>
                 <h1 className="font-display max-w-3xl text-[clamp(2.5rem,6.5vw,5.25rem)] font-medium leading-[0.95] text-white">
                   Um lugar para
                   <span className="block font-normal italic text-grape-light">
@@ -123,7 +158,7 @@ export default function Home() {
                 </h1>
               </Reveal>
 
-              <Reveal delay={620} once>
+              <Reveal delay={620}>
                 <p className="mt-6 max-w-lg leading-relaxed text-white/75 sm:text-lg">
                   Somos uma igreja em células espalhada por Indaiatuba. Sem
                   religiosidade e sem cobrança — gente real encontrando Jesus
@@ -131,7 +166,7 @@ export default function Home() {
                 </p>
               </Reveal>
 
-              <Reveal delay={880} once>
+              <Reveal delay={880}>
                 <div className="mt-9 flex flex-col gap-3.5 sm:flex-row">
                   <MagneticButton>
                     <Link
@@ -178,7 +213,7 @@ export default function Home() {
                   <ImageWithFallback
                     src={item.img}
                     alt={item.alt}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
+                    className={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-105 ${item.imgClassName ?? ""}`}
                   />
                   {/* Véu forte de propósito: estes cards são pequenos e a
                       eyebrow é 11px branca. Com foto clara (céu, parede branca)
@@ -208,11 +243,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ BOAS-VINDAS — fundo neutro e quieto, a cor mora só no card ═══ */}
+      {/* ═══ BOAS-VINDAS — quem é a Videira DE INDAIATUBA ═══ */}
       <section className="relative overflow-hidden bg-bone pb-24 pt-24 sm:pb-28 sm:pt-28 lg:pb-32 lg:pt-32">
-        {/* `items-start`: o card escuro é bem mais curto que a coluna de texto,
-            e centralizado ele boiava com vazio em cima E embaixo. Alinhado no
-            topo, o espaço que sobra lê como "a coluna acabou". */}
+        {/* `items-start` e não `items-center`: as duas colunas têm alturas
+            diferentes e, centralizadas, a manchete descia até o meio e a seção
+            perdia o ponto de entrada. Alinhadas no topo, o espaço que sobra
+            embaixo lê como "a coluna acabou". */}
         <div className="container relative mx-auto grid items-start gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
           <div>
             <Reveal>
@@ -225,27 +261,29 @@ export default function Home() {
               <h2 className="font-display mt-6 text-[clamp(2.25rem,5.2vw,3.9rem)] font-medium leading-[1.03] text-foreground">
                 Você não precisa ter tudo resolvido{" "}
                 <span className="block font-normal italic text-grape">
-                  pra fazer parte.
+                  para fazer parte.
                 </span>
               </h2>
             </Reveal>
             <Reveal delay={170}>
+              {/* A história da rede (Goiânia, 1997, pastor Aluízio, os 30+
+                  países) saiu daqui de propósito e vai virar seção no /sobre:
+                  quem abre este site quer a igreja de Indaiatuba, não a
+                  genealogia da denominação. O que sobrou fala de quem chega. */}
               <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
+                <p>
+                  Ninguém aqui vai te perguntar há quanto tempo você não pisa
+                  numa igreja. No domingo tem gente que cresceu na fé, gente
+                  voltando depois de muitos anos e gente entrando pela primeira
+                  vez na vida — e as três coisas são igualmente normais.
+                </p>
                 <p>
                   O nome vem de uma promessa: <em className="italic text-foreground">
                     &quot;Eu sou a videira, vocês são os ramos&quot;</em> (João
-                  15:5) — ramo isolado não dá fruto. Foi com essa convicção que
-                  o pastor Aluízio Silva plantou uma igreja que se multiplicou
-                  em casas ao redor do mundo: a fé acontece primeiro nas
-                  famílias, em grupos pequenos, antes de acontecer nos
-                  prédios.
-                </p>
-                <p>
-                  Em Indaiatuba, isso vira rotina: domingo de portas abertas
-                  pra cidade inteira, semana inteira de células nos bairros.
-                  Não importa se você cresceu na igreja, se está voltando
-                  depois de anos ou se essa é a sua primeira vez — aqui tem
-                  lugar pra você exatamente como você chegou.
+                  15:5) — ramo isolado não dá fruto. É por isso que a nossa
+                  semana não termina no domingo: tem casa aberta espalhada por
+                  Indaiatuba, onde dá pra conhecer gente de verdade e ser
+                  conhecido de volta.
                 </p>
               </div>
             </Reveal>
@@ -263,40 +301,64 @@ export default function Home() {
             </Reveal>
           </div>
 
+          {/* Blob, não retângulo — segunda tentativa: a primeira (retângulo
+              de canto arredondado) foi minha adaptação pro vocabulário do
+              site, mas o usuário viu as duas lado a lado e quis o blob de
+              contorno livre mesmo, como na referência. Contorno orgânico via
+              `border-radius` de 8 valores (4 cantos, horizontal/vertical
+              independentes) — é só CSS, a caixa continua retangular por
+              baixo, então nada aqui muda a lógica de posicionamento.
+
+              Os dois blobs usam valores DIFERENTES de propósito: os mesmos
+              números nos dois ficariam óbvios como "o mesmo componente
+              repetido", e o ponto de um blob é parecer desenhado à mão. */}
           <Reveal variant="scale" delay={120}>
-            <div className="relative">
-              <div className="overflow-hidden rounded-[2rem] bg-plum-deep p-9 sm:p-11">
-                <Globe2 size={22} className="text-grape-light" />
-                <p className="font-display mt-6 text-[1.65rem] leading-snug text-white sm:text-3xl">
-                  Um só chamado,{" "}
-                  <span className="block italic text-grape-light">
-                    espalhado em 30 países.
-                  </span>
-                </p>
-                <div className="mt-10 grid grid-cols-2 gap-6 border-t border-white/15 pt-8">
-                  <div>
-                    <p className="font-display text-4xl text-grape-light">
-                      1997
-                    </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/55">
-                      início em Goiânia
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-display text-4xl text-grape-light">
-                      1.300+
-                    </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/55">
-                      igrejas Videira
-                    </p>
-                  </div>
-                </div>
-                <p className="mt-8 text-sm leading-relaxed text-white/60">
-                  A Videira Indaiatuba faz parte da rede iniciada pelo pastor
-                  Aluízio Silva — a mesma visão de células, agora com
-                  endereço na nossa cidade.
-                </p>
-              </div>
+            {/* `ml-auto` + largura: passou por 100%, depois 68%/62%, depois
+                82%/76% — cada rodada o usuário pedia mais, buscando a
+                composição chegar perto da altura do bloco de texto ao lado.
+                Encolher/crescer só a FOTO e não o wrapper desalinharia o
+                blob de fundo e o abraço pendurado — os dois são `absolute`
+                ancorados nas bordas do wrapper, então quem cresce/encolhe é o
+                wrapper inteiro, e tudo dentro acompanha na mesma proporção.
+                `ml-auto` mantém a composição encostada na borda direita da
+                coluna em vez de sobrar vão dos dois lados. */}
+            <div className="relative ml-auto w-[92%] pb-[10%] pt-10 sm:w-[88%] sm:pt-14">
+              {/* Mesma forma atrás da foto grande, agora também em blob. Fica
+                  ATRÁS por ORDEM NO DOM (não z-index): os dois viram
+                  `relative` — mesmo grupo de empilhamento — e quem vem depois
+                  no DOM pinta por cima. Por isso a foto abaixo tem `relative`;
+                  sem isso ela é estática e um elemento posicionado (esta
+                  forma) pintaria por cima dela mesmo vindo antes no código. */}
+              <div
+                aria-hidden
+                className="absolute right-2 top-0 h-20 w-20 rounded-[63%_37%_54%_46%/43%_37%_63%_57%] bg-lilac sm:right-6 sm:h-28 sm:w-28"
+              />
+
+              {/* `aspect-[4/5]` era quase igual à proporção nativa da foto
+                  (1122×1402 ≈ 4:5) — o `object-cover` não tinha quase nada
+                  pra cortar, então as pernas apareciam inteiras. Encurtando
+                  pra `aspect-square` e ancorando o corte no topo
+                  (`object-top`), o corte agora acontece por BAIXO — some a
+                  parte de canela/pé, fica cabeça, placas e coxa. */}
+              <figure className="relative overflow-hidden rounded-[62%_38%_53%_47%/41%_44%_56%_59%]">
+                <ImageWithFallback
+                  src={welcomePhotos.principal.src}
+                  alt={welcomePhotos.principal.alt}
+                  className="aspect-square w-full object-cover object-top"
+                />
+              </figure>
+
+              {/* Ancorado embaixo à esquerda e pendurado pra fora da foto
+                  grande, igual à referência — por isso o `pb-[10%]` no
+                  wrapper: sem essa reserva o blob pendurado ficaria cortado
+                  pela seção seguinte. */}
+              <figure className="absolute bottom-0 left-0 w-[44%] overflow-hidden rounded-[48%_52%_58%_42%/58%_44%_56%_42%] ring-[6px] ring-bone sm:left-3">
+                <ImageWithFallback
+                  src={welcomePhotos.abraco.src}
+                  alt={welcomePhotos.abraco.alt}
+                  className="aspect-square w-full object-cover"
+                />
+              </figure>
             </div>
           </Reveal>
         </div>

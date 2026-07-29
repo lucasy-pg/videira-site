@@ -48,12 +48,12 @@ export function CellsView() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
         </div>
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal once>
+          <Reveal>
             <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
               Sistema de Células
             </p>
           </Reveal>
-          <Reveal variant="blur" delay={80} once>
+          <Reveal variant="blur" delay={80}>
             <h1
               className="font-display text-6xl sm:text-7xl lg:text-8xl font-medium leading-none text-foreground max-w-3xl"
             >
@@ -63,7 +63,7 @@ export function CellsView() {
               </span>
             </h1>
           </Reveal>
-          <Reveal delay={180} once>
+          <Reveal delay={180}>
             <p className="mt-6 text-lg text-muted-foreground max-w-xl">
               {cellGroups.length} células espalhadas por Indaiatuba. Encontre a sua comunidade perto de onde você mora.
             </p>

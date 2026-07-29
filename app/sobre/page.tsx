@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Quote } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { CursorGlow } from "@/components/CursorGlow";
 import { Reveal } from "@/components/Reveal";
-import { Parallax } from "@/components/Parallax";
 import { MagneticButton } from "@/components/MagneticButton";
+import { WorldReach } from "@/components/WorldReach";
+import { InteractiveDots } from "@/components/InteractiveDots";
 
 export const metadata: Metadata = {
   title: "Sobre — Igreja Videira Indaiatuba",
@@ -36,14 +36,22 @@ const beliefs = [
   },
 ];
 
+/* PLACEHOLDER — bio ainda é de rascunho e a foto de família ainda falta.
+   `familyImg` aponta pra um arquivo que não existe: as fotos disponíveis são
+   prints do carrossel do Instagram, com as setas de navegação e os pontinhos
+   queimados na própria imagem (mesmo problema que o antigo `/pastores.png`
+   já teve). Pedir pra família o export limpo, sem a UI do Instagram, e trocar
+   o caminho abaixo — até lá o `ImageWithFallback` mostra o ícone de erro no
+   lugar. */
 const pastors = {
-  names: "Pastor Nome & Pastora Nome",
-  role: "Pastores titulares",
+  names: "Pastor Thiago Duarte & Pastora Aline Duarte",
+  role: "Pastores locais",
   bio: [
     "Edite aqui com a história real do casal: como se conheceram, o chamado para o ministério e há quanto tempo estão à frente da Videira.",
     "Pode incluir também um pouco do coração deles pela igreja e pela cidade de Indaiatuba.",
   ],
-  img: "/pastores.png",
+  img: "/foto-pastores.jpeg",
+  familyImg: "/foto-pastores-3.png",
 };
 
 const mvv = [
@@ -63,51 +71,206 @@ const mvv = [
 
 export default function About() {
   return (
-    <div className="bg-background text-foreground">
-      {/* Hero */}
-      <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden border-b border-border">
-        <div className="absolute inset-0">
-          <Parallax speed={0.12} className="absolute inset-0 scale-[1.15]">
-            <ImageWithFallback
-              src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600&h=800&fit=crop&auto=format"
-              alt="Adoração na igreja"
-              className="w-full h-full object-cover opacity-70"
-            />
-          </Parallax>
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
-        </div>
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal once>
-            <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
+    <div className="bg-bone text-foreground">
+      {/* ═══ CAPA — a foto do encontro sangrando na tela inteira ═══
+          Diferente do hero da Home, que é um retângulo com margem: aqui a foto
+          vai de borda a borda. A altura desconta a do header (`pt-16 sm:pt-20`
+          do <main> no layout), senão a capa nasce já empurrada e nunca cabe
+          numa tela só.
+
+          `svh` e não `vh`: no celular o `vh` conta a barra do navegador que
+          some ao rolar, e a capa ficava alta demais, cortando o texto embaixo.
+
+          A foto é um panorama bem largo (1942x809): quanto mais estreita a
+          janela em relação a essa proporção, mais sobra corte horizontal pro
+          `object-position` empurrar — e isso depende da largura real da
+          janela, não de ser celular ou desktop (um desktop não-maximizado
+          ou um notebook menor tem tanta sobra quanto um celular). Ancorado
+          35% fechou demais e descompensou o outro lado; em 42% fecha a faixa de poste/vazio que sobrava entre a mão erguida
+          do rapaz e a borda direita. Numa janela BEM larga (ultrawide, tela
+          cheia) pode não sobrar corte nenhum e esse valor não muda nada —
+          sem problema, é inofensivo nesse caso. */}
+      <section className="relative isolate flex min-h-[calc(100svh-4rem)] items-end overflow-hidden bg-plum-deep sm:min-h-[calc(100svh-5rem)]">
+        <ImageWithFallback
+          src="/encontro.png"
+          alt="Grupo grande da Igreja Videira Indaiatuba reunido ao ar livre, em frente a uma fileira de árvores, com muitos braços erguidos"
+          className="absolute inset-0 h-full w-full object-cover object-[42%_center]"
+        />
+        {/* Mesmo par de véus cruzados da Home. A foto já é escura, então os
+            stops são mais leves que os de lá — com a força da Home a fachada
+            virava um borrão preto e a placa sumia. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-plum-deep/90 via-plum-deep/45 to-plum-deep/20 lg:via-plum-deep/20 lg:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/45 via-transparent to-transparent lg:from-transparent lg:via-plum-deep/20 lg:to-plum-deep/75" />
+
+        {/* O `container` volta só aqui dentro: a FOTO sangra, o texto continua
+            alinhado com o resto da página. */}
+        <div className="container relative z-10 mx-auto px-5 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
+          <Reveal>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/70">
               Nossa história
-            </p>
+            </span>
           </Reveal>
-          <Reveal variant="blur" delay={80} once>
-            <h1
-              className="font-display text-6xl sm:text-7xl lg:text-8xl font-medium leading-none text-foreground max-w-3xl"
-            >
-              Igreja<br />Videira
+          <Reveal variant="blur" delay={90}>
+            <h1 className="font-display mt-5 max-w-3xl text-[clamp(2.75rem,7vw,6rem)] font-medium leading-[0.95] text-white">
+              Igreja{" "}
+              <span className="block font-normal italic text-grape-light">
+                Videira
+              </span>
             </h1>
           </Reveal>
-          <Reveal delay={180} once>
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl">
-              Uma comunidade neopentecostal em Indaiatuba, comprometida com a graça de Deus e o discipulado através das células.
+          <Reveal delay={180}>
+            <p className="mt-6 max-w-lg leading-relaxed text-white/75 sm:text-lg">
+              Uma comunidade neopentecostal em Indaiatuba, comprometida com a
+              graça de Deus e o discipulado através das células.
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* Mission / Vision / Values */}
-      <section className="py-20 sm:py-28 border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border">
-            {mvv.map((item, i) => (
-              <Reveal key={i} delay={i * 110} variant="scale">
-                <div className="bg-background p-10 sm:p-14 h-full group hover:bg-secondary transition-colors">
-                  <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4 transition-all group-hover:tracking-[0.2em]">
-                    {item.label}
+      {/* ═══ A REDE VIDEIRA ═══
+          Duas colunas: texto à esquerda (manchete+parágrafo, depois os
+          números), mapa e fotos à direita.
+
+          Na versão anterior as fotos ocupavam a largura inteira do container
+          numa faixa própria e o mapa ficava espremido numa coluna — a arena
+          virava a coisa maior da página e o mapa quase sumia. Agora os dois
+          dividem a MESMA coluna, então a foto nunca passa da metade da tela e
+          o mapa ganha o mesmo peso dela.
+
+          Abre logo depois da capa: antes de qualquer detalhe institucional
+          (encargo, missão, crenças, pastores), a igreja se situa dentro do
+          panorama maior da rede — o contexto antes do detalhe. */}
+      <section className="bg-sand py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto grid items-start gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
+          {/* ── Coluna esquerda: dois blocos de texto ── */}
+          <div>
+            <Reveal>
+              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                A rede Videira
+              </span>
+              <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
+                Um só chamado,{" "}
+                <span className="block font-normal italic text-grape">
+                  espalhado em 30+ países.
+                </span>
+              </h2>
+              <p className="mt-7 leading-relaxed text-muted-foreground">
+                A Videira começou em 1997, em Goiânia, quando o pastor Aluízio
+                Silva reuniu um pequeno grupo em torno de uma ideia simples:
+                uma igreja vivida dentro de casa, organizada em células. Da
+                sala de estar para a sala de visitas do vizinho, a igreja
+                cresceu multiplicando pessoas, não apenas reunindo-as.
+              </p>
+              <p className="mt-4 leading-relaxed text-muted-foreground">
+                Décadas depois, o mesmo modelo se espalhou por mais de 30
+                países, sempre com a mesma convicção: que cada célula é uma
+                igreja em miniatura e cada casa, uma extensão do corpo de
+                Cristo. A Videira Indaiatuba nasceu dentro dessa visão e segue
+                multiplicando o mesmo chamado — de célula em célula, de casa
+                em casa.
+              </p>
+            </Reveal>
+
+            <Reveal delay={140}>
+              <div className="mt-10 grid max-w-md grid-cols-2 gap-6 border-t border-foreground/10 pt-8">
+                <div>
+                  <p className="font-display text-4xl text-grape">1997</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                    início em Goiânia
                   </p>
-                  <p className="text-muted-foreground leading-relaxed">{item.text}</p>
+                </div>
+                <div>
+                  <p className="font-display text-4xl text-grape">1.300+</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                    igrejas Videira
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* ── Coluna direita: mapa em cima, fotos embaixo ── */}
+          <div>
+            <Reveal variant="scale" delay={120}>
+              <WorldReach />
+            </Reveal>
+
+            {/* As duas fotos de arquivo montam por cima da foto de hoje: o
+                encontro das camadas É o argumento — a sala com vinte pessoas e
+                a arena lotada são a mesma igreja. O anel na cor da faixa
+                (`sand`) é o que separa as menores da foto atrás; sem ele as
+                bordas se dissolvem uma na outra. */}
+            <Reveal delay={190}>
+              <div className="relative mt-12 pb-[22%]">
+                <figure className="overflow-hidden rounded-[1.5rem]">
+                  <ImageWithFallback
+                    src="/videira-arena-hoje.jpg"
+                    alt="Auditório lotado num culto da Videira, com a plateia de mãos levantadas diante do palco iluminado"
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                </figure>
+
+                <figure className="absolute bottom-0 left-4 w-[38%] overflow-hidden rounded-[1rem] ring-[5px] ring-sand">
+                  <ImageWithFallback
+                    src="/videira-primeiros-anos.jpg"
+                    alt="Reunião nos primeiros anos da Videira: cerca de vinte pessoas sentadas em cadeiras numa sala simples, ouvindo a pregação"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                </figure>
+
+                <figure className="absolute bottom-8 left-[46%] w-[32%] overflow-hidden rounded-[1rem] ring-[5px] ring-sand">
+                  <ImageWithFallback
+                    src="/aluizio-silva-inicio.jpg"
+                    alt="O pastor Aluízio Silva nos primeiros anos, diante do letreiro original: Videira — Igreja em Células"
+                    className="aspect-[4/3] w-full object-cover object-top"
+                  />
+                </figure>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ NOSSO ENCARGO ═══
+          Antes era foto à esquerda + texto à direita, herdado do molde da
+          "Nossa História". Sem uma foto que realmente ilustrasse o encargo
+          (a de estoque não dizia nada específico da Videira), a citação sozinha
+          e centralizada pesa mais — vira uma declaração da casa, não mais um
+          bloco de texto ao lado de uma imagem genérica.
+
+          Fica logo acima de Missão/Visão/Valores: o encargo é a declaração
+          maior, e a MVV entra na sequência como o desdobramento prático dele. */}
+      <section className="bg-bone py-16 sm:py-20 lg:py-24">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal variant="scale" className="mx-auto max-w-3xl text-center">
+            <Quote className="mx-auto h-7 w-7 text-grape/35" />
+            <span className="mt-4 block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              Nosso encargo
+            </span>
+            <blockquote className="font-display mt-4 text-[clamp(1.5rem,3.2vw,2.5rem)] font-medium leading-[1.2] text-foreground">
+              Nosso encargo é edificar uma igreja de vencedores, onde{" "}
+              <span className="font-normal italic text-grape">
+                cada membro é um ministro e cada casa uma extensão da igreja
+              </span>
+              . Conquistando assim nossa geração para CRISTO.
+            </blockquote>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══ MISSÃO / VISÃO / VALORES — faixa greige, cards brancos ═══ */}
+      <section className="bg-sand py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid gap-5 md:grid-cols-3 lg:gap-6">
+            {mvv.map((item, i) => (
+              <Reveal key={item.label} delay={i * 110}>
+                <div className="flex h-full flex-col rounded-[1.75rem] bg-card p-8 lg:p-9">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                    {item.label}
+                  </span>
+                  <p className="mt-5 leading-relaxed text-muted-foreground">
+                    {item.text}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -115,149 +278,124 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-20 sm:py-28 lg:py-36 border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
-            <Reveal variant="left">
-              <div className="rounded-2xl overflow-hidden bg-muted aspect-[4/3]">
+      {/* ═══ NO QUE CREMOS ═══ */}
+      <section className="bg-bone py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal className="max-w-2xl">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              Fundamentos
+            </span>
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
+              No que{" "}
+              <span className="font-normal italic text-grape">cremos</span>
+            </h2>
+          </Reveal>
+
+          {/* Linhas divisórias em vez de cards: são cinco itens de texto puro e
+              cinco caixas seguidas viravam parede. */}
+          <div className="mt-14 divide-y divide-foreground/10 border-t border-foreground/10">
+            {beliefs.map((b, i) => (
+              <Reveal key={b.title} delay={i * 80}>
+                <div className="grid gap-3 py-8 sm:grid-cols-3 sm:gap-8">
+                  <h3 className="font-display text-xl font-medium text-foreground">
+                    {b.title}
+                  </h3>
+                  <p className="leading-relaxed text-muted-foreground sm:col-span-2">
+                    {b.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ NOSSOS PASTORES ═══
+          Logo depois dos fundamentos e bem antes do fechamento: a igreja diz
+          no que crê, depois apresenta quem lidera localmente essa crença. */}
+      <section className="bg-sand py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto grid items-center gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
+          <Reveal variant="left">
+            <div className="relative">
+              <div className="overflow-hidden rounded-[2rem]">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1579975096649-e773152b04cb?w=900&h=700&fit=crop&auto=format"
-                  alt="Comunidade Videira"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  src={pastors.img}
+                  alt={pastors.names}
+                  className="aspect-[4/5] w-full object-cover"
                 />
               </div>
-            </Reveal>
-            <Reveal variant="right" delay={100}>
-              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
-                De onde viemos
-              </p>
-              <h2
-                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground mb-8"
-              >
-                Nossa História
-              </h2>
-              <div className="space-y-5 text-muted-foreground leading-relaxed">
-                <p>
-                  A Igreja Videira nasceu do sonho de criar uma comunidade cristã autêntica em Indaiatuba, onde as pessoas pudessem experimentar a graça de Deus de forma prática e transformadora.
-                </p>
-                <p>
-                  Fundamentados nos princípios neopentecostais e comprometidos com o modelo de igreja em células, acreditamos que a verdadeira comunhão e crescimento espiritual acontecem quando nos conectamos de forma genuína uns com os outros.
-                </p>
-                <p>
-                  Nosso nome &quot;Videira&quot; reflete nossa identidade em Cristo: <em>&quot;Eu sou a videira; vocês são os ramos&quot;</em> (João 15:5). Estamos conectados a Jesus e uns aos outros, produzindo frutos que glorificam a Deus.
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Pastors */}
-      <section className="py-20 sm:py-28 lg:py-36 border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
-            <div className="rounded-2xl overflow-hidden bg-muted aspect-[4/5]">
-              <ImageWithFallback
-                src={pastors.img}
-                alt={pastors.names}
-                className="w-full h-full object-cover"
-              />
+              {/* Inset com a família: o retrato grande apresenta o casal como
+                  pastores, esse canto mostra o outro lado — quem eles são em
+                  casa. `ring-sand` repete o mesmo truque de recorte da seção
+                  da Rede, um parágrafo acima: o anel na cor do FUNDO da
+                  seção faz a moldura sumir e a foto pequena parecer encaixada
+                  na grande, não só empilhada por cima. */}
+              <figure className="absolute bottom-4 right-4 w-[44%] overflow-hidden rounded-[1.1rem] ring-[5px] ring-sand shadow-[0_18px_36px_-14px_rgba(0,0,0,0.45)]">
+                <ImageWithFallback
+                  src={pastors.familyImg}
+                  alt={`${pastors.names} com os filhos`}
+                  className="aspect-square w-full object-cover"
+                />
+              </figure>
             </div>
-            <Reveal variant="right" delay={100}>
-              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
-                Liderança
-              </p>
-              <h2
-                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground mb-6"
-              >
-                Nossos Pastores
-              </h2>
-              <p
-                className="font-display text-2xl text-foreground font-medium mb-1"
-              >
-                {pastors.names}
-              </p>
-              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6">
-                {pastors.role}
-              </p>
-              <div className="space-y-4 text-muted-foreground leading-relaxed">
-                {pastors.bio.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* What We Believe */}
-      <section className="py-20 sm:py-28 border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            <Reveal className="mb-12 sm:mb-16">
-              <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
-                Fundamentos
-              </p>
-              <h2
-                className="font-display text-4xl sm:text-5xl font-medium leading-tight text-foreground"
-              >
-                No Que Cremos
-              </h2>
-            </Reveal>
-            <div className="divide-y divide-border">
-              {beliefs.map((b, i) => (
-                <Reveal key={i} delay={i * 80} variant="right" className="py-8 first:pt-0">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 group">
-                    <h3
-                      className="font-display text-xl font-medium text-foreground group-hover:text-grape group-hover:translate-x-1 transition-all sm:col-span-1"
-                    >
-                      {b.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed sm:col-span-2">
-                      {b.desc}
-                    </p>
-                  </div>
-                </Reveal>
+          </Reveal>
+          <Reveal variant="right" delay={100}>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              Liderança
+            </span>
+            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
+              Nossos{" "}
+              <span className="font-normal italic text-grape">Pastores</span>
+            </h2>
+            <p className="font-display mt-7 text-2xl font-medium text-foreground">
+              {pastors.names}
+            </p>
+            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              {pastors.role}
+            </p>
+            <div className="mt-6 space-y-4 leading-relaxed text-muted-foreground">
+              {pastors.bio.map((p) => (
+                <p key={p}>{p}</p>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Join CTA */}
-      <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-sand" />
-        <CursorGlow size={300} opacity={0.3} />
-        <Reveal variant="scale" className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2
-            className="font-display text-5xl sm:text-6xl font-medium text-foreground leading-tight mb-6"
-          >
-            Venha Fazer<br />
-            <span className="text-grape">
-              Parte da Família
+      {/* ═══ FECHAMENTO — CTA simples e claro, no molde da faixa de
+          Células ("Não sabe qual célula escolher?"), não o fechamento
+          dramático escuro da Home. */}
+      <section className="relative overflow-hidden bg-bone py-24 sm:py-32">
+        {/* Grade de pontinhos que reage ao cursor — em vez de reaproveitar o
+            mapa da rede (repetiria a seção logo acima) ou uma foto (as
+            únicas disponíveis têm marca d'água do Instagram embutida). */}
+        <InteractiveDots />
+        <Reveal
+          variant="scale"
+          className="relative z-10 container mx-auto px-5 text-center sm:px-8 lg:px-12"
+        >
+          <h2 className="font-display mx-auto max-w-2xl text-[clamp(2.25rem,5vw,3.75rem)] font-medium leading-[1.05] text-foreground">
+            Venha fazer{" "}
+            <span className="font-normal italic text-grape">
+              parte da família
             </span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-md mx-auto mb-10">
-            Você é bem-vindo para conhecer a Igreja Videira e descobrir a transformação que a graça faz na vida de pessoas reais.
+          <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
+            Você é bem-vindo para conhecer a Igreja Videira e descobrir a
+            transformação que a graça faz na vida de pessoas reais.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <MagneticButton>
-              <Link
-                href="/contato"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-grape text-white font-semibold rounded-full hover:shadow-2xl hover:shadow-grape/25 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
-              >
-                Entre em Contato
-                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-              </Link>
-            </MagneticButton>
+          <MagneticButton className="mt-10">
             <Link
-              href="/celulas"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground/5 border border-foreground/15 text-foreground font-medium rounded-full hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95 transition-all text-sm"
+              href="/contato"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-grape px-8 py-4 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-grape/25 active:scale-95"
             >
-              Ver Células
+              Entre em contato
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </Link>
-          </div>
+          </MagneticButton>
         </Reveal>
       </section>
     </div>

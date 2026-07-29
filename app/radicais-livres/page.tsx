@@ -66,7 +66,7 @@ export default function RadicaisLivres() {
         </div>
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal variant="blur" once>
+          <Reveal variant="blur">
             <h1
               className="font-display text-6xl sm:text-7xl lg:text-9xl font-medium leading-none text-foreground mb-4"
             >
@@ -76,12 +76,12 @@ export default function RadicaisLivres() {
               </span>
             </h1>
           </Reveal>
-          <Reveal delay={120} once>
+          <Reveal delay={120}>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mt-6">
               Jovens apaixonados por Jesus, vivendo a fé sem medo e sem religião. Radicais pelo amor de Deus, livres pela graça.
             </p>
           </Reveal>
-          <Reveal delay={220} once>
+          <Reveal delay={220}>
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
               <MagneticButton>
                 <Link

@@ -70,7 +70,7 @@ export default function RadicaisKids() {
         </div>
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal variant="blur" once>
+          <Reveal variant="blur">
             <h1
               className="font-display text-6xl sm:text-7xl lg:text-9xl font-medium leading-none text-foreground mb-4"
             >
@@ -80,12 +80,12 @@ export default function RadicaisKids() {
               </span>
             </h1>
           </Reveal>
-          <Reveal delay={120} once>
+          <Reveal delay={120}>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mt-6">
               Um espaço feito com amor para crianças de 0 a 14 anos encontrarem Jesus, fazerem amigos e crescerem na fé de forma alegre e segura.
             </p>
           </Reveal>
-          <Reveal delay={220} once>
+          <Reveal delay={220}>
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
               <MagneticButton>
                 <Link
