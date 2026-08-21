@@ -1,0 +1,691 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   A CAPA QUE SE ABRE — /radicais-livres, seção 1
+
+   A página não abre com a colagem tomando a tela: abre com uma JANELA PEQUENA
+   e arredondada no meio do escuro, com o nome da rede por cima. Assim que a
+   página entra, a janela se alarga sozinha até sangrar nas quatro bordas, e o
+   resto do hero — etiqueta, texto e os três botões — chega junto com a
+   abertura. Em ~2,5s está tudo em cena.
+
+   ── O QUE SE MOVE, E O QUE SÓ PARECE QUE SE MOVE ──────────────────────────
+
+   NADA DA CAPA SE MOVE. Nem a colagem, nem os véus, nem a moldura. A colagem
+   está, o tempo todo, do tamanho final — 1,7 tela de altura, vagueando no
+   trajeto do protetor de tela do DVD (ver `.capa-vagueia` no globals.css, que
+   continua intacto). O que se abre são QUATRO CORTINAS opacas por cima dela,
+   na cor do fundo da seção, que deslizam para fora da tela: a de cima sobe, a
+   de baixo desce, as laterais saem pelos lados. O vão que elas deixam é a
+   janela — e a janela cresce sem que nada por baixo seja tocado.
+
+   É por isso que a capa pequena mostra um pedaço da colagem no MESMO tamanho
+   em que ele aparece na capa cheia — não é a foto encolhida, é a cortina
+   fechada. Uma peça que crescesse por `scale` daria o efeito oposto: a colagem
+   nasceria minúscula e inchada e o olho leria zoom, não abertura.
+
+   AS QUINAS ARREDONDADAS SÃO QUATRO QUADRADINHOS DE 22px, um em cada canto do
+   vão, com um quarto de disco transparente aberto em `radial-gradient`. Eles
+   viajam colados nas quinas do vão, na mesma curva das cortinas, e apagam nos
+   últimos 20% do curso — quando já estão na quina da TELA, onde um arco de
+   22px arredondaria o próprio monitor. Sem eles a janela fechada teria canto
+   vivo, e a moldura é metade do que faz o cartaz parecer um cartaz.
+
+   ⚠️ POR QUE NÃO É `clip-path`, QUE É COMO ISTO NASCEU ─────────────────────
+
+   Porque `clip-path` não anima no compositor — anima na MAIN THREAD, e a main
+   thread desta rota está ocupada exatamente no intervalo da abertura. Medido
+   aqui, com o Chrome no build de produção: seis tarefas longas entre 351ms e
+   1235ms (hidratação do React mais o motor da galeria, que monta trinta fotos
+   e um ScrollTrigger pinado assim que a página hidrata), e quadros de 144ms,
+   216ms e 238ms no meio da revelação.
+
+   O teste que fechou o diagnóstico: travar a main thread de propósito por
+   700ms no meio da abertura e gravar o que o compositor entrega. Saíram 17
+   quadros — e em todos eles a colagem continuou vagueando (ela anima
+   `transform`, que é do compositor) enquanto a moldura ficou PARADA no mesmo
+   lugar. A abertura congelava junto com o JavaScript.
+
+   `translate` e `opacity` são as duas propriedades que o compositor executa
+   sozinho, sem pedir nada à main thread. É por isso que a peça inteira, daqui
+   em diante, só usa essas duas — e por isso ela continua fluida mesmo enquanto
+   a página hidrata. Se um dia alguém for acrescentar um movimento aqui, esta é
+   a régra: se a propriedade não for `transform`/`translate`/`opacity`/`filter`,
+   ela vai engasgar junto com o resto da página.
+
+   ⚠️ E É POR ISSO QUE `pointer-events` SAIU DOS QUADROS DE `chegaConteudo`
+   para uma animação separada. Uma animação cujos quadros citam UMA propriedade
+   não-compositável é rejeitada INTEIRA pelo compositor — bastava aquele
+   `pointer-events` para jogar a chegada do texto de volta na main thread.
+
+   ── O RELÓGIO É O DO NAVEGADOR, NÃO O DA ROLAGEM ──────────────────────────
+
+   A abertura toca SOZINHA no carregamento: são `@keyframes` comuns com
+   `animation-delay`, e a peça inteira se resolve em ~2,5s sem a pessoa tocar
+   em nada. Os tempos estão nas variáveis do `.expansor`, num lugar só.
+
+   ⚠️ ISTO JÁ FOI UMA LINHA DO TEMPO DE ROLAGEM, e vale saber o que caiu junto
+   quando ela saiu: a seção tinha 220svh (100 de capa + 120 de curso), o miolo
+   dela era `sticky` para ficar preso na tela durante esse curso, e uma
+   `view-timeline: --curso-capa` na faixa `contain` amarrava cada peça a uma
+   fatia da rolagem. As percentagens daquele curso viraram os atrasos daqui, na
+   mesma ordem e na mesma proporção — quem for reabrir a versão rolada tem a
+   coreografia inteira já calibrada nos números abaixo.
+
+   O QUE SE GANHOU NA TROCA, além do pedido: a seção voltou a ter 100svh, então
+   sumiram os 120svh de rolagem em que a página parecia travada; e o efeito
+   deixou de depender de `animation-timeline`, que o Firefox ainda não tem — a
+   abertura agora toca em todo navegador, não só nos de motor Blink/WebKit.
+
+   O QUE NÃO SE GANHOU: a abertura não espera a colagem carregar. São 1,1MB de
+   AVIF com `fetchPriority="high"`, e numa conexão ruim os primeiros quadros da
+   janela podem se abrir sobre o `plum-deep` chapado em vez de sobre as fotos.
+   É o preço de não ter JavaScript aqui, e o estrago é pequeno porque o fundo da
+   seção é a mesma tinta do véu. Se um dia isso incomodar, o conserto é um
+   `onLoad` no `ImageWithFallback` acendendo uma classe na seção — e aí a seção
+   deixa de ser só CSS, que é a decisão a pesar.
+
+   ── A DEGRADAÇÃO É O PADRÃO, NÃO A EXCEÇÃO ────────────────────────────────
+
+   ⚠️ Repare que o efeito inteiro mora DENTRO de um
+   `@media (prefers-reduced-motion: no-preference)`, e que fora dele este
+   arquivo descreve a capa cheia, parada, com todo o conteúdo visível.
+
+   A ordem é essa de propósito. Escrito ao contrário — efeito por padrão, um
+   bloco de desfazer — qualquer peça nova acrescentada aqui em cima teria de ser
+   lembrada na lista de anulação. Esquecer não dá erro nenhum: dá uma capa presa
+   fechada, com os botões invisíveis, justamente para quem pediu menos
+   movimento. Com o estado final como padrão, peça esquecida aparece — que é o
+   lado certo do erro.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* OS TEMPOS DA ABERTURA MORAM AQUI, num lugar só, e descem por herança para as
+   peças lá embaixo. Espalhados pelas regras, ajustar o ritmo virava caçar seis
+   números em quatro blocos e conferir de cabeça se a escada ainda estava na
+   ordem certa.
+
+   `--espera` É O COMPASSO ANTES DE COMEÇAR, e ele não é gordura: sem ele a
+   janela já nasce se abrindo, e a peça inteira depende de a pessoa VER a
+   moldura fechada com o nome por cima antes de qualquer coisa se mexer. Quatro
+   décimos é o suficiente para o olho registrar o cartaz.
+
+   A CURVA NÃO É A DA CASA, e esta é a única peça do site em que isso vale. O
+   `cubic-bezier(0.16, 1, 0.3, 1)` dos `Reveal` e do `headerIn` gasta 85% do
+   caminho no primeiro terço: é ótimo para um elemento pequeno CHEGAR, e péssimo
+   para uma cortina de tela cheia ABRIR — vira um puxão seguido de um rastejo, e
+   o rastejo é justamente onde qualquer engasgo aparece. A curva daqui tem uma
+   entrada macia, um meio longo e uma chegada que assenta: é o gesto de um
+   telão, não de um card.
+
+   A ESCADA É CURTA E TERMINA JUNTO: etiqueta, texto e botões entram um atrás do
+   outro e o último fecha em ~2,2s, logo depois das cortinas (2,1s). Espichar
+   isso é o erro clássico aqui — a capa termina de abrir e os botões ficam mais
+   um tempo a meia opacidade, parecendo desabilitados em vez de chegando. */
+.expansor {
+  --espera: 0.4s;
+  --abre: 1.7s;
+  --entra: 0.65s;
+  --curva: cubic-bezier(0.55, 0, 0.12, 1);
+
+  position: relative;
+  isolation: isolate;
+  height: 100svh;
+  background: var(--color-plum-deep);
+}
+
+.grude {
+  position: relative;
+  height: 100svh;
+}
+
+/* A moldura é a camada recortada: colagem e véus moram dentro dela, o texto
+   mora FORA. É o que faz o nome da rede passar por cima da janela fechada em
+   vez de ser cortado por ela — na capa pequena, "Radicais Livres" transborda a
+   moldura de propósito, e é esse transbordo que diz que o cartaz é uma peça só
+   e a janela é um vão dentro dele. */
+.moldura {
+  position: absolute;
+  inset: 0;
+
+  /* ⚠️ O `clip-path` SOZINHO NÃO SEGURA A COLAGEM, e isto custou um bug medido.
+     Recorte é operação de PINTURA: ele esconde o que passa da moldura, mas não
+     tira esse excedente da conta de rolagem do documento. E a colagem é enorme
+     por construção — 1,7 tela de altura vezes a proporção 16:9 dá ~2720px de
+     largura num desktop de 900px de altura. Medido depois de trocar a capa
+     antiga (que tinha `overflow-hidden` na seção) por esta: 1245px de excesso
+     em 1440, 2367px em 320. A página não chegava a ganhar barra lateral porque
+     o `overflow-x: clip` do `html` a segurava, mas o documento inteiro passou a
+     ser mais largo que a janela — que é o defeito que aquela regra do
+     globals.css existe para ser a última linha de defesa, não a primeira.
+
+     Vai AQUI e não no `.expansor` por escopo: quem transborda é a colagem, e
+     ela mora dentro da moldura — a seção também tem o texto, que passa POR CIMA
+     da janela fechada de propósito e não pode ser cortado junto.
+
+     (Havia um segundo motivo, que caiu com a linha do tempo de rolagem: o miolo
+     da seção era `sticky`, e `overflow` diferente de `visible` num ancestral
+     desliga o `sticky` sem avisar. Não vale mais — mas continua valendo o
+     primeiro, então a regra não muda de lugar.) */
+  overflow: clip;
+
+  /* Quanto a janela come de cada lado quando está fechada — ou seja, a
+     espessura de cada cortina. Separados por eixo porque a proporção da janela
+     não é a da tela: num monitor 16:9 estes valores dão um retângulo deitado de
+     ~3:2; num celular em pé, o `@media` abaixo troca a dupla para não devolver
+     um selo minúsculo no meio do nada.
+
+     ⚠️ EM `svh`/`vw` E NÃO EM `%`, e a diferença não é estilo. As cortinas usam
+     estes valores como TAMANHO (a de cima tem `height: var(--recorte-y)`), e as
+     quinas usam os mesmos valores como DISTÂNCIA A PERCORRER — e `translate` em
+     `%` mede a porcentagem do próprio elemento, que num quadradinho de 22px
+     daria 6px de viagem em vez de meia tela. Com unidade de janela os dois lêem
+     a mesma medida. A moldura é `inset: 0` dentro de um bloco de 100svh, então
+     27svh e 27% dela são exatamente a mesma coisa. */
+  --recorte-y: 27svh;
+  --recorte-x: 30vw;
+}
+
+@media (max-width: 767px) {
+  .moldura {
+    --recorte-y: 33svh;
+    --recorte-x: 9vw;
+  }
+}
+
+/* ═══ AS CORTINAS ═══════════════════════════════════════════════════════════
+   Quatro retângulos opacos na cor do fundo da seção, e o vão entre eles é a
+   janela. Ficam ACIMA dos véus (que são irmãos, dentro da moldura) e ABAIXO do
+   texto, que é `z-index: 10` — é o que mantém o nome da rede por cima da
+   janela fechada, como sempre foi.
+
+   O ESTADO PADRÃO É O ABERTO — as quatro já nascem fora da tela e as quinas
+   apagadas. É a mesma regra do resto do arquivo: quem não recebe o efeito
+   (menos movimento) fica com a capa cheia, e uma cortina esquecida aparece em
+   vez de trancar a capa fechada.
+
+   `pointer-events: none` porque elas passam por cima da colagem inteira: sem
+   isso, a área do hero deixaria de responder a qualquer coisa. */
+.cortinas {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.cortina,
+.quina {
+  position: absolute;
+  background: var(--color-plum-deep);
+}
+
+.cortinaTopo {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--recorte-y);
+  translate: 0 -100%;
+}
+
+.cortinaBase {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--recorte-y);
+  translate: 0 100%;
+}
+
+.cortinaEsq {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--recorte-x);
+  translate: -100% 0;
+}
+
+.cortinaDir {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--recorte-x);
+  translate: 100% 0;
+}
+
+/* AS QUINAS. Cada uma é um quadrado de 22px encostado na quina do vão, pintado
+   de fundo MENOS um quarto de disco transparente — o arco que arredonda o
+   canto. O centro do disco fica na quina do quadrado que aponta para dentro da
+   janela, e por isso cada uma tem o seu `at`. */
+.quina {
+  --arco: 22px;
+  width: var(--arco);
+  height: var(--arco);
+  opacity: 0;
+}
+
+.quinaNO {
+  left: var(--recorte-x);
+  top: var(--recorte-y);
+  background: radial-gradient(
+    circle at 100% 100%,
+    transparent var(--arco),
+    var(--color-plum-deep) calc(var(--arco) + 0.5px)
+  );
+  translate: calc(-1 * var(--recorte-x)) calc(-1 * var(--recorte-y));
+}
+
+.quinaNE {
+  right: var(--recorte-x);
+  top: var(--recorte-y);
+  background: radial-gradient(
+    circle at 0% 100%,
+    transparent var(--arco),
+    var(--color-plum-deep) calc(var(--arco) + 0.5px)
+  );
+  translate: var(--recorte-x) calc(-1 * var(--recorte-y));
+}
+
+.quinaSO {
+  left: var(--recorte-x);
+  bottom: var(--recorte-y);
+  background: radial-gradient(
+    circle at 100% 0%,
+    transparent var(--arco),
+    var(--color-plum-deep) calc(var(--arco) + 0.5px)
+  );
+  translate: calc(-1 * var(--recorte-x)) var(--recorte-y);
+}
+
+.quinaSE {
+  right: var(--recorte-x);
+  bottom: var(--recorte-y);
+  background: radial-gradient(
+    circle at 0% 0%,
+    transparent var(--arco),
+    var(--color-plum-deep) calc(var(--arco) + 0.5px)
+  );
+  translate: var(--recorte-x) var(--recorte-y);
+}
+
+/* `--assenta` É QUANTO A COLUNA DESCE ENQUANTO SÓ O NOME SE VÊ, e os dois
+   valores foram MEDIDOS, não estimados.
+
+   O problema: etiqueta, parágrafo e botões ocupam espaço desde o primeiro
+   quadro (só estão transparentes — nunca `display: none`, senão a chegada deles
+   empurraria o nome e a capa daria um pulo). Com isso, o centro da COLUNA fica
+   bem abaixo do centro do NOME, e na janela fechada — em que o nome é a única
+   coisa visível — ele nasce encostado no teto da moldura.
+
+   EM PIXELS E NÃO EM ALTURA DE JANELA, e é isso que faz dois números bastarem:
+   o desencontro é a diferença de ALTURA entre o que está acima e o que está
+   abaixo do nome, e essa diferença não muda com o tamanho da tela — muda com o
+   LAYOUT. Medido em seis telas: 135px sempre que os três botões empilham, 57px
+   sempre que eles ficam numa linha só, e nada entre os dois. A fronteira é
+   exatamente a mesma dos `.botoes` (640px), e não por acaso: é ela que decide
+   se os botões ocupam uma linha ou três.
+
+   Já esteve em unidade de janela, e o erro era invisível no desktop e grosseiro
+   no celular: o valor que acertava 54 dos 57px de um monitor de 900px de altura
+   virava 50 dos 135px de um iPhone, e lá o nome nascia 85px acima do centro da
+   moldura — medido.
+
+   ⚠️ Se a descrição ganhar ou perder uma linha, ou se entrar um quarto botão,
+   estes números mudam. É rodar de novo a medida do centro do `<h1>`. */
+.palcoTexto {
+  --assenta: 135px;
+
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 1.25rem 3rem;
+}
+
+@media (min-width: 640px) {
+  .palcoTexto {
+    --assenta: 57px;
+    padding: 7rem 2rem 3.5rem;
+  }
+}
+
+/* ⚠️ 88% DE BRANCO, E NÃO OS 70% QUE ESTA ETIQUETA TINHA — é contraste medido,
+   não gosto. Varrendo 14 quadros do ciclo de 380s da colagem e olhando os 5%
+   de pixels mais claros de cada um (o pior fundo que o texto encontra, porque
+   a média mente aqui), os 70% davam 3,94:1. Abaixo dos 4,5:1 que a WCAG pede —
+   e esta é a menor tipografia da capa, 11px, justamente a que menos pode
+   reprovar. A 88% o pior quadro passa dos 6:1.
+
+   O parágrafo abaixo passou a 86% com folga (7,23:1) porque o véu elíptico é
+   mais pesado no meio da tela, onde ele mora; a etiqueta fica mais acima, já na
+   parte em que o véu começa a ceder. */
+.etiqueta {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* O NOME, e ele é o único elemento que já está inteiro no primeiro quadro.
+   Não encolhe nem cresce em nenhum momento do curso: o corpo do tipo é o mesmo
+   na janela fechada e na capa cheia. Uma tipografia que mudasse de tamanho
+   junto com a moldura leria como zoom de apresentação; parada, ela vira o
+   ponto fixo em torno do qual a capa se abre — que é o que a peça está
+   contando. */
+.nome {
+  margin-top: 1.25rem;
+  font-size: clamp(2.75rem, 10.5vw, 9rem);
+  font-weight: 500;
+  line-height: 0.95;
+  color: #fff;
+  text-shadow: 0 4px 40px rgba(24, 9, 41, 0.45);
+}
+
+.nomeVirado {
+  display: block;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-grape-light);
+}
+
+.descricao {
+  margin-top: 1.75rem;
+  max-width: 34rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+@media (min-width: 640px) {
+  .descricao {
+    font-size: 1.125rem;
+  }
+}
+
+.botoes {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .botoes {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+/* A seta diz que a página continua embaixo, e isso é verdade em todo estado
+   desta capa — inclusive para quem pediu menos movimento, que recebe a capa já
+   aberta. Por isso ela nasce visível aqui, e o bloco do efeito só cuida de
+   ACENDÊ-LA no fim da abertura: enquanto a janela ainda se abre, uma seta
+   apontando para baixo compete com o que está acontecendo na tela.
+
+   Ela já foi o oposto — nascia escondida e só existia dentro do efeito, porque
+   naquela versão a abertura ERA a rolagem e a seta apagava assim que a pessoa
+   começava a rolar. Sem rolagem no meio, a seta voltou a ser o que sempre foi
+   num hero: o convite para descer. */
+.seta {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 10;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   O EFEITO
+   Toca sozinho no carregamento. Só não entra para quem pediu menos movimento.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* `both` EM TODAS, e é o que segura a peça fechada durante a `--espera`: o
+     preenchimento para trás aplica o quadro inicial já na primeira pintura, e
+     sem ele a capa apareceria aberta por um instante antes de saltar para o
+     estado fechado — o pior quadro possível, e justo o primeiro.
+
+     AS QUATRO CORTINAS E AS QUATRO QUINAS ANDAM NA MESMA CURVA E NO MESMO
+     COMPASSO. Não é preguiça de escalonar: as quinas viajam coladas nas quinas
+     do vão, e basta uma curva diferente para o arco descolar do canto no meio
+     do caminho — que é o tipo de defeito que ninguém sabe nomear mas todo mundo
+     vê. */
+  .cortina,
+  .quina {
+    animation-duration: var(--abre);
+    animation-timing-function: var(--curva);
+    animation-delay: var(--espera);
+    animation-fill-mode: both;
+  }
+
+  .cortinaTopo {
+    animation-name: abreTopo;
+  }
+  .cortinaBase {
+    animation-name: abreBase;
+  }
+  .cortinaEsq {
+    animation-name: abreEsq;
+  }
+  .cortinaDir {
+    animation-name: abreDir;
+  }
+  .quinaNO {
+    animation-name: abreQuinaNO;
+  }
+  .quinaNE {
+    animation-name: abreQuinaNE;
+  }
+  .quinaSO {
+    animation-name: abreQuinaSO;
+  }
+  .quinaSE {
+    animation-name: abreQuinaSE;
+  }
+
+  .etiqueta,
+  .descricao,
+  .botoes {
+    /* DUAS ANIMAÇÕES, E A SEGUNDA EXISTE POR CAUSA DO COMPOSITOR. A primeira só
+       mexe em `opacity` e `translate` e por isso roda fora da main thread; a
+       segunda faz o degrau de `pointer-events` (ver o `liberaCliques`). Juntas
+       num `@keyframes` só — que é como isto nasceu — a citação de
+       `pointer-events` derrubava a chegada inteira para a main thread, junto com
+       a hidratação. */
+    animation:
+      chegaConteudo var(--entra) var(--curva) 1.15s both,
+      liberaCliques var(--entra) linear 1.15s both;
+  }
+
+  .descricao {
+    animation-delay: 1.3s;
+  }
+
+  /* Os botões fecham a escada, e ganham um tico a mais de duração porque são a
+     peça mais pesada da coluna — três pastilhas que sobem juntas. */
+  .botoes {
+    animation-duration: 0.7s;
+    animation-delay: 1.5s;
+  }
+
+  /* A COLUNA DESCE UM POUCO ENQUANTO A CAPA ABRE, e é um ajuste de centro,
+     não um enfeite. Com etiqueta, texto e botões ocupando espaço desde o
+     primeiro quadro (eles só estão transparentes, nunca `display: none` —
+     ver o porquê logo abaixo), o centro da coluna fica ABAIXO do nome. Na
+     janela fechada, em que só o nome se vê, isso o deixa flutuando acima do
+     meio da moldura. O empurrão devolve o nome ao centro do vão enquanto ele
+     é a única coisa na tela, e se desfaz conforme o resto chega — no mesmo
+     compasso da moldura, que é o que faz as duas coisas parecerem uma só. Os
+     dois valores, e o porquê de eles serem em PIXEL, estão no `--assenta`. */
+  .palcoTexto {
+    animation: assentaColuna var(--abre) var(--curva) var(--espera) both;
+  }
+
+  /* Por último, depois de os botões assentarem: antes disso ela estaria
+     chamando para baixo enquanto a capa ainda não terminou de se apresentar. */
+  .seta {
+    animation: acendeSeta 0.5s ease-out 2.2s both;
+  }
+}
+
+/* AS QUATRO CORTINAS. Cada uma sai pelo próprio lado, e `-100%` aqui é 100% do
+   TAMANHO DELA — que é exatamente a espessura do recorte. Fechada, a de cima
+   ocupa os 27svh do alto; aberta, está 27svh acima do teto da tela. */
+@keyframes abreTopo {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -100%;
+  }
+}
+
+@keyframes abreBase {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 100%;
+  }
+}
+
+@keyframes abreEsq {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: -100% 0;
+  }
+}
+
+@keyframes abreDir {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 100% 0;
+  }
+}
+
+/* AS QUINAS viajam na diagonal, a soma exata do que as duas cortinas vizinhas
+   percorrem — é isso que as mantém coladas no canto do vão o caminho inteiro.
+   Aqui a distância NÃO pode ser `-100%` (seria 22px, o tamanho do quadradinho):
+   é a medida do recorte, em unidade de janela.
+
+   O APAGÃO NOS ÚLTIMOS 20%: nesse ponto a quina já chegou ao canto da TELA, e
+   um arco de 22px parado ali arredondaria o próprio monitor. Apagar é a única
+   saída que não exige mandá-la mais longe do que as cortinas vão — e mandar
+   mais longe é o que descolaria o arco do canto no meio do curso. */
+@keyframes abreQuinaNO {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    translate: calc(-1 * var(--recorte-x)) calc(-1 * var(--recorte-y));
+    opacity: 0;
+  }
+}
+
+@keyframes abreQuinaNE {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    translate: var(--recorte-x) calc(-1 * var(--recorte-y));
+    opacity: 0;
+  }
+}
+
+@keyframes abreQuinaSO {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    translate: calc(-1 * var(--recorte-x)) var(--recorte-y);
+    opacity: 0;
+  }
+}
+
+@keyframes abreQuinaSE {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    translate: var(--recorte-x) var(--recorte-y);
+    opacity: 0;
+  }
+}
+
+/* SÓ `opacity` E `translate` AQUI DENTRO. Ver o cabeçalho do arquivo: um
+   `pointer-events` nesta lista tira a animação inteira do compositor, e era
+   assim que ela estava. Ele foi para o `liberaCliques`, logo abaixo. */
+@keyframes chegaConteudo {
+  from {
+    opacity: 0;
+    translate: 0 22px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ⚠️ ESTA ANIMAÇÃO EXISTE DE PROPÓSITO E NÃO É REDUNDANTE. Os três botões são
+   links de verdade (/contato, /celulas e a âncora da galeria) e, a opacidade
+   zero, continuariam clicáveis: dá para trocar de rota clicando no nada em cima
+   da colagem, sem nunca ter visto um botão — e, como a abertura toca sozinha,
+   esse nada dura os mesmos ~1,5s para todo mundo.
+
+   Como `pointer-events` não é interpolável, ele vira num degrau no meio do
+   intervalo — quando o bloco já está em ~50% de opacidade, que é onde ele passa
+   a ser visível o bastante para receber um clique honesto. Ela anda colada na
+   `chegaConteudo` porque as duas recebem a mesma duração e o mesmo atraso das
+   regras acima; mexer numa sem a outra desencontra o clique da imagem.
+
+   Isto não é problema fora do efeito: no estado padrão os botões estão opacos e
+   clicáveis desde o primeiro quadro. */
+@keyframes liberaCliques {
+  from {
+    pointer-events: none;
+  }
+  to {
+    pointer-events: auto;
+  }
+}
+
+@keyframes assentaColuna {
+  from {
+    translate: 0 var(--assenta);
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes acendeSeta {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

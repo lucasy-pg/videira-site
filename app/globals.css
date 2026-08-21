@@ -48,6 +48,78 @@
   --color-plum: #2c1250;
   --color-plum-deep: #180929;
 
+  /* ═══ EXCEÇÃO DOCUMENTADA: a paleta do Radicais Kids ═══════════════════
+     A regra do topo deste arquivo ("uma cor só, o roxo da videira") vale para
+     o site inteiro MENOS a rota /radicais-kids. Não é liberdade geral: é o
+     mesmo tipo de exceção nomeada que o GSAP tem na galeria dos Livres.
+
+     POR QUE. O Radicais Kids tem identidade visual própria, anterior a este
+     site e usada nas 32 nações da rede. As quatro cores abaixo foram AMOSTRADAS
+     do arquivo do logo (`public/kids/logo-horizontal-kids.avif`), não escolhidas
+     a olho — são as tintas do próprio logo. Recusá-las significaria publicar
+     um logo que não combina com a página em que ele está.
+
+     A REGRA DE USO, que é o que impede isto de virar arco-íris:
+     1. O fundo continua sendo o do site — `bone`, `sand`, `plum-deep`. Nenhuma
+        destas quatro cores pinta uma seção inteira.
+     2. Cada cor entra como ACENTO: o numeral da etapa, um filete, um chip, um
+        ponto. Área pequena, sempre.
+     3. NUNCA em texto corrido. Especialmente o amarelo — sobre `bone` ele dá
+        1.6:1 de contraste, que reprova em qualquer tamanho. Por isso a etapa
+        do amarelo (Treinamento) é a única que roda sobre `plum-deep`, onde ele
+        dá ~10:1. As superfícies das três etapas foram escolhidas por causa do
+        contraste do acento, não por gosto.
+     4. Sem gradiente entre elas. Continuam valendo "bloco sólido, nunca névoa"
+        e a proibição de gradiente de duas cores. */
+  --color-kids-amarelo: #ffc30c;
+  --color-kids-roxo: #7b2a90;
+  --color-kids-ciano: #009ebb;
+  --color-kids-magenta: #d5117f;
+
+  /* ═══ EXCEÇÃO DOCUMENTADA: as três tintas do Trilho do Vencedor ═══════
+     Mesma natureza da exceção do Kids logo acima — uma licença NOMEADA, para
+     uma rota só (`/trilho-do-vencedor`), e não uma abertura geral da paleta.
+
+     POR QUE. CME, CTL e Seminário Pastoral têm arte oficial própria, feita
+     pela rede, e as três chegam com um fundo de cor diferente: verde na do
+     CME, azul-marinho na do CTL, marrom-alaranjado na do Seminário. Os três
+     blocos da página exibem essas artes em tamanho grande. Sem um acento que
+     converse com elas, o numeral e o filete de cada bloco seriam roxos ao lado
+     de uma arte verde — e a página passaria a parecer três marcas brigando em
+     vez de três degraus da mesma formação.
+
+     DE ONDE SAEM OS VALORES. Foram derivados da matiz dominante de cada arte
+     (`#0a2d2a`, `#012b40` e `#441708`, amostradas dos próprios arquivos em
+     `public/trilho-vencedor/`) e depois abertos até passarem em contraste —
+     não escolhidos a olho num seletor.
+
+     A REGRA DE USO é a mesma das quatro do Kids, e é ela que impede isto de
+     virar três sites diferentes:
+     1. O fundo continua sendo o do site — `bone`, `sand`, `plum-deep`. Nenhuma
+        destas cores pinta uma seção inteira.
+     2. Cada uma entra como ACENTO: o numeral do bloco, um filete de 3px, um
+        pontinho na lista do trilho inteiro. Área pequena, sempre.
+     3. NUNCA em texto corrido.
+     4. Sem gradiente entre elas.
+
+     OS CONTRASTES, medidos (o alvo é 4.5:1, que todos passam mesmo sendo
+     numeral grande, onde 3:1 já bastaria):
+
+       cme       #1f5c46  →  7.6:1 sobre bone   6.5:1 sobre sand
+       ctl       #0d5a86  →  7.2:1 sobre bone   6.2:1 sobre sand
+       seminario #b4531b  →  4.8:1 sobre bone   4.2:1 sobre sand
+
+     ⚠️ E É POR ISSO QUE O SEMINÁRIO TEM DUAS TINTAS. Sobre `plum-deep` o
+     `#b4531b` cai para 3.8:1 — e o bloco do Seminário é justamente o escuro.
+     Lá ele troca pelo `seminario-claro` (#f2953f), que dá 8.2:1 sobre o
+     plum-deep e reprovaria sobre o bone (2.2:1). Cada um só serve a metade do
+     par: quem inverter os dois publica um numeral ilegível. Quem resolve a
+     escolha é o `COR` do `lib/trilho.ts`, não o JSX. */
+  --color-cme: #1f5c46;
+  --color-ctl: #0d5a86;
+  --color-seminario: #b4531b;
+  --color-seminario-claro: #f2953f;
+
   /* ---- Tipografia ----
      Duas vozes, e só uma delas fala alto. Newsreader é a serifa que carrega
      todo o caráter — inclusive o itálico, que é o gesto da casa: toda manchete
@@ -67,6 +139,23 @@
 
 html {
   scroll-behavior: smooth;
+
+  /* Mata a rolagem horizontal no celular. A causa é o estado inicial dos
+     <Reveal>: `.reveal--left/--right` começam deslocados 40px no eixo X, e um
+     elemento de largura cheia deslocado pra direita passa da borda do
+     documento — mediram-se 410px de conteúdo numa tela de 390, em SEIS das
+     sete páginas (só a Home escapava). O sintoma é a página balançando de lado
+     ao rolar, justamente no aparelho em que a maior parte das visitas chega.
+
+     É `clip` e NÃO `hidden` de propósito: `hidden` cria um contêiner de
+     rolagem, o que quebraria qualquer `position: sticky` da página e o
+     `scroll-behavior: smooth` da linha acima. `clip` só recorta.
+
+     E fica no `html`, não no `body`: enquanto o `html` está `visible`, o
+     `overflow` do `body` é PROPAGADO para o viewport e o próprio body passa a
+     se comportar como `visible` — no body a regra não recorta nada. Foi
+     tentado primeiro, medido, e não funcionou. */
+  overflow-x: clip;
 }
 
 body {
@@ -85,6 +174,42 @@ body {
   letter-spacing: -0.015em;
 }
 
+/* A /sobre e a /celulas rodam as manchetes numa geométrica (Poppins) em vez da
+   Newsreader.
+   QUEM TROCA É O TOKEN, não cada `<h2>`: `.font-display` continua lendo
+   `--font-display`, então redefinir a variável no <div> raiz da página vira
+   Poppins em tudo que é manchete lá dentro — títulos, destaques, numerais —
+   sem tocar em Header, Footer e nas outras páginas, que estão fora dessa
+   subárvore.
+
+   ⚠️ QUEM PÕE ESTA CLASSE HERDA UMA PÁGINA SEM ITÁLICO: a Poppins é carregada
+   só em romano (app/layout.tsx), e todo `<em>`/`italic` que sobrar dentro da
+   subárvore cai no oblíquo sintético do navegador. Foi o que obrigou a
+   /celulas a trocar o destaque de itálico roxo para só roxo.
+
+   O peso continua sendo o 500 das classes do markup: o 600 foi testado e pesou
+   — a Poppins tem traço uniforme e no corpo de manchete o semibold vira bloco.
+
+   O tracking aperta: `-0.015em` foi calibrado para a serifa, e os contrapontos
+   circulares da Poppins pedem um pouco mais.
+
+   `text-wrap: balance` é o que impede a manchete de terminar numa palavra
+   sozinha. A Poppins é MAIS LARGA que a Newsreader no mesmo corpo (cerca de
+   10%), então toda medida da página encolheu em número de caracteres de uma
+   hora para outra, e a última linha ficava órfã. O `balance` reparte as linhas
+   para que fiquem parecidas em vez de deixar a sobra no fim — e ele resolve
+   sozinho em qualquer viewport, que é mais confiável do que caçar `max-width`
+   um a um. Só vale até 6 linhas no Chrome, que é muito mais do que qualquer
+   manchete daqui tem. */
+.manchetes-poppins {
+  --font-display: var(--font-poppins), system-ui, -apple-system, sans-serif;
+}
+
+.manchetes-poppins .font-display {
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
 ::selection {
   background: #6d28d9;
   color: #fff;
@@ -96,11 +221,206 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Ken Burns lento no hero */
-@keyframes heroZoom {
-  from { transform: scale(1.12); }
+/* A ÚNICA ANIMAÇÃO DA CAPA DA /sobre. A fotografia da comunidade entra 6%
+   maior e recua para o tamanho dela — a imagem se AFASTA, e o quadro não se
+   mexe: quem anima é o <img> dentro da moldura, que já tem `overflow: hidden`.
+
+   A origem é o PÉ (`50% 100%`) porque o recorte da foto também é (ver o
+   `posicao` na capa): ancorados no mesmo lugar, o que o recuo revela é copa de
+   árvore em cima, e a fileira de gente sentada na grama não desliza durante a
+   entrada.
+
+   Herdou o lugar do antigo `heroZoom`, que tinha sobrado sem uso no arquivo.
+
+   Quem pediu menos movimento não recebe nenhum. */
+@keyframes capaAfasta {
+  from { transform: scale(1.06); }
   to { transform: scale(1); }
 }
+
+.capa-afasta img {
+  transform-origin: 50% 100%;
+  animation: capaAfasta 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capa-afasta img {
+    animation: none;
+  }
+}
+
+/* Seta de scroll da capa — flutua de leve pra chamar o olho pra baixo */
+@keyframes setaFlutua {
+  0%, 100% { transform: translateY(0); opacity: 0.75; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+.animate-seta-flutua {
+  animation: setaFlutua 2.2s ease-in-out infinite;
+}
+
+/* ── Capa do /radicais-livres: a câmera vagueia pela colagem ───────────────
+   A colagem é MAIOR QUE A TELA e quem se move é a janela, no trajeto do
+   protetor de tela do DVD: reta até bater numa borda, reflete, segue. É o que
+   permite uma colagem só servir o celular e o desktop — o celular apenas usa
+   uma janela menor e caminha mais. Sem isso a capa larga perdia ~17% no
+   celular e o conserto seria manter uma segunda colagem em retrato.
+
+   GEOMETRIA, e é aqui que mora a única sutileza. O deslocamento não pode ser
+   em pixels fixos (a caixa muda de tamanho em cada tela) nem em porcentagem do
+   próprio elemento (essa fração depende da proporção da janela, que varia de
+   um celular em pé a um monitor ultrawide). A saída é derivar tudo da ALTURA
+   DA CAIXA, que é conhecida em CSS: a seção é `100svh` menos o header. Daí
+   saem a altura e a largura da imagem, e daí sai a SOBRA — quanto de imagem
+   existe além da janela em cada eixo. Os keyframes só falam em frações dessa
+   sobra, então o mesmo trajeto vale em qualquer tela.
+
+   AS DUAS REDES DE SEGURANÇA existem porque mostrar fundo atrás da colagem é
+   o pior defeito possível aqui: `min-width: 100vw` e `min-height: 100%`
+   garantem que a imagem nunca fique menor que a janela, e o `object-fit`
+   corta em vez de distorcer quando uma delas entra em ação (numa tela muito
+   larga e baixa, por exemplo). Nesse caso `--sobra-x` cai a zero e o passeio
+   vira só vertical — feio de medir, mas nunca abre buraco.
+
+   `max-width: none` NÃO é enfeite: o preflight do Tailwind põe
+   `max-width: 100%` em toda imagem, e sem desligar isso a largura calculada
+   aqui seria cortada na largura da tela — a imagem ficaria do tamanho da
+   janela e não haveria passeio nenhum.
+
+   O `100vw` do `--sobra-x` ignora a barra de rolagem e por isso superestima a
+   janela em ~15px, o que SUBestima a sobra. Erro no lado seguro: a colagem
+   para um triz antes de encostar na borda direita, em vez de passar dela. */
+@keyframes capaVagueia {
+  0% { transform: translate3d(calc(var(--sobra-x) * -0.0000), calc(var(--sobra-y) * -0.0000), 0); }
+  12.5% { transform: translate3d(calc(var(--sobra-x) * -0.7500), calc(var(--sobra-y) * -1.0000), 0); }
+  16.667% { transform: translate3d(calc(var(--sobra-x) * -1.0000), calc(var(--sobra-y) * -0.6667), 0); }
+  25% { transform: translate3d(calc(var(--sobra-x) * -0.5000), calc(var(--sobra-y) * -0.0000), 0); }
+  33.333% { transform: translate3d(calc(var(--sobra-x) * -0.0000), calc(var(--sobra-y) * -0.6667), 0); }
+  37.5% { transform: translate3d(calc(var(--sobra-x) * -0.2500), calc(var(--sobra-y) * -1.0000), 0); }
+  50% { transform: translate3d(calc(var(--sobra-x) * -1.0000), calc(var(--sobra-y) * -0.0000), 0); }
+  62.5% { transform: translate3d(calc(var(--sobra-x) * -0.2500), calc(var(--sobra-y) * -1.0000), 0); }
+  66.667% { transform: translate3d(calc(var(--sobra-x) * -0.0000), calc(var(--sobra-y) * -0.6667), 0); }
+  75% { transform: translate3d(calc(var(--sobra-x) * -0.5000), calc(var(--sobra-y) * -0.0000), 0); }
+  83.333% { transform: translate3d(calc(var(--sobra-x) * -1.0000), calc(var(--sobra-y) * -0.6667), 0); }
+  87.5% { transform: translate3d(calc(var(--sobra-x) * -0.7500), calc(var(--sobra-y) * -1.0000), 0); }
+  100% { transform: translate3d(calc(var(--sobra-x) * -0.0000), calc(var(--sobra-y) * -0.0000), 0); }
+}
+
+/* OS TREZE QUADROS ACIMA SÃO CALCULADOS, não escolhidos a olho. São as 12
+   batidas de uma bola de bilhar largada da QUINA SUPERIOR ESQUERDA na direção
+   3:4 sobre o retângulo normalizado da sobra.
+
+   COMEÇAR NA QUINA FOI PEDIDO, e ele traz uma consequência que não é escolha
+   de ninguém — é teorema. De uma quina, QUALQUER direção racional leva a outra
+   quina: com direção p:q em termos mínimos, a bola chega numa quina depois de
+   p travessias horizontais e q verticais, sempre. E numa quina os dois eixos
+   refletem ao mesmo tempo, o que inverte o vetor inteiro e faz a bola REFAZER
+   o próprio caminho de trás para frente. Por isso a segunda metade do ciclo é
+   o espelho da primeira: 50% bate na quina superior direita, e de lá até 100%
+   é a ida ao contrário. Não há trajeto que saia de uma quina e volta a ela sem
+   espelhar; para não espelhar era preciso partir do meio de uma parede, que é
+   o que este arquivo fazia antes.
+
+   O preço é pequeno e foi medido: o trajeto espelhado mostra 98,5% da colagem
+   contra 99,3% do anterior. O ganho é a capa abrir exatamente na quina, e uma
+   batida de quina de verdade na metade do caminho — que no protetor de tela do
+   DVD é o momento que todo mundo espera.
+
+   Duas coisas continuam valendo e quebram se alguém mexer num número solto:
+
+   1. O CICLO FECHA. O quadro de 100% é idêntico ao de 0%, então o `infinite`
+      não dá salto. Uma direção irracional espalharia melhor, mas nunca
+      voltaria ao início — e o loop piscaria.
+
+   2. A VELOCIDADE É CONSTANTE. Os tempos dos quadros são proporcionais ao
+      caminho andado, e como a reflexão só troca o SINAL das componentes (o
+      módulo continua o mesmo), velocidade constante no espaço normalizado é
+      velocidade constante em pixels. Mexer numa porcentagem sozinha faz o
+      trecho acelerar ou arrastar.
+
+   OS DOIS TEMPOS saem de uma conta de velocidade, não de gosto: a volta
+   inteira é ~9.200px de percurso num desktop de 1440×900 e ~13.800px num
+   celular de 390×844, porque lá a sobra horizontal é bem maior. 380s e 560s
+   deixam os dois em ~24px/s — devagar o bastante para ser deriva e não
+   travelling. Quem quiser afinar mexe só na duração; o trajeto não muda.
+
+   Uma volta leva 6min no desktop e 9min no celular. Isto é assumido: a capa é
+   ambiência, e quem faz o trabalho de mostrar as fotos é a parede da galeria
+   mais abaixo, que aparece inteira de uma vez. */
+.capa-vagueia {
+  /* `100svh` cheio, sem descontar header: esta rota está em `OVERLAY_ROUTES`,
+     a nav flutua por cima e a colagem sangra atrás dela. `svh` e não `vh`
+     porque no Safari do iPhone o `vh` conta a barra que some ao rolar, e a
+     capa nasceria maior que a janela. */
+  --caixa: 100svh;
+  --zoom: 1.7;
+  --prop: 1.7778; /* 1600÷900, a proporção do arquivo — 16:9 */
+  --alt: calc(var(--caixa) * var(--zoom));
+  --larg: calc(var(--alt) * var(--prop));
+  --sobra-x: max(0px, calc(var(--larg) - 100vw));
+  --sobra-y: calc(var(--alt) - var(--caixa));
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--larg);
+  height: var(--alt);
+  max-width: none;
+  min-width: 100vw;
+  min-height: 100%;
+  object-fit: cover;
+
+  animation: capaVagueia 560s linear infinite;
+  /* `translate3d` e `will-change`: sobem a camada pra GPU e tiram a animação
+     da main thread. Numa imagem desse tamanho é a diferença entre derivar e
+     tremer. */
+  will-change: transform;
+}
+
+@media (min-width: 640px) {
+  .capa-vagueia {
+    animation-duration: 380s;
+  }
+}
+
+/* ── O PAINEL TÉCNICO DO /radicais-livres SAIU DAQUI ───────────────────────
+   Moravam neste ponto do arquivo a `.malha` (o papel milimetrado), o
+   `.letreiro` com a onda de fontes (`@keyframes ondaFonte`), a extrusão roxa
+   das letras, a resposta ao mouse e os `.painel` de quina viva da régua de
+   missão/visão/propósito. Cerca de 270 linhas, das quais a maior parte era
+   comentário — e o comentário valia mais que o código.
+
+   Tudo caiu junto com o redesenho da seção "Quem somos", que trocou a lousa
+   escura por tipografia em fundo claro com fotografia dentro das letras. O
+   letreiro e a lousa dependiam um do outro: a extrusão só existe sobre escuro,
+   a malha só existe em fio branco, e a onda só funcionava numa grotesca
+   variável (Archivo, que saiu da rota junto).
+
+   ANTES DE TENTAR TRAZER O EFEITO DE VOLTA, ler os comentários originais no
+   histórico — em especial o do `ondaFonte`, que registra por que uma animação
+   `infinite` confisca PARA SEMPRE toda propriedade que ela cita, e portanto por
+   que nenhum quadro podia mencionar `font-variation-settings` sem matar o
+   hover. É o tipo de coisa que custa uma tarde para redescobrir. */
+
+/* Quem pediu menos movimento no sistema fica com o estado de repouso: a seta
+   parada (mas visível) e a câmera da colagem sem percorrer. A parede aparece
+   pronta, pelo mesmo motivo acima.
+
+   A seção "Quem somos" tem a própria régua de menos-movimento, e ela mora no
+   `components/quem-somos/quem-somos.module.css` — junto da coreografia que ela
+   desarma, que é onde dá para conferir se sobrou alguma peça escondida. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-seta-flutua,
+  .capa-vagueia {
+    animation: none;
+  }
+}
+
+/* A `.capa-vagueia` sem animação fica no `transform` de repouso, que é zero —
+   ou seja, a quina superior esquerda da colagem. É de propósito e não precisa
+   de regra: é o MESMO quadro em que a capa abre para todo mundo. Antes daqui
+   havia um `transform` parando ela no meio, e isso deixou de fazer sentido
+   quando o trajeto passou a nascer na quina — quem pediu menos movimento veria
+   um enquadramento que mais ninguém vê. */
 
 /* Scroll reveal (usado pelo componente <Reveal />) — várias variantes de entrada,
    todas revertem ao sair da viewport (retrigger na volta do scroll também) */
@@ -127,7 +447,31 @@ body {
 .reveal--blur { transform: translateY(16px); filter: blur(10px); }
 .reveal--fade { transform: none; }
 
-/* Grade de células: fade+rise ao trocar de filtro */
+/* QUEM PEDIU MENOS MOVIMENTO NÃO RECEBE NENHUM REVEAL.
+   Sem esta regra o `.reveal` continuava deslizando 28px e desfocando 10px em
+   TODAS as sete páginas para quem tem "reduzir movimento" ligado no sistema —
+   e são dezenas de elementos por página, o que faz dele, de longe, a maior
+   fonte de movimento do site. As outras animações (a seta da capa, a colagem
+   que vagueia, o afastamento da foto da /sobre) já paravam; esta faltava.
+
+   O estado imposto é o de CHEGADA, não o de partida: opacidade cheia, sem
+   deslocamento e sem desfoque. É importante que seja assim e não
+   `animation: none` — o `.reveal` nasce com `opacity: 0` no CSS, então
+   desligar só a transição deixaria a página inteira invisível para exatamente
+   as pessoas que pediram menos efeito.
+
+   `transition: none` junto: sem ele o elemento ainda percorreria a mudança de
+   opacidade quando o IntersectionObserver marcasse `.is-visible`. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Grade que troca de conteúdo: fade+rise na entrada */
 @keyframes gridIn {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
@@ -140,4 +484,73 @@ body {
 @keyframes underlineIn {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
+}
+
+/* ── A JANELA DA /celulas (seção 07) ──────────────────────────────────────
+   A colagem de todas as células fica PARADA e a página passa por cima dela:
+   a seção é um vão na página por onde se enxerga uma parede que está atrás.
+   Quem se move é o texto, não a fotografia.
+
+   ⚠️ O PIN É `position: sticky`, E NÃO `background-attachment: fixed` NEM
+   `position: fixed`. Os dois caminhos óbvios não servem:
+
+   • `background-attachment: fixed` é o truque clássico e é justamente o que
+     não funciona no iPhone — o Safari do iOS ignora o `fixed` em boa parte
+     dos casos e, quando não ignora, repinta a cada quadro de rolagem. Esta é
+     a página que mais chega por celular.
+
+   • `position: fixed` recortado por um ancestral também não: `overflow`,
+     `clip-path`, `transform` e `filter` no ancestral TRANSFORMAM ESSE
+     ANCESTRAL no bloco de contenção do elemento fixo — ou seja, no instante
+     em que o recorte funciona, o elemento deixa de ser fixo em relação à
+     janela e passa a ser posicionado dentro da seção. As duas coisas são a
+     mesma propriedade; não dá para ter uma sem perder a outra.
+
+   O `sticky` não tem esse problema, e ele DISPENSA O RECORTE: um elemento
+   grudento nunca sai do próprio bloco de contenção, então a parede já nasce
+   presa dentro da seção. É por isso que a coluna do fundo não leva
+   `overflow-hidden` — e não pode levar: `overflow` em QUALQUER ancestral de
+   um `sticky` vira o "scrollport" dele, o pin passa a ser relativo a uma
+   caixa que não rola, e a parede simplesmente desce junto com a página.
+   O `overflow-hidden` que existe está no PRÓPRIO elemento grudento, que é
+   permitido, e serve só para conter a sobra da regra abaixo. */
+
+/* ── E a parede SOBE, sozinha e para sempre ───────────────────────────────
+   Presa, a parede mostraria sempre o mesmo pedaço da colagem. Aqui ela sobe
+   em looping: é o mesmo movimento que a capa antiga tinha, agora atrás de uma
+   janela em vez de ocupar a tela inteira. As duas coisas trabalham juntas — a
+   janela desliza pela página quando você rola, a parede sobe mesmo quando
+   você para.
+
+   ⚠️ SÃO DUAS CÓPIAS DA COLAGEM, EMPILHADAS, E O CURSO É EXATAMENTE -50%.
+   É o que faz a emenda desaparecer: ao fim do percurso a segunda cópia está
+   no pixel onde a primeira começou, e o salto de volta ao zero acontece entre
+   dois quadros idênticos. Um curso de -100% mostraria o vazio embaixo da
+   segunda; qualquer valor entre os dois produz um tranco visível a cada
+   volta. Tirar uma das cópias quebra o looping — não é imagem repetida por
+   descuido.
+
+   Como o -50% é da altura da PISTA (as duas cópias somadas), ele vale um
+   quadro inteiro da colagem em qualquer largura de tela, sem medir nada.
+
+   A DURAÇÃO É LONGA DE PROPÓSITO. São 55 segundos para percorrer a colagem
+   inteira, algo em torno de 30 pixels por segundo: devagar o bastante para
+   que o movimento seja percebido como o fundo respirando, e não como uma
+   esteira passando. Numa parede que fica atrás de texto, movimento rápido
+   rouba a leitura — e esta seção tem uma frase só, que precisa ser lida. */
+@keyframes paredeSobe {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+.janela-parede {
+  animation: paredeSobe 55s linear infinite;
+}
+
+/* Quem pediu menos movimento recebe a parede parada — e ela continua inteira,
+   porque o repouso é o primeiro quadro: a primeira cópia no lugar. */
+@media (prefers-reduced-motion: reduce) {
+  .janela-parede {
+    animation: none;
+  }
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { cellGroups, neighborhoods } from "@/lib/cells";
+import { cells, neighborhoods } from "@/lib/cells";
 
 /**
  * Os quatro momentos de uma noite de célula.
@@ -20,7 +20,7 @@ const night = [
   {
     n: "01",
     title: "Boas-vindas",
-    desc: "Você chega, alguém abre a porta e te apresenta pro grupo. Dá pra só observar na primeira vez.",
+    desc: "Você chega, alguém abre a porta e apresenta você ao grupo. É possível apenas observar na primeira vez.",
     card: "bg-plum-deep",
     text: "text-white",
     body: "text-white/70",
@@ -29,7 +29,7 @@ const night = [
   {
     n: "02",
     title: "Adoração",
-    desc: "Duas ou três músicas, no violão mesmo. Uns cantam, outros só ficam ouvindo — os dois são normais.",
+    desc: "Duas ou três músicas, no violão mesmo. Uns cantam, outros apenas ouvem — os dois são normais.",
     card: "bg-plum",
     text: "text-white",
     body: "text-white/70",
@@ -38,7 +38,7 @@ const night = [
   {
     n: "03",
     title: "Palavra",
-    desc: "Alguém abre um texto curto da Bíblia e a conversa fica aberta. Dá pra perguntar, discordar ou só escutar.",
+    desc: "Alguém abre um texto curto da Bíblia e a conversa fica aberta. É possível perguntar, discordar ou apenas escutar.",
     card: "bg-grape",
     text: "text-white",
     body: "text-white/75",
@@ -93,26 +93,26 @@ export function CellsFeature() {
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
             Toda semana, em casas espalhadas pela cidade, grupos de 8 a 15
-            pessoas se reúnem pra comer junto, conversar e cuidar uns dos
-            outros. É assim que a gente é igreja no meio da semana.
+            pessoas se reúnem para comer junto, conversar e cuidar uns dos
+            outros. É assim que somos igreja no meio da semana.
           </p>
 
           <p className="mt-6 text-sm text-muted-foreground">
             <span className="font-medium text-foreground">
-              {cellGroups.length} células
+              {cells.length} células
             </span>{" "}
             em{" "}
             <span className="font-medium text-foreground">
               {neighborhoods.length} bairros
             </span>{" "}
-            de Indaiatuba, abertas pra quem quiser começar.
+            de Indaiatuba, abertas a quem quiser começar.
           </p>
 
           <Link
             href="/celulas"
             className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
           >
-            Achar a célula mais perto de você
+            Encontrar a célula mais perto de você
             <ArrowRight
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"

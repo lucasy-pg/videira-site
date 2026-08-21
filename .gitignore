@@ -43,3 +43,18 @@ next-env.d.ts
 # fontes de vídeo (originais pesados — só os derivados comprimidos vão pro repo)
 public/*.MOV
 public/*.mov
+
+# oficinas de imagem: fotos originais, recortes e mosaicos de trabalho. São
+# ~150MB que não têm por que viver no repo do site — só o derivado final vai
+# pro `public/`. O contexto para tocar isso fora daqui está em
+# `docs/colagem-radicais.md`.
+/fotos-radicais-livres/
+/colagem-fotos/
+
+# material cru: originais pesados que você joga pra eu converter e levar
+# pro `public/`. O contrato está em `material/LEIA-ME.md`.
+/material/
+
+# catálogo gerado: 3,5MB de miniaturas embutidas, regerável com
+# `node scripts/gerar-acervo.js`. O script vai pro git, o produto dele não.
+/docs/acervo.html

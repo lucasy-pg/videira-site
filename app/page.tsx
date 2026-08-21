@@ -4,12 +4,17 @@ import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
 import { CellsFeature } from "@/components/CellsFeature";
+import { cells } from "@/lib/cells";
 
 const IMG = {
-  jovens:
-    "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1100&h=1300&fit=crop&auto=format",
-  /* A foto anterior (blocos de brinquedo em cores primárias) era a coisa mais
-     saturada da página inteira e brigava com a disciplina de uma matiz só. */
+  /* A foto anterior era stock (`photo-1493225457124`, jovens genéricos numa
+     luz colorida) e era a MESMA que abria o /radicais-livres. Agora é foto
+     real de um culto da Videira — e a página do ministério usa a mesma, o que
+     faz o card virar prévia de verdade do que a pessoa vai encontrar lá. */
+  jovens: "/igreja/adoracao-jovens.jpg",
+  /* Ainda stock: não existe nenhuma foto real das crianças no repositório.
+     (A anterior — blocos de brinquedo em cores primárias — era a coisa mais
+     saturada da página e brigava com a disciplina de uma matiz só.) */
   kids: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1100&h=1300&fit=crop&auto=format",
   culto:
     "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1800&h=1000&fit=crop&auto=format",
@@ -29,11 +34,11 @@ const IMG = {
  */
 const welcomePhotos = {
   principal: {
-    src: "/videira-boas-vindas.jpg",
+    src: "/igreja/boas-vindas.jpg",
     alt: "Dois voluntários da Videira recebendo visitantes com placas escritas 'Seja bem-vindo' e 'É um privilégio termos você conosco hoje'",
   },
   abraco: {
-    src: "/videira-abraco-1.jpg",
+    src: "/igreja/abraco.jpg",
     alt: "Abraço entre dois membros da Videira",
   },
 };
@@ -42,8 +47,8 @@ const welcomePhotos = {
 const visitInfo = [
   {
     label: "Cultos de domingo",
-    value: "10h da manhã · 18h da noite",
-    img: "/culto-todos-juntos.JPG",
+    value: "9h da manhã · 18h da noite",
+    img: "/igreja/culto-todos-juntos.jpg",
     /* A foto é bem mais larga que o card (quase 3:2 num card 5:4), então o
        `object-cover` recorta uns 17% da largura. O pedido era esconder MAIS
        o caixote de flores à direita — `object-left` empurra o corte inteiro
@@ -56,7 +61,7 @@ const visitInfo = [
   {
     label: "Onde nos encontrar",
     value: "R. Augusto de Oliveira Camargo, 257 · Centro",
-    img: "/videira-fachada.jpg",
+    img: "/igreja/fachada.jpg",
     /* Foto quase 2:1 (640×332) num card 5:4 — o corte já é grande por conta
        da proporção. O poste de luz fica em x≈440-460 de 640; `object-left`
        mostra só até x≈415, sobra o letreiro Videira e a fachada, some o
@@ -68,13 +73,15 @@ const visitInfo = [
   },
   {
     label: "Durante a semana",
-    value: "26 células espalhadas por Indaiatuba",
+    /* Derivado, nunca digitado: esta linha dizia "26 células" enquanto o
+       cadastro tinha 22. */
+    value: `${cells.length} células espalhadas por Indaiatuba`,
     /* Antes era um stock de abraço em círculo, com o alt dizendo "célula numa
        casa" sem ser isso de fato — a foto real corrige a mentirinha. */
-    img: "/celula-vitor.jpeg",
+    img: "/celulas/celula-vitor.jpg",
     alt: "Célula reunida numa casa durante a semana",
     href: "/celulas",
-    cta: "Achar a mais perto",
+    cta: "Encontrar a mais perto",
   },
 ];
 
@@ -82,7 +89,7 @@ const visitInfo = [
 const nextSteps = [
   {
     title: "Venha um domingo",
-    desc: "Chegue do jeito que você está. Tem gente pra te receber e nenhuma cobrança.",
+    desc: "Chegue do jeito que você está. Há pessoas para receber você, e nenhuma cobrança.",
     href: "/contato",
     cta: "Como chegar",
   },
@@ -103,17 +110,19 @@ const nextSteps = [
 const ministries = [
   {
     href: "/radicais-livres",
-    tag: "15 — 30 anos",
+    tag: "12 — 29 anos",
     title: "Radicais Livres",
     desc: "Jovens apaixonados por Jesus, vivendo a fé sem medo e sem religião.",
     img: IMG.jovens,
+    alt: "Jovens da Videira em adoração num culto, de mãos levantadas",
   },
   {
     href: "/radicais-kids",
     tag: "0 — 14 anos",
     title: "Radicais Kids",
-    desc: "Um espaço seguro e alegre pra crianças encontrarem Jesus e fazerem amigos.",
+    desc: "Discípulos desde a infância: a criança tem célula, convida os amigos dela e ministra.",
     img: IMG.kids,
+    alt: "Crianças brincando juntas",
   },
 ];
 
@@ -123,17 +132,40 @@ export default function Home() {
       {/* ═══ HERO — o vídeo é um BLOCO na página, não o fundo dela ═══
           A página começa no bone e o vídeo mora dentro de um retângulo com
           margem, como nas referências. O header fica sólido por cima do bone,
-          em vez de flutuar sobre a filmagem. */}
+          em vez de flutuar sobre a filmagem.
+
+          A ALTURA é relativa à VIEWPORT, não uma escala fixa em rem:
+          `h-[calc(100svh-…)]` desconta do alto da tela o header fixo
+          (`4rem` / `5rem`, o `pt` do <main> no layout), o `pt` desta seção e
+          uma sobra igual embaixo — moldura do mesmo tamanho nos quatro lados.
+          Assim a capa ocupa a MESMA fatia da tela em qualquer aparelho, e os
+          cards da seção seguinte ficam SEMPRE abaixo da dobra: quem chega vê a
+          capa inteira e só encontra o resto ao rolar. Com altura fixa em rem
+          isso variava por aparelho — em tela alta sobrava vão e os cards
+          espiavam por baixo, em tela baixa a capa estourava.
+
+          `svh` e não `dvh`: o dinâmico mede a viewport COM a barra do
+          navegador recolhida, então o cartão remediria (e daria um pulo) toda
+          vez que a barra some ao rolar. O `svh` é a medida estável, com a
+          barra visível — pior caso, e por isso o que nunca corta.
+
+          Os limites são guarda-corpo, não composição: `min-h-[30rem]` pro
+          celular deitado (abaixo disso o título, o parágrafo e os dois botões
+          não cabem, e o `overflow-hidden` cortaria o que sobrasse);
+          `max-h-[52rem]` pro monitor em pé, onde 100svh viraria um paredão. */}
       <section className="bg-bone pt-4 sm:pt-6">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="relative isolate flex min-h-[32rem] items-end overflow-hidden rounded-[2rem] bg-plum-deep sm:min-h-[36rem] lg:min-h-[40rem] lg:rounded-[2.5rem]">
-            {/* Filmagem real de um culto, muda e em loop. O poster (30 KB) pinta
-                a capa na hora; o vídeo entra por cima quando carrega. Só H.264 —
-                AV1 e VP9 saíram maiores nesse material. */}
+          <div className="relative isolate flex h-[calc(100svh-6rem)] min-h-[30rem] max-h-[52rem] items-end overflow-hidden rounded-[2rem] bg-plum-deep sm:h-[calc(100svh-8rem)] lg:rounded-[2.5rem]">
+            {/* Filmagem real de um culto (em cor), muda e em loop. O poster
+                (~75 KB) pinta a capa na hora; o vídeo entra por cima quando
+                carrega. Só H.264 — AV1 e VP9 saíram maiores nesse material.
+                Reencodado de 148 MB/1080p originais para ~17 MB (CRF 26) —
+                o bruto ficaria pesado demais pra rodar em loop autoplay na
+                Home. */}
             <video
               className="absolute inset-0 h-full w-full object-cover"
-              src="/capa-inicio.mp4"
-              poster="/capa-inicio-poster.jpg"
+              src="/videos/horizontal/capa-inicio.mp4"
+              poster="/videos/horizontal/capa-inicio-poster.jpg"
               autoPlay
               muted
               loop
@@ -161,8 +193,8 @@ export default function Home() {
               <Reveal delay={620}>
                 <p className="mt-6 max-w-lg leading-relaxed text-white/75 sm:text-lg">
                   Somos uma igreja em células espalhada por Indaiatuba. Sem
-                  religiosidade e sem cobrança — gente real encontrando Jesus
-                  junto, no domingo e no meio da semana.
+                  religiosidade e sem cobrança — pessoas reais encontrando Jesus
+                  juntas, no domingo e no meio da semana.
                 </p>
               </Reveal>
 
@@ -180,12 +212,6 @@ export default function Home() {
                       />
                     </Link>
                   </MagneticButton>
-                  <Link
-                    href="/sobre"
-                    className="inline-flex items-center justify-center gap-2.5 rounded-full border border-white/30 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 active:scale-95"
-                  >
-                    Conheça a igreja
-                  </Link>
                 </div>
               </Reveal>
             </div>
@@ -267,37 +293,26 @@ export default function Home() {
             </Reveal>
             <Reveal delay={170}>
               {/* A história da rede (Goiânia, 1997, pastor Aluízio, os 30+
-                  países) saiu daqui de propósito e vai virar seção no /sobre:
-                  quem abre este site quer a igreja de Indaiatuba, não a
-                  genealogia da denominação. O que sobrou fala de quem chega. */}
+                  países) saiu daqui de propósito: quem abre este site quer a
+                  igreja de Indaiatuba, não a genealogia da denominação. O que
+                  sobrou fala de quem chega. */}
               <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
                 <p>
-                  Ninguém aqui vai te perguntar há quanto tempo você não pisa
-                  numa igreja. No domingo tem gente que cresceu na fé, gente
-                  voltando depois de muitos anos e gente entrando pela primeira
-                  vez na vida — e as três coisas são igualmente normais.
+                  Ninguém aqui vai perguntar há quanto tempo você não pisa
+                  numa igreja. No domingo há quem tenha crescido na fé, quem
+                  esteja voltando depois de muitos anos e quem entre pela
+                  primeira vez na vida — e as três coisas são igualmente
+                  normais.
                 </p>
                 <p>
                   O nome vem de uma promessa: <em className="italic text-foreground">
                     &quot;Eu sou a videira, vocês são os ramos&quot;</em> (João
                   15:5) — ramo isolado não dá fruto. É por isso que a nossa
-                  semana não termina no domingo: tem casa aberta espalhada por
-                  Indaiatuba, onde dá pra conhecer gente de verdade e ser
+                  semana não termina no domingo: há casas abertas espalhadas por
+                  Indaiatuba, onde é possível conhecer pessoas de verdade e ser
                   conhecido de volta.
                 </p>
               </div>
-            </Reveal>
-            <Reveal delay={250}>
-              <Link
-                href="/sobre"
-                className="group mt-9 inline-flex items-center gap-2.5 border-b border-foreground/25 pb-1.5 text-sm font-medium text-foreground transition-colors hover:border-grape hover:text-grape"
-              >
-                Nossa história e o que cremos
-                <ArrowRight
-                  size={15}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </Link>
             </Reveal>
           </div>
 
@@ -417,7 +432,7 @@ export default function Home() {
               Ministérios
             </span>
             <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
-              Tem lugar para{" "}
+              Há lugar para{" "}
               <span className="block font-normal italic text-grape">
                 cada fase da vida
               </span>
@@ -437,7 +452,7 @@ export default function Home() {
                 >
                   <ImageWithFallback
                     src={m.img}
-                    alt={m.title}
+                    alt={m.alt}
                     className="aspect-[4/5] w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-95 sm:aspect-[5/4] lg:aspect-[4/3]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-plum-deep via-plum-deep/45 to-plum-deep/0" />
@@ -476,7 +491,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-plum/70 via-plum-deep/85 to-plum-deep" />
 
         <div className="container relative mx-auto px-5 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
-          {/* Os números (26 células / 16 bairros) já são ditos, com mais força,
+          {/* Os números (células / bairros) já são ditos, com mais força,
               na seção dos bairros. Repeti-los aqui como troféu enfraquecia os
               dois lugares — o fechamento é só convite. */}
           <Reveal variant="scale" className="text-center">
@@ -487,8 +502,8 @@ export default function Home() {
               </span>
             </h2>
             <p className="mx-auto mt-7 max-w-lg text-lg leading-relaxed text-white/70">
-              Não importa onde você está na sua jornada. Manda uma mensagem,
-              aparece num domingo — a gente te espera.
+              Não importa onde você está na sua jornada. Envie uma mensagem ou
+              apareça num domingo — nós esperamos por você.
             </p>
             <MagneticButton>
               <Link

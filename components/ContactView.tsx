@@ -1,29 +1,43 @@
 "use client";
 
-import { MapPin, Phone, Mail, Clock, ArrowRight, Check, Loader2 } from "lucide-react";
+import { MapPin, ArrowRight, Check, Loader2, Phone } from "lucide-react";
 import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
+import { MagneticButton } from "@/components/MagneticButton";
+import { WHATSAPP_IGREJA } from "@/lib/social";
 
+/* Os quadradinhos de ícone (`h-10 w-10 rounded-xl bg-lilac`) que ficavam ao
+   lado de cada item saíram: é o mesmo elemento genérico-SaaS que já tinha sido
+   cortado da Home. Sem eles a coluna vira uma lista tipográfica. */
 const contactInfo = [
   {
-    icon: MapPin,
     label: "Endereço",
     lines: ["Rua Augusto de Oliveira Camargo, 257", "Centro — Indaiatuba/SP"],
   },
   {
-    icon: Phone,
+    /* O número real da igreja é o mesmo do WhatsApp que o site inteiro já
+       linka (wa.me/5519978201132). Antes havia aqui um "(19) 99999-9999" de
+       rascunho, que é placeholder óbvio numa página cujo assunto é justamente
+       como falar com a igreja. O segundo número (fixo/secretaria) segue
+       PENDENTE — pedir o real. */
     label: "Telefone",
-    lines: ["(19) 99999-9999", "(19) 3875-0000"],
+    lines: [WHATSAPP_IGREJA.exibicao],
   },
   {
-    icon: Mail,
+    /* Endereço real, informado pela igreja. Os dois anteriores
+       (contato@ e celulas@igrejavideira.com.br) vinham do rascunho do design e
+       não existiam — mandar alguém escrever para uma caixa inexistente é pior
+       do que não publicar e-mail nenhum. Só há UM endereço; não invente o
+       segundo para preencher a coluna. */
     label: "E-mail",
-    lines: ["contato@igrejavideira.com.br", "celulas@igrejavideira.com.br"],
+    lines: ["igrejavideiraindaituba@hotmail.com"],
   },
   {
-    icon: Clock,
+    /* O horário de secretaria ("Seg–Sex, 9h–17h") saiu daqui: era do rascunho e
+       nunca foi confirmado. Numa página cujo assunto é como chegar até a
+       igreja, um expediente inventado faz alguém bater numa porta fechada. */
     label: "Horários",
-    lines: ["Domingos: 10h e 18h", "Células: durante a semana", "Secretaria: Seg–Sex, 9h–17h"],
+    lines: ["Domingos: 9h–11h e 18h–20h", "Células: durante a semana"],
   },
 ];
 
@@ -52,106 +66,146 @@ export function ContactView() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /* Campo em `bg-sand` DENTRO do card branco: na faixa greige o card é o
+     branco, então o campo precisa ser mais escuro que ele pra ler como campo.
+     O `bg-secondary` de antes era o bege órfão do sistema antigo. */
   const inputClass =
-    "w-full px-4 py-3 bg-secondary border border-border rounded-xl text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-grape focus:ring-1 focus:ring-grape transition-colors";
+    "w-full rounded-xl border border-foreground/10 bg-sand px-4 py-3 text-sm text-foreground transition-colors placeholder:text-muted-foreground/60 focus:border-grape focus:outline-none focus:ring-1 focus:ring-grape";
+
+  const labelClass =
+    "mb-2 block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground";
 
   return (
-    <div className="bg-background text-foreground">
-      {/* Hero */}
-      <section className="relative overflow-hidden py-28 sm:py-36 border-b border-border">
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-bone text-foreground">
+      {/* ═══ ABERTURA — tipográfica ═══ */}
+      {/* `manchetes-poppins` fica NA SEÇÃO, não no <div> raiz como na /sobre e
+          na /celulas: aqui só a abertura roda na geométrica. As manchetes do
+          formulário e do mapa, mais abaixo, continuam na Newsreader.
+          Como a Poppins é carregada só em romano (app/layout.tsx), o destaque
+          do <h1> perdeu o itálico e ficou só no roxo — mesma troca que a
+          /celulas fez. Deixar `italic` aqui renderia o oblíquo sintético do
+          navegador. */}
+      <section className="manchetes-poppins bg-bone pb-20 pt-14 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <p className="text-xs text-grape uppercase tracking-widest font-medium mb-4">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
               Fale conosco
-            </p>
+            </span>
           </Reveal>
-          <Reveal variant="blur" delay={80}>
-            <h1
-              className="font-display text-6xl sm:text-7xl lg:text-8xl font-medium leading-none text-foreground"
-            >
-              Entre em<br />
-              <span className="text-grape">
-                Contato
+          <Reveal variant="blur" delay={90}>
+            <h1 className="font-display mt-5 max-w-4xl text-[clamp(2.5rem,6.5vw,5.25rem)] font-medium leading-[0.98] text-foreground">
+              Envie uma mensagem,{" "}
+              <span className="block font-normal text-grape">
+                nós respondemos
               </span>
             </h1>
           </Reveal>
           <Reveal delay={180}>
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl">
-              Estamos aqui para você. Manda sua mensagem e a gente conversa!
+            {/* O subtítulo acompanha o título na Poppins. Vai pela família
+                direta, e não por `.font-display`, porque essa classe carrega o
+                tracking de manchete (-0.025em) — num parágrafo de corpo ele
+                aperta demais. */}
+            <p className="mt-7 max-w-xl font-[family-name:var(--font-poppins)] leading-relaxed text-muted-foreground sm:text-lg">
+              Para visitar pela primeira vez, entrar numa célula, pedir oração
+              ou apenas tirar uma dúvida — não é preciso ter um motivo formal.
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* Info + Form */}
-      <section className="py-20 sm:py-28 border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 max-w-6xl mx-auto">
-            {/* Contact Info */}
-            <div className="lg:col-span-2 space-y-8">
-              {contactInfo.map((item, i) => (
-                <Reveal key={i} delay={i * 90} variant="left">
-                  <div className="flex gap-4 group">
-                    <div className="w-10 h-10 rounded-xl bg-lilac border border-grape/15 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:bg-lilac group-hover:scale-110">
-                      <item.icon size={17} className="text-grape" />
-                    </div>
-                    <div>
-                      <h3
-                        className="text-sm font-bold uppercase tracking-wide text-foreground mb-2"
-                      >
-                        {item.label}
-                      </h3>
-                      {item.lines.map((line, j) => (
-                        <p key={j} className="text-sm text-muted-foreground leading-relaxed">
+      {/* ═══ CONTATO + FORMULÁRIO ═══ */}
+      <section className="bg-sand py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-5 lg:gap-16">
+            {/* ── Coluna esquerda ── */}
+            <div className="lg:col-span-2">
+              {/* O WhatsApp vem ANTES do formulário na leitura da coluna: é o
+                  canal que a igreja realmente atende (o mesmo número que as
+                  células usam), e é resposta de gente, não de caixa de
+                  entrada. */}
+              <Reveal variant="left">
+                <div className="rounded-[1.75rem] bg-card p-7">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                    Jeito mais rápido
+                  </span>
+                  <p className="mt-4 leading-relaxed text-muted-foreground">
+                    No WhatsApp há alguém do outro lado, com nome e rosto — é
+                    possível perguntar qualquer coisa antes de aparecer.
+                  </p>
+                  <MagneticButton className="mt-6">
+                    <a
+                      href={WHATSAPP_IGREJA.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 rounded-full bg-grape px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-grape/25 active:scale-95"
+                    >
+                      <Phone size={16} />
+                      Falar no WhatsApp
+                    </a>
+                  </MagneticButton>
+                </div>
+              </Reveal>
+
+              {/* Linhas divisórias em vez de quatro caixinhas — quatro cards
+                  seguidos numa coluna estreita viram parede (mesma decisão do
+                  "No Que Cremos"). O padding vai no PRÓPRIO <Reveal>, que é o
+                  irmão real dentro do `divide-y`: no div interno, cada um é
+                  filho único do seu Reveal e o `first:`/`last:` casaria com
+                  todos, zerando o respiro da lista inteira. */}
+              <div className="mt-10 divide-y divide-foreground/10 border-t border-foreground/10">
+                {contactInfo.map((item, i) => (
+                  <Reveal
+                    key={item.label}
+                    delay={i * 80}
+                    variant="left"
+                    className="py-6 first:pt-8 last:pb-0"
+                  >
+                    <h3 className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                      {item.label}
+                    </h3>
+                    <div className="mt-2.5 space-y-0.5">
+                      {item.lines.map((line) => (
+                        <p key={line} className="leading-relaxed text-foreground">
                           {line}
                         </p>
                       ))}
                     </div>
-                  </div>
-                </Reveal>
-              ))}
-
-              <Reveal delay={contactInfo.length * 90} variant="left">
-                <div className="mt-8 p-6 rounded-2xl bg-card border border-border transition-colors hover:border-grape/35">
-                  <h3
-                    className="text-base font-bold uppercase text-foreground mb-2"
-                  >
-                    Primeira Visita?
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Adoraríamos conhecer você! Venha nos visitar e descubra como é fazer parte da família Videira.
-                  </p>
-                </div>
-              </Reveal>
+                  </Reveal>
+                ))}
+              </div>
             </div>
 
-            {/* Form */}
+            {/* ── Coluna direita: o formulário ── */}
             <Reveal variant="right" delay={120} className="lg:col-span-3">
-              <div className="bg-card border border-border rounded-2xl p-8 sm:p-10">
-                <h2
-                  className="font-display text-3xl sm:text-4xl font-medium text-foreground mb-8"
-                >
-                  Envie sua Mensagem
+              <div className="rounded-[1.75rem] bg-card p-8 sm:p-10">
+                <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                  Ou escreva aqui
+                </span>
+                <h2 className="font-display mt-5 text-[clamp(1.75rem,3.4vw,2.5rem)] font-medium leading-[1.05] text-foreground">
+                  Envie sua{" "}
+                  <span className="font-normal italic text-grape">mensagem</span>
                 </h2>
 
                 {sent && (
-                  <div className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-lilac border border-grape/15 text-grape text-sm animate-grid-in">
-                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-lilac">
+                  <div className="animate-grid-in mt-8 flex items-center gap-3 rounded-xl bg-lilac p-4 text-sm text-grape">
+                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-grape text-white">
                       <Check size={14} />
                     </span>
                     Mensagem enviada! Entraremos em contato em breve.
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="mt-8 space-y-5">
                   <div>
-                    <label htmlFor="name" className="block text-xs text-muted-foreground uppercase tracking-widest mb-2">
-                      Nome Completo *
+                    <label htmlFor="name" className={labelClass}>
+                      Nome completo *
                     </label>
                     <input
                       type="text"
@@ -165,9 +219,9 @@ export function ContactView() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div>
-                      <label htmlFor="email" className="block text-xs text-muted-foreground uppercase tracking-widest mb-2">
+                      <label htmlFor="email" className={labelClass}>
                         E-mail *
                       </label>
                       <input
@@ -182,7 +236,7 @@ export function ContactView() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="phone" className="block text-xs text-muted-foreground uppercase tracking-widest mb-2">
+                      <label htmlFor="phone" className={labelClass}>
                         Telefone
                       </label>
                       <input
@@ -192,13 +246,13 @@ export function ContactView() {
                         value={formData.phone}
                         onChange={handleChange}
                         className={inputClass}
-                        placeholder="(19) 99999-9999"
+                        placeholder="(19) 90000-0000"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="subject" className="block text-xs text-muted-foreground uppercase tracking-widest mb-2">
+                    <label htmlFor="subject" className={labelClass}>
                       Assunto *
                     </label>
                     <select
@@ -209,17 +263,17 @@ export function ContactView() {
                       onChange={handleChange}
                       className={inputClass}
                     >
-                      <option value="" className="bg-card">Selecione um assunto</option>
-                      <option value="celula" className="bg-card">Participar de uma Célula</option>
-                      <option value="visita" className="bg-card">Primeira Visita</option>
-                      <option value="oracao" className="bg-card">Pedido de Oração</option>
-                      <option value="evento" className="bg-card">Informações sobre Eventos</option>
-                      <option value="outro" className="bg-card">Outro Assunto</option>
+                      <option value="">Selecione um assunto</option>
+                      <option value="celula">Participar de uma célula</option>
+                      <option value="visita">Primeira visita</option>
+                      <option value="oracao">Pedido de oração</option>
+                      <option value="evento">Informações sobre eventos</option>
+                      <option value="outro">Outro assunto</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-xs text-muted-foreground uppercase tracking-widest mb-2">
+                    <label htmlFor="message" className={labelClass}>
                       Mensagem *
                     </label>
                     <textarea
@@ -237,7 +291,7 @@ export function ContactView() {
                   <button
                     type="submit"
                     disabled={sending || sent}
-                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-grape text-white font-semibold rounded-full hover:shadow-xl hover:shadow-grape/25 hover:-translate-y-0.5 active:scale-95 transition-all text-sm disabled:opacity-80 disabled:hover:translate-y-0 disabled:active:scale-100"
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-grape px-8 py-4 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-grape/25 active:scale-95 disabled:opacity-80 disabled:hover:translate-y-0 disabled:active:scale-100 sm:w-auto"
                   >
                     {sending ? (
                       <>
@@ -251,8 +305,11 @@ export function ContactView() {
                       </>
                     ) : (
                       <>
-                        Enviar Mensagem
-                        <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                        Enviar mensagem
+                        <ArrowRight
+                          size={17}
+                          className="transition-transform duration-300 group-hover:translate-x-1"
+                        />
                       </>
                     )}
                   </button>
@@ -263,18 +320,22 @@ export function ContactView() {
         </div>
       </section>
 
-      {/* Map */}
-      <section className="py-20 sm:py-28">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+      {/* ═══ MAPA ═══ */}
+      <section className="bg-bone py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <h2
-                className="font-display text-3xl sm:text-4xl font-medium text-foreground"
-              >
-                Localização
+              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                Como chegar
+              </span>
+              <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
+                Estamos{" "}
+                <span className="block font-normal italic text-grape">
+                  no Centro de Indaiatuba
+                </span>
               </h2>
-              <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin size={15} className="text-grape flex-shrink-0" />
+              <p className="mt-6 flex items-start gap-2 text-sm text-muted-foreground">
+                <MapPin size={15} className="mt-0.5 flex-shrink-0 text-grape" />
                 Rua Augusto de Oliveira Camargo, 257 — Centro, Indaiatuba/SP
               </p>
             </div>
@@ -282,19 +343,22 @@ export function ContactView() {
               href="https://www.google.com/maps/search/?api=1&query=Rua+Augusto+de+Oliveira+Camargo,+257,+Centro,+Indaiatuba+-+SP"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-foreground/5 px-5 py-2.5 text-sm text-foreground transition-all hover:bg-foreground/10 hover:-translate-y-0.5 active:scale-95"
+              className="group inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-card px-6 py-3 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg active:scale-95"
             >
-              Como chegar
-              <ArrowRight size={16} className="text-grape transition-transform group-hover:translate-x-1" />
+              Abrir no Google Maps
+              <ArrowRight
+                size={16}
+                className="text-grape transition-transform duration-300 group-hover:translate-x-1"
+              />
             </a>
           </Reveal>
 
           <Reveal variant="scale">
-            <div className="overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-grape/35">
+            <div className="mt-12 overflow-hidden rounded-[2rem] bg-card">
               <iframe
                 title="Mapa da Igreja Videira — Rua Augusto de Oliveira Camargo, 257, Centro, Indaiatuba/SP"
                 src="https://www.google.com/maps?q=Rua+Augusto+de+Oliveira+Camargo,+257,+Centro,+Indaiatuba+-+SP&z=16&hl=pt-BR&output=embed"
-                className="h-[360px] w-full border-0 sm:h-[440px]"
+                className="h-[360px] w-full border-0 sm:h-[460px]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />

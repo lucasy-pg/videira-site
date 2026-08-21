@@ -1,0 +1,587 @@
+import type { Foto } from "@/lib/foto";
+import { linkWhatsApp } from "@/lib/social";
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * O TEXTO E AS FOTOS DA /celulas
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Mesma divisão de trabalho do `lib/sobre.ts`: aqui mora o que a página DIZ,
+ * lá em `app/celulas/page.tsx` mora como ela se PARECE. Quem for revisar a
+ * copy com a igreja não precisa abrir JSX nenhum.
+ *
+ * O QUE NÃO ESTÁ AQUI, e é decisão herdada do `lib/cells.ts`: dia, horário,
+ * endereço e nome de líder. A página inteira leva a uma conversa no WhatsApp
+ * justamente porque esses quatro dados mudam demais para viver num arquivo
+ * versionado — publicar um horário velho manda alguém para uma casa vazia.
+ *
+ * OS NÚMEROS TAMBÉM NÃO ESTÃO AQUI. "24 células em 17 bairros" não é digitado
+ * em lugar nenhum: sai de `cells.length` e `neighborhoodGroups.length`. Foi
+ * assim que a Home parou de anunciar 26 células enquanto o cadastro tinha 22.
+ */
+
+/* ── Tipos ────────────────────────────────────────────────────────────────
+   `Titulo` é o mesmo desenho do `Manchete` da /sobre — a manchete partida em
+   três para que UM trecho possa ser destacado sem tirar o resto do `<h2>`.
+   Não foi promovido a um arquivo comum de propósito: o que as duas páginas
+   compartilham é o FORMATO, não o desenho — e o desenho ainda pode divergir
+   (hoje as duas são Poppins e pintam o destaque só de roxo; foi Newsreader
+   itálico aqui até a página trocar de fonte). Se uma terceira quiser o mesmo,
+   aí vale subir os dois juntos.
+
+   ⚠️ `antes` e `depois` são colados no `forte` SEM ESPAÇO NENHUM: o espaço que
+   separa as palavras tem que estar digitado dentro da string, e ele mora no
+   `antes`/`depois`, não no `forte` — senão o roxo pinta um espaço solto na
+   ponta da palavra. O `depois` também é onde mora a pontuação final, e ele
+   fica VAZIO quando o `forte` já termina em ponto ou em interrogação: um
+   `depois: "."` depois de "encontro de célula?" publica "célula?." na tela. */
+export type Titulo = { antes: string; forte: string; depois: string };
+
+/** Um pedaço de parágrafo, para quando uma frase do meio precisa de peso. */
+export type Pedaco = { texto: string; forte?: boolean };
+
+/* ── A AÇÃO ───────────────────────────────────────────────────────────────
+   "Encontre uma célula" aparece três vezes na página (capa, bairros e fecho) e
+   as três apontam para AQUI. Uma constante e não três `href` soltos: o dia em
+   que a igreja tiver um formulário próprio, a página muda numa linha.
+
+   POR QUE WHATSAPP E NÃO UM FORMULÁRIO. É o canal que a igreja de fato
+   atende, é o mesmo número do rodapé e do /contato, e é a ponte que o
+   `lib/cells.ts` já descreve: quem se identifica com o bairro fala no
+   WhatsApp e recebe o endereço certo, que é o dado que o site não publica.
+
+   A MENSAGEM JÁ VAI ESCRITA. Uma janela em branco é onde a maior parte das
+   pessoas desiste — ainda mais quando o pedido é "quero entrar na casa de
+   alguém que eu não conheço". Ela está na primeira pessoa porque aparece do
+   lado de lá como se o visitante tivesse digitado. */
+export const ACAO_ENCONTRAR_CELULA = linkWhatsApp(
+  "Olá! Vi o site da Videira e queria encontrar uma célula perto de mim.",
+);
+
+/* ── 01 · CAPA ────────────────────────────────────────────────────────── */
+export const HERO = {
+  eyebrow: "Células Videira",
+  titulo: { antes: "Tem um lugar ", forte: "para você", depois: "." } as Titulo,
+  texto:
+    "Encontre uma célula, construa relacionamentos, cresça na fé e viva a igreja de perto.",
+  acao: "Encontrar uma célula",
+  acaoSecundaria: "Conheça as células",
+
+  /* ── AS FOTOS DA FAIXA, QUE TROCA SOZINHA ──────────────────────────────
+     A faixa era UMA foto. Vinte e quatro células e uma foto só mostrava uma
+     casa; agora ela passa quatro, parando alguns segundos em cada. Quem
+     renderiza é o `components/celulas/CapaEmLoop.tsx`, e o ritmo (quanto
+     tempo parada, quanto tempo deslizando) mora lá.
+
+     ⚠️ A ORDEM É O ARGUMENTO, não a ordem em que os arquivos chegaram.
+     Começa numa CASA com três gerações — a promessa da manchete, "tem um
+     lugar para você", precisa abrir com o lugar. Depois abre em escala (a
+     célula grande à noite), e só então mostra que as células têm IDADES
+     diferentes: os adolescentes e os jovens. É a mesma ideia que a seção 06
+     escreve em palavras ("temos células para diferentes idades e fases da
+     vida"), dita em quatro fotos antes de qualquer texto.
+
+     ⚠️ A PRIMEIRA É O LCP DA ROTA. Ela carrega em prioridade alta e as outras
+     três atrás; trocar a ordem troca qual foto o visitante espera. A primeira
+     também precisa ser 16:9 nativa — a faixa é 16:9, e as que não são levam
+     corte, que é o que o campo `recorte` resolve.
+
+     ⚠️ QUATRO É O TETO. São quatro fotos de largura cheia baixadas na abertura
+     da página; uma quinta é mais meio megabyte por visita para uma imagem que
+     aparece vinte segundos depois de a pessoa ter rolado a página. Trocar
+     uma por outra é de graça, acrescentar não é.
+
+     DUAS DESTAS NÃO SÃO EM CASA (a dos adolescentes e a dos jovens são no
+     salão da igreja) e é a única coisa aqui que contraria o resto da página,
+     que insiste em "de casa em casa". Elas entram porque são as únicas do
+     acervo em resolução de capa que mostram uma FAIXA ETÁRIA que as fotos de
+     sala não mostram. No dia em que houver uma célula de jovens fotografada
+     numa casa, essas duas saem. */
+  fotos: [
+    {
+      /* A CASA CHEIA, e por isso é esta e não uma das dezenas de selfies do
+         acervo: nela dá para ver a sala, a escada, o sofá e três gerações na
+         mesma parede — avó, pais e as crianças sentadas no chão da frente. É
+         a única do material que mostra ao mesmo tempo o LUGAR e a MISTURA DE
+         IDADES, que são exatamente as duas coisas que a manchete promete.
+
+         O recorte sobe acima do centro: embaixo é chão e joelho, em cima é a
+         parede e o vão da escada. A 45% o corte come teto em vez de comer as
+         crianças da fileira da frente. */
+      src: "/celulas/celula-filipenses.jpg",
+      alvo: "public/celulas/celula-filipenses.jpg",
+      alt: "Célula reunida na sala de uma casa: adultos em pé encostados na parede de tijolo e as crianças sentadas no chão à frente",
+      recorte: "object-[50%_45%]",
+    },
+    {
+      /* A ESCALA. Trinta e poucas pessoas numa garagem à noite, com o banner
+         da célula ao fundo e três gerações no mesmo quadro — é a foto que diz
+         "isto não é um grupinho". Também 16:9 nativa, então não perde nada no
+         corte. Ela é a maior peça do mosaico da seção 07; repetir aqui é o
+         preço de ter só duas fotos de capa nesta resolução. */
+      src: "/celulas/celula-leandro.jpg",
+      alvo: "public/celulas/celula-leandro.jpg",
+      alt: "Célula grande reunida numa garagem à noite, com avós, pais e muitas crianças sentadas à frente",
+      recorte: "object-[50%_42%]",
+    },
+    {
+      /* OS ADOLESCENTES. 4:3, então o 16:9 corta em cima e embaixo — o
+         recorte desce um pouco do centro para manter a fileira sentada no
+         chão, que é metade da turma. */
+      src: "/celulas/celula-shalom.jpg",
+      alvo: "public/celulas/celula-shalom.jpg",
+      alt: "Turma de adolescentes de uma célula sentada em degraus, todos com as mãos cruzadas sobre o peito",
+      recorte: "object-[50%_55%]",
+    },
+    {
+      /* OS JOVENS. Mesma proporção e mesmo problema de corte da anterior. */
+      src: "/celulas/celula-united.jpg",
+      alvo: "public/celulas/celula-united.jpg",
+      alt: "Célula de jovens reunida em pé e agachada para a foto, sorrindo com os polegares levantados",
+      recorte: "object-[50%_48%]",
+    },
+  ] satisfies (Foto & { recorte?: string })[],
+};
+
+/* ── 02 · O QUE É UMA CÉLULA ──────────────────────────────────────────── */
+export const O_QUE_E = {
+  eyebrow: "O que é uma célula?",
+  titulo: {
+    antes: "",
+    forte: "Muito mais",
+    depois: " que uma reunião semanal.",
+  } as Titulo,
+  paragrafos: [
+    [
+      { texto: "Uma célula é um pequeno grupo de pessoas que se reúne semanalmente para " },
+      { texto: "compartilhar a vida, aprender a Palavra e orar juntas", forte: true },
+      { texto: "." },
+    ],
+    [
+      {
+        texto:
+          "É onde construímos relacionamentos, somos cuidados e crescemos na nossa caminhada com Deus.",
+      },
+    ],
+    [
+      { texto: "Porque acreditamos que a igreja não acontece apenas aos domingos. " },
+      { texto: "Ela continua durante a semana, de casa em casa.", forte: true },
+    ],
+  ] as Pedaco[][],
+  fotoPrincipal: {
+    src: "/celulas/celula-leandro.jpg",
+    alvo: "public/celulas/celula-leandro.jpg",
+    alt: "Roda de pessoas amontoadas na sala de estar de uma casa, rindo, sob a luz quente do abajur",
+  } satisfies Foto,
+  /* A segunda foto é a MESMA que a /sobre usa na seção de células, e é
+     reencontro de propósito: quem vem de lá reconhece a varanda. Ela entra
+     menor e por baixo da quina da grande porque o que ela acrescenta é o
+     LUGAR — telhado, varal de luzinhas, quintal —, não os rostos. */
+  fotoSobreposta: {
+    src: "/celulas/celula-sao-lourenco.jpg",
+    alvo: "public/celulas/celula-sao-lourenco.jpg",
+    alt: "Célula reunida na varanda de uma casa à noite, sob um varal de luzinhas, com as crianças sentadas na frente segurando copos",
+  } satisfies Foto,
+};
+
+/* ── 03 · NOSSA VISÃO ─────────────────────────────────────────────────── */
+export const VISAO = {
+  eyebrow: "Nossa visão",
+  /* "ALÉM DAS QUATRO PAREDES" SAIU e não volta: era metáfora de púlpito, e a
+     seção passa a dizer a mesma coisa com o fato — a igreja acontece de casa
+     em casa. O roxo cai em "de casa em casa" porque é ele que carrega a ideia;
+     "uma igreja" sozinho não é a visão de ninguém. */
+  titulo: {
+    antes: "Uma igreja ",
+    forte: "de casa em casa",
+    depois: ".",
+  } as Titulo,
+  /* DOIS PARÁGRAFOS E É TUDO. Eram três, e o terceiro ("assim como a igreja do
+     primeiro século…") dizia pela terceira vez o que os outros dois já tinham
+     dito duas — a seção inteira era a mesma frase em três tamanhos.
+
+     O ENCARGO ("cada membro um ministro, cada casa uma extensão da igreja")
+     APARECE UMA VEZ SÓ NA PÁGINA, e é aqui, dentro do primeiro parágrafo. Ele
+     também era o bloco tipográfico gigante no pé desta seção — a mesma frase
+     escrita duas vezes na mesma tela, uma sussurrada e uma gritada. Ficou a
+     sussurrada. Quem quiser o encargo em voz alta tem a /sobre, que o exibe
+     entre aspas no meio da página; e a seção 09 desta página ainda o repete
+     como refrão, longe daqui, para fechar o argumento. */
+  paragrafos: [
+    [
+      { texto: "Na Videira, cremos que " },
+      {
+        texto:
+          "cada membro é um ministro e cada casa uma extensão da igreja",
+        forte: true,
+      },
+      { texto: "." },
+    ],
+    [
+      {
+        texto:
+          "Por isso, além de nos reunirmos para celebrar, durante a semana vivemos a igreja através das células: ",
+      },
+      {
+        texto:
+          "compartilhando a fé, cuidando de pessoas e fazendo discípulos",
+        forte: true,
+      },
+      { texto: "." },
+    ],
+  ] as Pedaco[][],
+  versiculo:
+    "Partiam o pão em suas casas e juntos participavam das refeições, com alegria e sinceridade de coração.",
+  referencia: "Atos 2:46",
+};
+
+/* ── 04 · POR QUE PARTICIPAR ──────────────────────────────────────────── */
+export const BENEFICIOS = {
+  eyebrow: "Por que participar?",
+  titulo: {
+    antes: "Um lugar para ",
+    forte: "pertencer e crescer",
+    depois: ".",
+  } as Titulo,
+  /* Os quatro em ordem de PROXIMIDADE crescente com a pessoa: primeiro o que
+     ela recebe (discipulado, amizade, cuidado), depois o que ela vira. O
+     quarto é o único que fala de dar em vez de receber, e é por isso que ele
+     fecha a lista — é a ponte para a seção de multiplicação, mais abaixo.
+
+     ⚠️ SÃO QUATRO PORQUE A GRADE É 2 + 2. Um quinto item deixa a última linha
+     com um órfão do lado de um buraco; se a igreja quiser um quinto, a grade
+     do `page.tsx` precisa voltar a ser assimétrica junto. */
+  itens: [
+    {
+      n: "01",
+      rotulo: "Discipulado",
+      titulo: "Cresça acompanhado.",
+      texto:
+        "Tenha pessoas por perto para ajudar você a avançar na sua caminhada com Deus.",
+    },
+    {
+      n: "02",
+      rotulo: "Relacionamentos",
+      titulo: "Construa amizades.",
+      texto:
+        "Compartilhe a vida com pessoas que caminham na mesma fé.",
+    },
+    {
+      n: "03",
+      rotulo: "Cuidado",
+      titulo: "Tenha com quem contar.",
+      texto:
+        "Encontre apoio, oração e cuidado nos diferentes momentos da vida.",
+    },
+
+    {
+      n: "04",
+      rotulo: "Propósito",
+      titulo: "Descubra que Deus também quer usar você.",
+      texto:
+        "Desenvolva seus dons, aprenda a servir e comece a cuidar de outras pessoas.",
+    },
+  ],
+};
+
+/* ── 05 · COMO FUNCIONA ───────────────────────────────────────────────── */
+
+/* O QUADRO DAS QUATRO FOTOS DA LINHA DO TEMPO, um só. Está em constante e não
+   repetido quatro vezes justamente porque o valor de tê-lo é ele ser o MESMO:
+   quem mudar a proporção muda as quatro juntas, que é a única forma de a fila
+   continuar alinhada. 4:3 porque é a proporção nativa da maioria das fotos de
+   turma do acervo — nela o `object-cover` quase não corta. */
+const QUADRO = "aspect-[4/3]";
+const ALTURA = "lg:h-full";
+export const ENCONTRO = {
+  eyebrow: "Como funciona",
+  titulo: {
+    antes: "Como é um ",
+    forte: "encontro de célula?",
+    depois: "",
+  } as Titulo,
+  intro: [
+    { texto: "Os encontros acontecem " },
+    { texto: "uma vez por semana", forte: true },
+    { texto: " e duram aproximadamente " },
+    { texto: "1h30", forte: true },
+    {
+      texto:
+        ". Cada célula tem sua própria personalidade, mas normalmente vivemos quatro momentos.",
+    },
+  ] as Pedaco[],
+  /* OS QUATRO MOMENTOS TÊM O MESMO QUADRO: mesma proporção (4:3), mesma
+     altura, mesma base. Cada um tinha o seu — 4:3, quadrado, 3:4 — e cada um
+     pousava numa altura diferente (100%, 74%, 88%) para a fila parecer montada
+     à mão. Parecia desalinhada: quatro fotos de mesma natureza, em quatro
+     tamanhos, lado a lado, leem como erro de recorte e não como composição.
+     A régua horizontal e os pontos roxos já dão o ritmo da seção; as fotos não
+     precisam dar também.
+
+     A REGRA DE QUAL FOTO VAI EM QUAL MOMENTO É LITERAL: braços para o alto na
+     chegada, o teclado no louvor, a Bíblia junto ao peito na Palavra, os
+     balões e a mesa na comunhão.
+
+     ⚠️ A DO LOUVOR É A ÚNICA QUE NÃO É UMA TURMA, e é de propósito. As outras
+     três mostram gente reunida; esta é um close de duas mãos no teclado. Não
+     foi falta de opção — foi a única cena de louvor no acervo inteiro, e ela
+     acabou sendo a melhor escolha possível: o momento de louvor e oração é o
+     que ninguém fotografa de frente, e uma selfie de turma sorrindo no lugar
+     dele seria uma cena que não é a cena. O detalhe diz "aqui se canta" sem
+     fingir um retrato que não existe.
+
+     Ela também é a única na vertical do enquadramento original (3:2 contra os
+     4:3 das outras) e entra no mesmo quadro por corte central — as mãos estão
+     no meio do quadro, então o corte não come nada. */
+  momentos: [
+    {
+      n: "01",
+      titulo: "Quebra-gelo",
+      texto:
+        "Um momento leve para conversar, interagir e conectar as pessoas.",
+      foto: {
+        src: "/celulas/celula-hebrom.jpg",
+        alvo: "public/celulas/celula-hebrom.jpg",
+        alt: "Turma de uma célula na área externa de uma casa à noite, alguns com os braços levantados, todos rindo",
+      } satisfies Foto,
+      /* Cada foto tem proporção E altura diferentes, e todas pousam na MESMA
+         linha de base — é isso que faz a fileira parecer montada à mão em vez
+         de recortada em série. `altura` só vale do `lg` para cima, onde a
+         faixa é horizontal; no celular a timeline é vertical e o que manda é a
+         largura. Ver o comentário da faixa no `page.tsx`. */
+      proporcao: QUADRO,
+      altura: ALTURA,
+    },
+    {
+      n: "02",
+      titulo: "Louvor e oração",
+      texto: "Um momento para agradecer a Deus e orar uns pelos outros.",
+      foto: {
+        src: "/celulas/celula-teclado.jpg",
+        alvo: "public/celulas/celula-teclado.jpg",
+        alt: "Close das duas mãos de alguém tocando um teclado branco durante o louvor de uma célula",
+      } satisfies Foto,
+      proporcao: QUADRO,
+      altura: ALTURA,
+    },
+    {
+      n: "03",
+      titulo: "Palavra",
+      texto:
+        "Um compartilhar prático e participativo baseado nos ensinamentos da Bíblia.",
+      foto: {
+        src: "/celulas/celula-vitor.jpg",
+        alvo: "public/celulas/celula-vitor.jpg",
+        alt: "Célula reunida numa sala, uma das pessoas segurando a Bíblia junto ao peito",
+      } satisfies Foto,
+      proporcao: QUADRO,
+      altura: ALTURA,
+    },
+    {
+      n: "04",
+      titulo: "Comunhão",
+      texto:
+        "Um tempo para conversar, tomar um café e fortalecer os relacionamentos.",
+      foto: {
+        src: "/celulas/celula-betel.jpg",
+        alvo: "public/celulas/celula-betel.jpg",
+        alt: "Célula reunida numa varanda decorada com balões vermelhos, adultos e crianças juntos",
+      } satisfies Foto,
+      proporcao: QUADRO,
+      altura: ALTURA,
+    },
+  ],
+};
+
+/* ── 06 · PARA QUEM É ─────────────────────────────────────────────────── */
+export const PARA_QUEM = {
+  eyebrow: "Para quem é?",
+  titulo: {
+    antes: "Tem uma ",
+    forte: "célula",
+    depois: " para você.",
+  } as Titulo,
+  /* DOIS PARÁGRAFOS, UM EMBAIXO DO OUTRO na coluna da direita — não duas
+     colunas lado a lado, que foi como esta seção nasceu. Cada um tem um
+     trabalho: o primeiro derruba o pretexto ("não sei nada de igreja") e o
+     segundo diz o que existe. Trocar a ordem troca o argumento.
+
+     Lado a lado eles pareciam duas informações concorrentes e deixavam a
+     coluna da esquerda com um parágrafo curto solto embaixo do nada.
+     Empilhados na mesma coluna eles leem como uma resposta em dois tempos, e
+     a esquerda fica só com o título. Um terceiro parágrafo aqui é seguro —
+     entra na pilha, não cria coluna nova. */
+  paragrafos: [
+    [
+      {
+        texto:
+          "Você não precisa ter experiência com igreja ou conhecimento bíblico para participar.",
+      },
+    ],
+    [
+      {
+        texto:
+          "Temos células para diferentes idades e fases da vida. Encontre um grupo onde você possa conhecer pessoas, crescer com Deus e viver a fé em comunidade.",
+      },
+    ],
+  ] as Pedaco[][],
+  /* AS CATEGORIAS SÃO UMA LISTA DE VERDADE e não uma string com pontos no
+     meio. Como texto corrido ("Crianças · Jovens · Adultos…") o leitor de tela
+     lia tudo numa respiração só e o separador virava parte do nome; e no
+     celular a linha quebrava em qualquer lugar, deixando "Casais ·" pendurado.
+     Cada uma é um item, e o ponto entre elas é desenho do `page.tsx`.
+
+     ⚠️ NÃO VIRAR CARTÃO. Já foram um bloco de texto colado no fim de um
+     parágrafo e agora são uma faixa própria — mas o passo seguinte, que seria
+     dar a cada uma uma caixa com borda, transforma uma frase em formulário de
+     seleção, e não há nada para selecionar. */
+  categorias: ["Crianças", "Jovens", "Adultos", "Casais", "Famílias"],
+};
+
+/* ── 07 · A PAREDE DE CÉLULAS ─────────────────────────────────────────── */
+export const GALERIA = {
+  frase: "Extensões da igreja",
+  /* ⚠️ ERAM SEIS FOTOS SOLTAS NUM MOSAICO E AGORA É A COLAGEM INTEIRA. As
+     seis foram escolhidas na época pela variedade — três gerações, adultos,
+     adolescentes, jovens, crianças, sala apertada — para que a parede não
+     dissesse "célula é gente da mesma idade num sofá". A colagem faz isso
+     sozinha e melhor: são as VINTE E QUATRO células no mesmo quadro, e a
+     variedade deixa de ser uma curadoria de seis para ser o retrato do que a
+     igreja tem.
+
+     Nenhuma foto se perdeu no caminho: as seis estão dentro da colagem.
+
+     ELA NÃO É UMA FOTO DE SEÇÃO, é uma PAREDE que fica atrás da página. Quem
+     monta a janela é o `page.tsx` com a classe `.janela` do `globals.css`, e
+     é lá que está escrito por que o pin é `sticky` e não `fixed`.
+
+     A MESMA COLAGEM ERA A TEXTURA DA SEÇÃO 08, a 5,5% e desfocada, e saiu de
+     lá: as duas seções são vizinhas, e a mesma imagem em cheio e logo em
+     seguida apagada lê como erro de exportação, não como rima.
+
+     `alt` VAZIO e `aria-hidden` porque para quem não a vê ela não existe: é
+     uma textura de fundo, e descrevê-la seria despejar "vinte e seis fotos de
+     grupos de pessoas" no meio da leitura. O que a seção DIZ está na frase, e
+     a frase é texto de verdade. */
+  /* ⚠️ O ARQUIVO EM `public/` NÃO É CÓPIA DO DE `material/`. As calhas da
+     colagem — os vãos entre as fotos — eram creme com barras violeta e foram
+     PINTADAS DE PRETO no arquivo publicado. Atrás dos véus escuros da seção,
+     o creme virava uma grade clara atravessando a parede e roubava a frase;
+     em preto as fotos passam a flutuar.
+
+     Quem copiar `material/celulas/celulas-colagem.jpg` por cima do de
+     `public/` DESFAZ isso e as barras violeta voltam.
+
+     COMO FOI FEITO, porque não dá para repetir no olho. Pintar por cor não
+     funciona — parede branca dentro de foto tem a mesma tinta do vão, e o
+     preenchimento vazava para dentro das salas. A grade foi achada por
+     PROJEÇÃO: as colunas em que quase toda a altura é fundo (deu as três
+     calhas verticais) e, dentro de cada coluna, as linhas em que quase toda a
+     largura é fundo (deu as 26 fotos). Com os 26 retângulos na mão, a colagem
+     foi REMONTADA num fundo preto: cada foto teve 3px aparados na borda (a
+     franja de JPEG entre a calha e a imagem), foi reescalada para a nova
+     largura de coluna e recortada no centro.
+
+     OS VÃOS SÃO 8px, e eram uns 27. A margem de topo e de base é 4px de
+     propósito, e não 8: ela é somada consigo mesma na emenda do looping — a
+     base de uma cópia encosta no topo da seguinte —, então 4+4 dá exatamente o
+     mesmo 8px dos vãos internos. É isso que faz a volta do looping não
+     aparecer como uma faixa preta mais grossa que as outras. Mexer num dos
+     dois números sem mexer no outro põe a emenda para fora. */
+  parede: {
+    src: "/celulas/celulas-colagem.jpg",
+    alvo: "public/celulas/celulas-colagem.jpg",
+    alt: "",
+  } satisfies Foto,
+};
+
+/* ── 08 · CÉLULAS POR INDAIATUBA ──────────────────────────────────────── */
+export const BAIRROS = {
+  eyebrow: "Células em Indaiatuba",
+  titulo: {
+    antes: "De casa em casa. ",
+    forte: "Por toda Indaiatuba",
+    depois: ".",
+  } as Titulo,
+  copy: "Temos células espalhadas por diferentes regiões de Indaiatuba.",
+
+  /* ⚠️ ESTA SEÇÃO NÃO TEM MAIS FUNDO. A colagem de todas as células ficava
+     aqui atrás, a 5,5% e desfocada — era o "elemento abstrato ao fundo" que o
+     briefing pedia, e era melhor que um mapa estilizado porque um mapa com
+     pino promete endereço, que é o dado que este site não publica.
+
+     Ela saiu quando a seção 07, que é a VIZINHA DE CIMA, virou uma janela
+     para essa mesma colagem em tamanho real. A mesma imagem em cheio e, na
+     rolagem seguinte, quase apagada não lê como rima: lê como a mesma coisa
+     duas vezes, a segunda com defeito. O mural de bairros aguenta o `sand`
+     puro — o que sustenta a seção é a tipografia, não a textura. */
+};
+
+/* ── 09 · MULTIPLICAÇÃO ───────────────────────────────────────────────── */
+export const MULTIPLICACAO = {
+  eyebrow: "Crescimento e Propósito",
+  titulo: {
+    antes: "Na célula, você cresce para também ",
+    forte: "cuidar de pessoas",
+    depois: ".",
+  } as Titulo,
+  paragrafos: [
+    "Com o tempo, cada pessoa é encorajada a crescer na fé, descobrir seus dons, servir e ajudar outras pessoas em sua caminhada com Deus.",
+  ],
+  refraoIntro: "É assim que vivemos nossa visão:",
+  refrao: [
+    "Cada membro como um ministro.",
+    "Cada casa como uma extensão da igreja.",
+  ],
+  link: "Conheça o Trilho do Vencedor",
+  href: "/trilho-do-vencedor",
+};
+
+/* ── 10 · FECHO ───────────────────────────────────────────────────────── */
+export const FECHO = {
+  titulo: {
+    antes: "Sua próxima história pode começar ",
+    forte: "em uma célula",
+    depois: ".",
+  } as Titulo,
+  /* ⚠️ DUAS FRASES, DOIS PARÁGRAFOS. O `page.tsx` percorre esta lista e emite
+     um `<p>` por item — antes ele imprimia o array inteiro de uma vez e o
+     React colava as duas strings sem espaço nenhum ("…receber você.Fale com a
+     gente"). Quem acrescentar uma terceira frase ganha um terceiro parágrafo
+     de graça; quem quiser DUAS FRASES NO MESMO parágrafo tem que juntá-las
+     numa string só, com o espaço digitado. */
+  texto: [
+    "Tem uma célula pronta para receber você.",
+    "Fale com a gente e vamos ajudar a encontrar um grupo de acordo com sua região e fase da vida.",
+  ],
+  acao: "Encontre uma célula",
+  /* A ÚNICA FOTO DA PÁGINA COM TEXTO POR CIMA, e por isso é uma selfie de
+     sala cheia: o véu escuro come contraste, e uma foto já apertada de gente
+     encostada uma na outra continua legível como "muita gente junta" mesmo
+     escurecida. Uma foto de plano aberto viraria mancha. */
+  foto: {
+    src: "/celulas/celula-danilo.jpg",
+    alvo: "public/celulas/celula-danilo.jpg",
+    alt: "Célula reunida na sala de uma casa, adultos e crianças espremidos para caber na mesma foto",
+  } satisfies Foto,
+};
+
+/* ── O MURAL DE BAIRROS ───────────────────────────────────────────────────
+   `lib/cells.ts` guarda os nomes na forma do cadastro ("Jd. Morada do Sol",
+   "Pq. São Lourenço"), que é curta porque lá ela vive dentro de linha de
+   tabela. No mural os nomes viram tipografia grande, e abreviação em corpo de
+   manchete lê como erro de digitação — "JD. MORADA DO SOL" parece nome
+   cortado, "JARDIM MORADA DO SOL" parece um bairro.
+
+   A expansão mora AQUI e não no `lib/cells.ts` porque é decisão de exibição
+   desta página: o cadastro continua sendo a fonte, e quem quiser a forma
+   curta (a Home, um filtro) continua tendo. */
+const EXPANSOES: [RegExp, string][] = [
+  [/^Jd\. /, "Jardim "],
+  [/^Pq\. /, "Parque "],
+  [/ Res\. /, " Residencial "],
+  [/^Cecap$/, "CECAP"],
+];
+
+export const nomeExtenso = (nome: string) =>
+  EXPANSOES.reduce((n, [de, para]) => n.replace(de, para), nome);

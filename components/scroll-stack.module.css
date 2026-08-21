@@ -1,0 +1,73 @@
+/* Geometria do <ScrollStack>. Tudo o que é aparência (fundo, raio, sombra,
+   conteúdo do painel) mora no módulo de quem usa o componente — aqui só fica o
+   que o empilhamento precisa que seja verdade. */
+
+.raiz {
+  position: relative;
+}
+
+.card {
+  position: relative;
+  /* Encolhe pelo topo, não pelo centro: é o topo que fica à mostra quando o
+     painel vira uma faixa da pilha, e uma escala centrada faria a faixa subir e
+     descer sozinha enquanto o cartão diminui. */
+  transform-origin: top center;
+}
+
+/* A folga entre um painel e o outro ANTES de empilharem — é ela que dá o ritmo
+   da rolagem, porque a distância entre duas paradas é a altura do painel mais
+   esta folga menos o degrau da pilha. Vem do `itemDistance` no JSX.
+
+   O componente CONTA COM ESTA REGRA para saber onde cada painel começa: ele
+   soma `offsetHeight + itemDistance` painel a painel em vez de perguntar a
+   posição a cada um. Trocar esta margem por `gap` na raiz, ou por qualquer
+   espaçamento que o JS não conheça, desalinha a pilha sem dar erro. */
+.card + .card {
+  margin-top: var(--item-distance, 100px);
+}
+
+/* ── O PIN É `position: sticky`, E ISSO É O CORAÇÃO DESTE ARQUIVO ───────────
+   O original do React Bits prende cada painel escrevendo `translateY` a cada
+   quadro de rolagem. Aqui isso TREMIA, e não por bug de implementação: a página
+   rola no compositor e o `transform` só chega no quadro seguinte, então o
+   painel pinado corrige a posição sempre um quadro atrasado. A cada quadro ele
+   anda os ~50px da rolagem e volta — é o tremor. O original não sofre disso
+   porque o Lenis assume a rolagem e move tudo dentro do MESMO laço; sem Lenis,
+   a única forma de o pin ficar em fase com a rolagem é o pin não ser JS.
+
+   `sticky` resolve porque é layout, não pintura: o navegador segura o painel na
+   linha certa junto com a rolagem, sem passar pelo JavaScript. O que sobrou
+   para o JS é a escala — que muda 1,5% ao longo de centenas de pixels e, mesmo
+   um quadro atrasada, se mexe menos de um pixel por quadro. Invisível.
+
+   `--stack-i` é o índice do painel, escrito pelo componente uma vez; as outras
+   duas variáveis vêm das props. O `top` resultante é a mesma linha que a conta
+   antiga chamava de `degrau`.
+
+   SÓ VALE COM `data-empilha`, que o componente põe na raiz quando o
+   `enabledQuery` casa. Fora dele nada gruda e os painéis são blocos comuns —
+   é assim que o celular e quem pediu menos movimento saem do efeito sem que a
+   media query precise ser repetida no CSS de quem usa. */
+.raiz[data-empilha] .card {
+  position: sticky;
+  top: calc(
+    var(--stack-top, 20vh) + var(--stack-i, 0) * var(--item-stack-distance, 30px)
+  );
+}
+
+/* O MARCADOR DE FIM não desenha nada: ele estica a raiz para além do último
+   painel, e é essa sobra que dá à pilha o curso em que ela fica parada à vista,
+   completa, antes de a página levar tudo embora. `sticky` prende cada painel
+   dentro do bloco do PAI, então encurtar isto encurta exatamente o tempo em que
+   se vêem as quatro faixas juntas.
+
+   Nasce com zero fora do empilhamento: onde a pilha não existe, meia tela de
+   sobra depois do último painel é só um vão em branco. */
+.fim {
+  width: 100%;
+  height: 0;
+}
+
+.raiz[data-empilha] .fim {
+  height: var(--fim-altura, 50vh);
+}
