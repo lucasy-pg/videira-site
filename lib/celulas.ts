@@ -67,80 +67,30 @@ export const HERO = {
   acao: "Encontrar uma célula",
   acaoSecundaria: "Conheça as células",
 
-  /* ── AS FOTOS DA FAIXA, QUE TROCA SOZINHA ──────────────────────────────
-     A faixa era UMA foto. Vinte e quatro células e uma foto só mostrava uma
-     casa; agora ela passa quatro, parando alguns segundos em cada. Quem
-     renderiza é o `components/celulas/CapaEmLoop.tsx`, e o ritmo (quanto
-     tempo parada, quanto tempo deslizando) mora lá.
+  /* ── A FOTOGRAFIA DA CAPA ──────────────────────────────────────────────
+     UMA FOTO SÓ, E PARADA. A faixa já passou quatro células em carrossel; a
+     troca automática tirava do visitante a única coisa que a capa tem para
+     dar — tempo em cima de uma cena com trinta rostos. O movimento que
+     sobrou é a entrada: a imagem nasce 6% maior e recua para o tamanho dela
+     quando a página carrega (`capa-afasta`, no globals.css), uma vez, e
+     acabou. As outras células aparecem no mosaico da seção 07 e no mural de
+     bairros da 08, que são paredes paradas.
 
-     ⚠️ A ORDEM É O ARGUMENTO, não a ordem em que os arquivos chegaram.
-     Começa numa CASA com três gerações — a promessa da manchete, "tem um
-     lugar para você", precisa abrir com o lugar. Depois abre em escala (a
-     célula grande à noite), e só então mostra que as células têm IDADES
-     diferentes: os adolescentes e os jovens. É a mesma ideia que a seção 06
-     escreve em palavras ("temos células para diferentes idades e fases da
-     vida"), dita em quatro fotos antes de qualquer texto.
+     ⚠️ É ESTA E NÃO UMA DAS DEZENAS DE SELFIES DO ACERVO: nela dá para ver o
+     lugar inteiro — a parede, a decoração de Dia das Mães ao fundo, o chão —
+     e três gerações no mesmo quadro, avós, pais e as crianças sentadas na
+     frente. É a única do material que mostra ao mesmo tempo o LUGAR e a
+     MISTURA DE IDADES, que são as duas coisas que a manchete promete.
 
-     ⚠️ A PRIMEIRA É O LCP DA ROTA. Ela carrega em prioridade alta e as outras
-     três atrás; trocar a ordem troca qual foto o visitante espera. A primeira
-     também precisa ser 16:9 nativa — a faixa é 16:9, e as que não são levam
-     corte, que é o que o campo `recorte` resolve.
-
-     ⚠️ QUATRO É O TETO. São quatro fotos de largura cheia baixadas na abertura
-     da página; uma quinta é mais meio megabyte por visita para uma imagem que
-     aparece vinte segundos depois de a pessoa ter rolado a página. Trocar
-     uma por outra é de graça, acrescentar não é.
-
-     DUAS DESTAS NÃO SÃO EM CASA (a dos adolescentes e a dos jovens são no
-     salão da igreja) e é a única coisa aqui que contraria o resto da página,
-     que insiste em "de casa em casa". Elas entram porque são as únicas do
-     acervo em resolução de capa que mostram uma FAIXA ETÁRIA que as fotos de
-     sala não mostram. No dia em que houver uma célula de jovens fotografada
-     numa casa, essas duas saem. */
-  fotos: [
-    {
-      /* A CASA CHEIA, e por isso é esta e não uma das dezenas de selfies do
-         acervo: nela dá para ver a sala, a escada, o sofá e três gerações na
-         mesma parede — avó, pais e as crianças sentadas no chão da frente. É
-         a única do material que mostra ao mesmo tempo o LUGAR e a MISTURA DE
-         IDADES, que são exatamente as duas coisas que a manchete promete.
-
-         O recorte sobe acima do centro: embaixo é chão e joelho, em cima é a
-         parede e o vão da escada. A 45% o corte come teto em vez de comer as
-         crianças da fileira da frente. */
-      src: "/celulas/celula-filipenses.jpg",
-      alvo: "public/celulas/celula-filipenses.jpg",
-      alt: "Célula reunida na sala de uma casa: adultos em pé encostados na parede de tijolo e as crianças sentadas no chão à frente",
-      recorte: "object-[50%_45%]",
-    },
-    {
-      /* A ESCALA. Trinta e poucas pessoas numa garagem à noite, com o banner
-         da célula ao fundo e três gerações no mesmo quadro — é a foto que diz
-         "isto não é um grupinho". Também 16:9 nativa, então não perde nada no
-         corte. Ela é a maior peça do mosaico da seção 07; repetir aqui é o
-         preço de ter só duas fotos de capa nesta resolução. */
-      src: "/celulas/celula-leandro.jpg",
-      alvo: "public/celulas/celula-leandro.jpg",
-      alt: "Célula grande reunida numa garagem à noite, com avós, pais e muitas crianças sentadas à frente",
-      recorte: "object-[50%_42%]",
-    },
-    {
-      /* OS ADOLESCENTES. 4:3, então o 16:9 corta em cima e embaixo — o
-         recorte desce um pouco do centro para manter a fileira sentada no
-         chão, que é metade da turma. */
-      src: "/celulas/celula-shalom.jpg",
-      alvo: "public/celulas/celula-shalom.jpg",
-      alt: "Turma de adolescentes de uma célula sentada em degraus, todos com as mãos cruzadas sobre o peito",
-      recorte: "object-[50%_55%]",
-    },
-    {
-      /* OS JOVENS. Mesma proporção e mesmo problema de corte da anterior. */
-      src: "/celulas/celula-united.jpg",
-      alvo: "public/celulas/celula-united.jpg",
-      alt: "Célula de jovens reunida em pé e agachada para a foto, sorrindo com os polegares levantados",
-      recorte: "object-[50%_48%]",
-    },
-  ] satisfies (Foto & { recorte?: string })[],
+     ⚠️ É O LCP DA ROTA, então carrega em prioridade alta, e precisa ser 16:9
+     nativa: a faixa é 16:9 e uma foto de outra proporção entraria cortada.
+     O recorte sobe acima do centro (ver `posicao`, na página) porque embaixo
+     é chão e joelho, e em cima é a parede. */
+  foto: {
+    src: "/celulas/celula-filipenses.jpg",
+    alvo: "public/celulas/celula-filipenses.jpg",
+    alt: "Célula reunida na sala de uma casa: adultos em pé ao fundo e as crianças sentadas no chão à frente",
+  } satisfies Foto,
 };
 
 /* ── 02 · O QUE É UMA CÉLULA ──────────────────────────────────────────── */

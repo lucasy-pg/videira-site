@@ -392,9 +392,30 @@ export const FECHO = {
   texto:
     "Acreditamos que Deus nos chamou para viver em família, crescer juntos e cumprir um propósito.",
   destaque: "Venha fazer parte dessa história.",
+  /* A PÁGINA FECHA COM DUAS PESSOAS E UMA ORAÇÃO. Era um pai com o filho no
+     colo — bonita, mas dizia "família", que é o que o texto já diz duas vezes
+     na mesma faixa. Esta diz outra coisa: alguém de cabeça baixa e alguém com
+     a mão na cabeça dele. É gente sendo cuidada por gente, que é a promessa
+     do "há um lugar para você aqui" no exato momento em que ela é cobrada.
+
+     ⚠️ ELA MORA EM `public/radicais/` E ISSO É DE PROPÓSITO. A foto é do
+     acervo dos Radicais Livres e já aparece na parede da galeria e na seção
+     "Nossos encontros" de lá; apontar para o mesmo arquivo — em vez de gravar
+     uma cópia em `public/igreja/` — é o que evita o visitante baixar a mesma
+     imagem duas vezes. É a única foto de `public/radicais/` que entra pelo
+     `next/image`; ela tem a variante `-800` ao lado, do regime da galeria, e
+     esta página simplesmente não a usa (ver `docs/imagens.md`).
+
+     ⚠️ O MESTRE TEM 1067px DE LARGURA, que é o original inteiro que existe no
+     acervo — veio do WhatsApp e não há arquivo maior. Numa coluna de 50vw ela
+     dá conta em tela comum e fica no limite em tela retina. Se um dia aparecer
+     o original da câmera, é trocar o arquivo. */
   foto: {
-    src: "/igreja/pai-com-filho-no-culto.jpg",
-    alvo: "public/igreja/pai-com-filho-no-culto.jpg",
-    alt: "Pai com o filho pequeno no colo durante um culto, encostando a testa na cabeça dele",
+    src: "/radicais/oracao-a-dois.jpg",
+    alvo: "public/radicais/oracao-a-dois.jpg",
+    /* Palavra por palavra o `alt` do `lib/galeria.ts`, onde a foto já existe:
+       duas descrições diferentes da mesma imagem no mesmo site é ruído para
+       quem navega por leitor de tela. */
+    alt: "Dois rapazes abraçados junto à janela, um com a mão no ombro do outro, os dois de cabeça baixa",
   } satisfies Foto,
 };

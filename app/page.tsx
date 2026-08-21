@@ -1,473 +1,595 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { ArrowRight, ChevronDown, Play } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
-import { CellsFeature } from "@/components/CellsFeature";
-import { cells } from "@/lib/cells";
-
-const IMG = {
-  /* A foto anterior era stock (`photo-1493225457124`, jovens genéricos numa
-     luz colorida) e era a MESMA que abria o /radicais-livres. Agora é foto
-     real de um culto da Videira — e a página do ministério usa a mesma, o que
-     faz o card virar prévia de verdade do que a pessoa vai encontrar lá. */
-  jovens: "/igreja/adoracao-jovens.jpg",
-  /* Ainda stock: não existe nenhuma foto real das crianças no repositório.
-     (A anterior — blocos de brinquedo em cores primárias — era a coisa mais
-     saturada da página e brigava com a disciplina de uma matiz só.) */
-  kids: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1100&h=1300&fit=crop&auto=format",
-  culto:
-    "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1800&h=1000&fit=crop&auto=format",
-};
+import { MolduraFoto } from "@/components/MolduraFoto";
+import { YOUTUBE_IGREJA } from "@/lib/social";
+import type { Manchete } from "@/lib/home";
+import {
+  CELULAS,
+  CULTOS,
+  FECHO,
+  HERO,
+  MINISTERIOS,
+  QUEM_SOMOS,
+  TRILHO,
+  VISAO,
+  YOUTUBE,
+} from "@/lib/home";
 
 /**
- * Fotos reais da Videira Indaiatuba pra composição de Boas-vindas.
+ * A palavra-chave em roxo dentro de uma manchete.
  *
- *   principal — dois voluntários recebendo com placa de "Seja bem-vindo"
- *   abraco    — abraço entre dois membros
+ * Vai DENTRO do `<h1>`/`<h2>`, não no lugar dele: assim cada título mantém as
+ * próprias classes de escala e quebra, e o único trabalho daqui é pintar o
+ * trecho. Para o leitor de tela nada muda — um `<span>` colorido no meio de um
+ * cabeçalho não parte o nome acessível dele.
  *
- * As duas foram escolhidas porque batem com a cena da referência que o
- * usuário trouxe (Renewal Church): gente na entrada, recepção, acolhimento —
- * não palco, não multidão. Eram três fotos antes (tinha também uma de
- * adoração e uma de célula); o usuário pediu pra reduzir pra só estas duas,
- * no estilo blob da referência.
+ * `escuro` troca o `grape` (6.9:1 sobre bone) pelo `grape-light` (9.6:1 sobre
+ * plum-deep). Cada um só passa em contraste na sua metade do par: inverter os
+ * dois publica uma palavra-chave ilegível.
+ *
+ * ⚠️ É A TERCEIRA CÓPIA DESTE COMPONENTE no site (as outras estão no /sobre e
+ * no /trilho-do-vencedor) e a repetição é consciente: a do Trilho aceita um
+ * SEGUNDO trecho pintado e escolhe entre quatro tintas de curso, e unificar as
+ * três significaria uma API com quatro parâmetros opcionais para pintar um
+ * `<span>`. Se um dia uma quarta página precisar de uma, aí sim vale extrair —
+ * e o que se extrai é esta versão, que é a simples.
  */
-const welcomePhotos = {
-  principal: {
-    src: "/igreja/boas-vindas.jpg",
-    alt: "Dois voluntários da Videira recebendo visitantes com placas escritas 'Seja bem-vindo' e 'É um privilégio termos você conosco hoje'",
-  },
-  abraco: {
-    src: "/igreja/abraco.jpg",
-    alt: "Abraço entre dois membros da Videira",
-  },
-};
-
-/** Informações que todo visitante procura primeiro — ponte entre o hero e a página. */
-const visitInfo = [
-  {
-    label: "Cultos de domingo",
-    value: "9h da manhã · 18h da noite",
-    img: "/igreja/culto-todos-juntos.jpg",
-    /* A foto é bem mais larga que o card (quase 3:2 num card 5:4), então o
-       `object-cover` recorta uns 17% da largura. O pedido era esconder MAIS
-       o caixote de flores à direita — `object-left` empurra o corte inteiro
-       pro lado direito, cortando o caixote em vez de mostrá-lo por inteiro. */
-    imgClassName: "object-left",
-    alt: "Congregação reunida num culto de domingo",
-    href: "/contato",
-    cta: "Planeje sua visita",
-  },
-  {
-    label: "Onde nos encontrar",
-    value: "R. Augusto de Oliveira Camargo, 257 · Centro",
-    img: "/igreja/fachada.jpg",
-    /* Foto quase 2:1 (640×332) num card 5:4 — o corte já é grande por conta
-       da proporção. O poste de luz fica em x≈440-460 de 640; `object-left`
-       mostra só até x≈415, sobra o letreiro Videira e a fachada, some o
-       poste e a placa do RKids junto. */
-    imgClassName: "object-right",
-    alt: "Fachada da Videira Indaiatuba à noite, com o letreiro iluminado",
-    href: "/contato",
-    cta: "Ver no mapa",
-  },
-  {
-    label: "Durante a semana",
-    /* Derivado, nunca digitado: esta linha dizia "26 células" enquanto o
-       cadastro tinha 22. */
-    value: `${cells.length} células espalhadas por Indaiatuba`,
-    /* Antes era um stock de abraço em círculo, com o alt dizendo "célula numa
-       casa" sem ser isso de fato — a foto real corrige a mentirinha. */
-    img: "/celulas/celula-vitor.jpg",
-    alt: "Célula reunida numa casa durante a semana",
-    href: "/celulas",
-    cta: "Encontrar a mais perto",
-  },
-];
-
-/** Três portas de entrada — o padrão "next steps" das igrejas americanas. */
-const nextSteps = [
-  {
-    title: "Venha um domingo",
-    desc: "Chegue do jeito que você está. Há pessoas para receber você, e nenhuma cobrança.",
-    href: "/contato",
-    cta: "Como chegar",
-  },
-  {
-    title: "Entre em uma célula",
-    desc: "Grupos pequenos que se reúnem nas casas durante a semana. É onde a amizade de verdade acontece.",
-    href: "/celulas",
-    cta: "Ver as células",
-  },
-  {
-    title: "Traga sua família",
-    desc: "Enquanto você adora, seus filhos vivem a fé no nível deles — com segurança e alegria.",
-    href: "/radicais-kids",
-    cta: "Conhecer o Kids",
-  },
-];
-
-const ministries = [
-  {
-    href: "/radicais-livres",
-    tag: "12 — 29 anos",
-    title: "Radicais Livres",
-    desc: "Jovens apaixonados por Jesus, vivendo a fé sem medo e sem religião.",
-    img: IMG.jovens,
-    alt: "Jovens da Videira em adoração num culto, de mãos levantadas",
-  },
-  {
-    href: "/radicais-kids",
-    tag: "0 — 14 anos",
-    title: "Radicais Kids",
-    desc: "Discípulos desde a infância: a criança tem célula, convida os amigos dela e ministra.",
-    img: IMG.kids,
-    alt: "Crianças brincando juntas",
-  },
-];
-
-export default function Home() {
+function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
   return (
     <>
-      {/* ═══ HERO — o vídeo é um BLOCO na página, não o fundo dela ═══
-          A página começa no bone e o vídeo mora dentro de um retângulo com
-          margem, como nas referências. O header fica sólido por cima do bone,
-          em vez de flutuar sobre a filmagem.
+      {t.antes}
+      <span className={escuro ? "text-grape-light" : "text-grape"}>
+        {t.forte}
+      </span>
+      {t.depois}
+    </>
+  );
+}
 
-          A ALTURA é relativa à VIEWPORT, não uma escala fixa em rem:
-          `h-[calc(100svh-…)]` desconta do alto da tela o header fixo
-          (`4rem` / `5rem`, o `pt` do <main> no layout), o `pt` desta seção e
-          uma sobra igual embaixo — moldura do mesmo tamanho nos quatro lados.
-          Assim a capa ocupa a MESMA fatia da tela em qualquer aparelho, e os
-          cards da seção seguinte ficam SEMPRE abaixo da dobra: quem chega vê a
-          capa inteira e só encontra o resto ao rolar. Com altura fixa em rem
-          isso variava por aparelho — em tela alta sobrava vão e os cards
-          espiavam por baixo, em tela baixa a capa estourava.
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * O SISTEMA DESTA PÁGINA
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * A Home é a porta de entrada do site, e o briefing dela cabe numa frase:
+ * "menos elementos, mais intenção". Ela não explica a Videira — apresenta o
+ * necessário de cada assunto e oferece um caminho para aprofundar. Toda seção
+ * termina num CTA que sai desta página.
+ *
+ * A NARRATIVA, que precisa ser legível só rolando, sem ler:
+ *
+ *   1 a igreja viva, agora        → vídeo de culto em tela cheia
+ *   2 quem nós somos              → editorial em duas áreas, muito respiro
+ *   3 venha num domingo           → fotografia de culto + os horários grandes
+ *   4 e no meio da semana         → composição invertida, célula numa casa
+ *   5 e na idade que você tem     → o par de cards, Kids e Livres
+ *   6 há um caminho a percorrer   → faixa roxa, a arte oficial do Trilho
+ *   7 é esta a visão              → pausa tipográfica, quatro palavras
+ *   8 continue conosco na semana  → duas colunas limpas, quadro de vídeo
+ *   9 agora entra você            → a comunidade inteira, foto sangrando
+ *
+ * As quatro do meio (3 a 6) são as portas, e a ordem delas é uma escada de
+ * compromisso: assistir a um culto, entrar numa casa, achar o seu grupo,
+ * começar a ser formado. Trocar duas de lugar é trocar o que a página pede
+ * primeiro.
+ *
+ * RITMO DE SUPERFÍCIE. escura → bone → sand → bone → sand → ROXA → sand →
+ * bone → fotografia escura. O roxo em bloco aparece UMA VEZ (o Trilho), que é
+ * o que o briefing pede ao dizer "evitar aplicar roxo em todas as seções" — no
+ * resto da página ele só existe como palavra-chave das manchetes e como
+ * eyebrow. (Os dois cards dos ministérios são escuros, mas são FOTOGRAFIA sob
+ * véu, não faixa de cor: é a mesma tinta que o fecho da página usa.)
+ *
+ * AS TRÊS COSTURAS. Onde a superfície muda de família (escuro→claro,
+ * roxo→claro, claro→fotografia), a seção de baixo SOBE por cima da de cima com
+ * margem negativa e canto arredondado, em vez de encostar numa linha reta. São
+ * exatamente três, e é de propósito que não sejam mais: repetido em toda
+ * emenda o gesto vira tique, e entre duas faixas claras não há o que suavizar.
+ *
+ * ONDE O ROXO ENTRA, e a regra é de contagem: UM TRECHO POR MANCHETE, mais o
+ * eyebrow. Quem pinta é a `<Chave>` logo acima, e o corte de cada frase mora
+ * no `lib/home.ts`, onde `antes + forte + depois` remontam a frase exata do
+ * briefing. Nenhuma manchete leva dois destaques.
+ *
+ * TIPOGRAFIA. O briefing pede Poppins nos títulos, então esta página entra na
+ * mesma exceção do /sobre e da /celulas: `manchetes-poppins` (globals.css)
+ * troca o token `--font-display` só nesta subárvore. O corpo segue em
+ * Instrument Sans.
+ *
+ * ⚠️ E ISSO SIGNIFICA UMA PÁGINA SEM ITÁLICO. A Poppins é carregada só em
+ * romano (app/layout.tsx); todo `<em>` que aparecer aqui cai no oblíquo
+ * sintético do navegador. Nenhuma frase desta página tem um — e a versão
+ * anterior da Home era construída em cima de itálico (o gesto da Newsreader,
+ * que era a fonte de manchete dela). Quem for reintroduzir um itálico aqui
+ * está reabrindo essa decisão, não ajustando um detalhe.
+ *
+ * E POR ISSO AS MANCHETES NÃO USAM `clamp(...vw...)`. O `container` do
+ * Tailwind não cresce liso: ele TRAVA numa largura fixa e só pula no
+ * breakpoint seguinte. Uma fonte em `vw` continua crescendo dentro desse
+ * degrau, e às 1279px ela fica ~25% maior do que às 1024 com exatamente a
+ * mesma largura de coluna para caber — era aí que a manchete estourava na
+ * tela de notebook. Os tamanhos daqui pulam nos MESMOS breakpoints do
+ * container. É a mesma escada do /sobre, e mexer num tamanho é mexer numa
+ * quebra.
+ *
+ * FOTOGRAFIA. Nove imagens, todas reais e da própria Videira, todas pela
+ * `<MolduraFoto>` — ou seja, todas por `next/image`, que gera as larguras
+ * responsivas a partir de um arquivo só. A Home ANTES era o oposto disso:
+ * `<img>` cruas, sem `srcset`, e duas fotos de banco carregadas ao vivo do
+ * Unsplash (o card do Radicais Kids e uma de culto). As duas dependências
+ * morreram aqui. Ver `docs/imagens.md`.
+ *
+ * MOVIMENTO. Só `<Reveal>` (fade e deslocamento curto na entrada), o hover dos
+ * CTAs e a seta que flutua no fim da capa. Nada de GSAP, nada de parallax,
+ * nada preso à rolagem: o briefing pede que nenhuma animação chame mais
+ * atenção que o conteúdo, e quem tem "reduzir movimento" ligado no sistema não
+ * recebe nenhuma delas (as réguas estão no globals.css).
+ */
+export default function Home() {
+  return (
+    /* `manchetes-poppins` (globals.css) troca o token `--font-display` só nesta
+       subárvore: as manchetes saem da Newsreader e vão para a Poppins. */
+    <div className="manchetes-poppins bg-bone text-foreground">
+      {/* ═══ 01 · HERO ══════════════════════════════════════════════════════
+          A FILMAGEM OCUPA A TELA INTEIRA, sem moldura e sem margem — a versão
+          anterior punha o vídeo dentro de um retângulo arredondado com bone em
+          volta, e o briefing novo pede o contrário: o vídeo é a primeira tela.
+          Por isso a "/" entrou em `OVERLAY_ROUTES` (lib/overlay-routes.ts): é
+          essa lista que solta o `pt-16` que o <main> reserva para o header e
+          que manda a barra ficar transparente com texto branco enquanto está
+          no topo. Sem ela, uma faixa bone de 4rem apareceria acima da
+          filmagem.
 
-          `svh` e não `dvh`: o dinâmico mede a viewport COM a barra do
-          navegador recolhida, então o cartão remediria (e daria um pulo) toda
-          vez que a barra some ao rolar. O `svh` é a medida estável, com a
-          barra visível — pior caso, e por isso o que nunca corta.
+          `100svh` E NÃO `100vh`: no Safari do iPhone o `vh` conta a barra do
+          navegador que se esconde ao rolar, então uma capa em `100vh` nasce
+          mais alta que a tela e empurra o texto para fora. O `svh` mede a
+          viewport com as barras VISÍVEIS, que é o estado em que a página é
+          vista ao abrir.
 
-          Os limites são guarda-corpo, não composição: `min-h-[30rem]` pro
-          celular deitado (abaixo disso o título, o parágrafo e os dois botões
-          não cabem, e o `overflow-hidden` cortaria o que sobrasse);
-          `max-h-[52rem]` pro monitor em pé, onde 100svh viraria um paredão. */}
-      <section className="bg-bone pt-4 sm:pt-6">
-        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="relative isolate flex h-[calc(100svh-6rem)] min-h-[30rem] max-h-[52rem] items-end overflow-hidden rounded-[2rem] bg-plum-deep sm:h-[calc(100svh-8rem)] lg:rounded-[2.5rem]">
-            {/* Filmagem real de um culto (em cor), muda e em loop. O poster
-                (~75 KB) pinta a capa na hora; o vídeo entra por cima quando
-                carrega. Só H.264 — AV1 e VP9 saíram maiores nesse material.
-                Reencodado de 148 MB/1080p originais para ~17 MB (CRF 26) —
-                o bruto ficaria pesado demais pra rodar em loop autoplay na
-                Home. */}
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src="/videos/horizontal/capa-inicio.mp4"
-              poster="/videos/horizontal/capa-inicio-poster.jpg"
-              autoPlay
-              muted
-              loop
-              playsInline
-              aria-hidden
-            />
-            {/* O véu muda com o formato do retângulo. No celular ele é retrato e
-                o texto ocupa quase tudo — inclusive o teto claro do galpão —,
-                então o escurecimento sobe alto. No desktop o retângulo é
-                widescreen e o texto vive só no canto inferior esquerdo: aí os
-                dois véus se cruzam nesse canto e o lado direito fica limpo. */}
-            <div className="absolute inset-0 bg-gradient-to-t from-plum-deep/95 via-plum-deep/70 to-plum-deep/40 lg:from-plum-deep/85 lg:via-plum-deep/15 lg:to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-plum-deep/45 via-transparent to-transparent lg:from-plum-deep/70 lg:via-plum-deep/10" />
+          É `min-h` e não `h` para o caso do celular deitado: em 390×844 o
+          título, o parágrafo e o botão cabem com folga, mas numa janela de
+          360px de altura eles empurram a seção em vez de serem cortados. */}
+      <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-plum-deep">
+        {/* Culto real da Videira, mudo e em loop. O poster (~75KB) pinta a
+            primeira tela na hora; o vídeo entra por cima quando carrega — sem
+            ele a capa abre preta no 4G. `aria-hidden` porque é ambiência: o
+            que a seção diz está no texto por cima. */}
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          src={HERO.video.src}
+          poster={HERO.video.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden
+        />
 
-            <div className="relative z-10 w-full p-7 sm:p-10 lg:p-14">
-              <Reveal delay={300}>
-                <h1 className="font-display max-w-3xl text-[clamp(2.5rem,6.5vw,5.25rem)] font-medium leading-[0.95] text-white">
-                  Um lugar para
-                  <span className="block font-normal italic text-grape-light">
-                    você pertencer
-                  </span>
-                </h1>
-              </Reveal>
+        {/* DOIS VÉUS, e o mínimo necessário para a leitura — o briefing pede
+            para não esconder a filmagem. O vertical garante o contraste do
+            texto, que vive no terço de baixo; o horizontal escurece só o canto
+            esquerdo, onde o texto começa, e some antes da metade da tela, de
+            modo que o lado direito continua sendo vídeo limpo. No `lg` os dois
+            afrouxam: a tela fica bem mais larga que alta e o mesmo bloco de
+            texto passa a ocupar uma fração bem menor dela — o véu que o
+            celular precisa, ali, escureceria filmagem à toa. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-plum-deep via-plum-deep/55 to-plum-deep/25 lg:via-plum-deep/40 lg:to-plum-deep/15"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-plum-deep/70 via-plum-deep/20 to-transparent lg:from-plum-deep/75 lg:via-plum-deep/10"
+        />
 
-              <Reveal delay={620}>
-                <p className="mt-6 max-w-lg leading-relaxed text-white/75 sm:text-lg">
-                  Somos uma igreja em células espalhada por Indaiatuba. Sem
-                  religiosidade e sem cobrança — pessoas reais encontrando Jesus
-                  juntas, no domingo e no meio da semana.
-                </p>
-              </Reveal>
+        {/* O texto encostado no canto inferior esquerdo, e não centralizado —
+            é pedido do briefing, e é o que deixa a maior parte do quadro para
+            a filmagem. O `pb` grande reserva a faixa onde a seção seguinte
+            sobe por cima (ver a costura logo abaixo) mais o indicador de
+            rolagem, para que nem um nem outro encoste no botão. */}
+        <div className="container relative mx-auto px-5 pb-28 pt-32 sm:px-8 sm:pb-32 lg:px-12 lg:pb-36">
+          <Reveal variant="blur" delay={200}>
+            <h1 className="font-display max-w-[15ch] text-[2.75rem] font-medium leading-[0.98] text-white sm:text-[3.5rem] lg:text-[3.75rem] xl:text-[4.5rem]">
+              <Chave t={HERO.titulo} escuro />
+            </h1>
+          </Reveal>
 
-              <Reveal delay={880}>
-                <div className="mt-9 flex flex-col gap-3.5 sm:flex-row">
-                  <MagneticButton>
-                    <Link
-                      href="/celulas"
-                      className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
-                    >
-                      Encontre sua célula
-                      <ArrowRight
-                        size={17}
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      />
-                    </Link>
-                  </MagneticButton>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
+          <Reveal delay={480}>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/75">
+              {HERO.texto}
+            </p>
+          </Reveal>
 
-      {/* ═══ PONTE — três portas de entrada, cada uma com a própria foto ═══
-          Mesma composição do hero (foto + véu subindo + texto encostado na
-          base) em escala menor, pra ler como continuação dele e não como uma
-          tabela de avisos colada embaixo. */}
-      {/* `pt-5` é o MESMO valor do `gap-5` entre os cards, de propósito: assim o
-          retângulo do hero e os três cards leem como um arranjo só. Com respiro
-          grande aqui eles ficam órfãos — nem pertencem ao hero, nem à seção
-          seguinte (testado com pt-16 e pt-28: os dois leem como ilha perdida). */}
-      <section className="bg-bone pt-5">
-        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="grid gap-5 sm:grid-cols-3">
-            {visitInfo.map((item, i) => (
-              <Reveal key={item.label} variant="up" delay={i * 90}>
-                <Link
-                  href={item.href}
-                  className="group relative flex aspect-[5/4] items-end overflow-hidden rounded-[1.75rem] bg-plum-deep"
-                >
-                  <ImageWithFallback
-                    src={item.img}
-                    alt={item.alt}
-                    className={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-105 ${item.imgClassName ?? ""}`}
-                  />
-                  {/* Véu forte de propósito: estes cards são pequenos e a
-                      eyebrow é 11px branca. Com foto clara (céu, parede branca)
-                      um véu suave apaga o texto — conferir sempre trocando a
-                      foto por uma bem clara antes de aliviar estes stops. */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-plum-deep/95 via-plum-deep/75 to-plum-deep/35" />
-
-                  <div className="relative z-10 p-6 sm:p-7">
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-white/60">
-                      {item.label}
-                    </p>
-                    <p className="font-display mt-2 text-xl leading-snug text-white">
-                      {item.value}
-                    </p>
-                    <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-bone px-5 py-2.5 text-xs font-semibold text-plum-deep transition-colors duration-300 group-hover:bg-white">
-                      {item.cta}
-                      <ArrowRight
-                        size={14}
-                        className="transition-transform duration-300 group-hover:translate-x-0.5"
-                      />
-                    </span>
-                  </div>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ BOAS-VINDAS — quem é a Videira DE INDAIATUBA ═══ */}
-      <section className="relative overflow-hidden bg-bone pb-24 pt-24 sm:pb-28 sm:pt-28 lg:pb-32 lg:pt-32">
-        {/* `items-start` e não `items-center`: as duas colunas têm alturas
-            diferentes e, centralizadas, a manchete descia até o meio e a seção
-            perdia o ponto de entrada. Alinhadas no topo, o espaço que sobra
-            embaixo lê como "a coluna acabou". */}
-        <div className="container relative mx-auto grid items-start gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
-          <div>
-            <Reveal>
-              <span className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-                <Sparkles size={13} />
-                Bem-vindo à Videira
-              </span>
-            </Reveal>
-            <Reveal delay={90}>
-              <h2 className="font-display mt-6 text-[clamp(2.25rem,5.2vw,3.9rem)] font-medium leading-[1.03] text-foreground">
-                Você não precisa ter tudo resolvido{" "}
-                <span className="block font-normal italic text-grape">
-                  para fazer parte.
-                </span>
-              </h2>
-            </Reveal>
-            <Reveal delay={170}>
-              {/* A história da rede (Goiânia, 1997, pastor Aluízio, os 30+
-                  países) saiu daqui de propósito: quem abre este site quer a
-                  igreja de Indaiatuba, não a genealogia da denominação. O que
-                  sobrou fala de quem chega. */}
-              <div className="mt-8 space-y-5 text-lg leading-relaxed text-muted-foreground">
-                <p>
-                  Ninguém aqui vai perguntar há quanto tempo você não pisa
-                  numa igreja. No domingo há quem tenha crescido na fé, quem
-                  esteja voltando depois de muitos anos e quem entre pela
-                  primeira vez na vida — e as três coisas são igualmente
-                  normais.
-                </p>
-                <p>
-                  O nome vem de uma promessa: <em className="italic text-foreground">
-                    &quot;Eu sou a videira, vocês são os ramos&quot;</em> (João
-                  15:5) — ramo isolado não dá fruto. É por isso que a nossa
-                  semana não termina no domingo: há casas abertas espalhadas por
-                  Indaiatuba, onde é possível conhecer pessoas de verdade e ser
-                  conhecido de volta.
-                </p>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Blob, não retângulo — segunda tentativa: a primeira (retângulo
-              de canto arredondado) foi minha adaptação pro vocabulário do
-              site, mas o usuário viu as duas lado a lado e quis o blob de
-              contorno livre mesmo, como na referência. Contorno orgânico via
-              `border-radius` de 8 valores (4 cantos, horizontal/vertical
-              independentes) — é só CSS, a caixa continua retangular por
-              baixo, então nada aqui muda a lógica de posicionamento.
-
-              Os dois blobs usam valores DIFERENTES de propósito: os mesmos
-              números nos dois ficariam óbvios como "o mesmo componente
-              repetido", e o ponto de um blob é parecer desenhado à mão. */}
-          <Reveal variant="scale" delay={120}>
-            {/* `ml-auto` + largura: passou por 100%, depois 68%/62%, depois
-                82%/76% — cada rodada o usuário pedia mais, buscando a
-                composição chegar perto da altura do bloco de texto ao lado.
-                Encolher/crescer só a FOTO e não o wrapper desalinharia o
-                blob de fundo e o abraço pendurado — os dois são `absolute`
-                ancorados nas bordas do wrapper, então quem cresce/encolhe é o
-                wrapper inteiro, e tudo dentro acompanha na mesma proporção.
-                `ml-auto` mantém a composição encostada na borda direita da
-                coluna em vez de sobrar vão dos dois lados. */}
-            <div className="relative ml-auto w-[92%] pb-[10%] pt-10 sm:w-[88%] sm:pt-14">
-              {/* Mesma forma atrás da foto grande, agora também em blob. Fica
-                  ATRÁS por ORDEM NO DOM (não z-index): os dois viram
-                  `relative` — mesmo grupo de empilhamento — e quem vem depois
-                  no DOM pinta por cima. Por isso a foto abaixo tem `relative`;
-                  sem isso ela é estática e um elemento posicionado (esta
-                  forma) pintaria por cima dela mesmo vindo antes no código. */}
-              <div
-                aria-hidden
-                className="absolute right-2 top-0 h-20 w-20 rounded-[63%_37%_54%_46%/43%_37%_63%_57%] bg-lilac sm:right-6 sm:h-28 sm:w-28"
-              />
-
-              {/* `aspect-[4/5]` era quase igual à proporção nativa da foto
-                  (1122×1402 ≈ 4:5) — o `object-cover` não tinha quase nada
-                  pra cortar, então as pernas apareciam inteiras. Encurtando
-                  pra `aspect-square` e ancorando o corte no topo
-                  (`object-top`), o corte agora acontece por BAIXO — some a
-                  parte de canela/pé, fica cabeça, placas e coxa. */}
-              <figure className="relative overflow-hidden rounded-[62%_38%_53%_47%/41%_44%_56%_59%]">
-                <ImageWithFallback
-                  src={welcomePhotos.principal.src}
-                  alt={welcomePhotos.principal.alt}
-                  className="aspect-square w-full object-cover object-top"
+          <Reveal delay={700}>
+            <MagneticButton className="mt-9">
+              <Link
+                href={HERO.acao.href}
+                className="group inline-flex items-center gap-2.5 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
+              >
+                {HERO.acao.rotulo}
+                <ArrowRight
+                  size={17}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
                 />
-              </figure>
-
-              {/* Ancorado embaixo à esquerda e pendurado pra fora da foto
-                  grande, igual à referência — por isso o `pb-[10%]` no
-                  wrapper: sem essa reserva o blob pendurado ficaria cortado
-                  pela seção seguinte. */}
-              <figure className="absolute bottom-0 left-0 w-[44%] overflow-hidden rounded-[48%_52%_58%_42%/58%_44%_56%_42%] ring-[6px] ring-bone sm:left-3">
-                <ImageWithFallback
-                  src={welcomePhotos.abraco.src}
-                  alt={welcomePhotos.abraco.alt}
-                  className="aspect-square w-full object-cover"
-                />
-              </figure>
-            </div>
+              </Link>
+            </MagneticButton>
           </Reveal>
         </div>
+
+        {/* O INDICADOR DE CONTINUIDADE, no canto oposto ao texto. Fica à
+            direita justamente porque o texto está à esquerda: no centro ele
+            cairia sobre o botão no celular, e embaixo do botão viraria um
+            segundo CTA. `animate-seta-flutua` (globals.css) é a mesma seta que
+            a /sobre usa, e ela para para quem pediu menos movimento.
+
+            É SÓ A SETA, sem rótulo. Chegou a ter um "Role" em caixa alta por
+            cima dela e saiu: uma seta que flutua para baixo na beira da
+            primeira tela já é a convenção inteira, e a palavra só acrescentava
+            uma segunda voz no canto onde a composição pedia silêncio. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-24 right-5 text-white/70 sm:right-8 sm:bottom-28 lg:right-12 lg:bottom-32"
+        >
+          <ChevronDown size={18} className="animate-seta-flutua" />
+        </div>
       </section>
 
-      {/* ═══ PRIMEIROS PASSOS — faixa greige, cards brancos por cima ═══ */}
+      {/* ═══ 02 · QUEM SOMOS ════════════════════════════════════════════════
+          A PRIMEIRA COSTURA. A seção sobe por cima do pé do vídeo com margem
+          negativa e canto arredondado, em vez de a filmagem terminar numa
+          linha reta contra o bone. `relative` é o que faz o bone pintar por
+          cima do vídeo: sem posicionamento, a margem negativa aproxima os dois
+          e o vídeo (que está numa seção com `isolate`) continua por cima.
+
+          A COMPOSIÇÃO É EM DUAS ÁREAS, não em duas colunas iguais: à esquerda
+          o identificador, a manchete e a fotografia; à direita só o texto e o
+          caminho. O vazio que sobra embaixo do texto, na coluna da direita, é o
+          respiro que o briefing pede — é ele que faz a manchete parecer grande
+          sem precisar de corpo maior.
+
+          A FOTOGRAFIA OCUPA QUASE A COLUNA INTEIRA. Ela já foi pequena (60% da
+          coluna, teto de 17rem) e sumia: nesta seção ela é a única imagem, e
+          numa página em que todas as outras sangram ou preenchem meia tela, um
+          selo de 270px lia como miniatura esquecida, não como escolha. */}
+      <section className="relative -mt-10 rounded-t-[2rem] bg-bone pt-24 pb-24 sm:pt-28 sm:pb-28 lg:-mt-14 lg:rounded-t-[3rem] lg:pt-32 lg:pb-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24">
+            <div>
+              <Reveal>
+                <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                  {QUEM_SOMOS.eyebrow}
+                </span>
+              </Reveal>
+              <Reveal delay={90}>
+                <h2 className="font-display mt-5 max-w-[14ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
+                  <Chave t={QUEM_SOMOS.titulo} />
+                </h2>
+              </Reveal>
+
+              {/* O CORTE COME AS PERNAS, e é ele que decide a proporção do
+                  quadro — não o contrário.
+
+                  O arquivo é 1122×1402 (quase 4:5) e mostra os dois
+                  voluntários de corpo inteiro, do céu ao pé. Num quadro 4:5 o
+                  `object-cover` não tinha o que cortar: entrava a fotografia
+                  inteira, e metade dela era calçada, calça e sapato — a foto
+                  ficava sobre pernas e não sobre os dois rostos e as duas
+                  placas, que são o assunto.
+
+                  `aspect-[9/8]` com o recorte preso no TOPO (`50% 0%`) mostra
+                  os 71% de cima do arquivo, o que corta exatamente abaixo da
+                  borda de baixo das placas. A conta que amarra os dois números:
+                  o `cover` escala pela largura (o quadro é mais largo que o
+                  arquivo em proporção), então a fração visível é
+                  1 / (9/8 × 1402/1122) = 0,71 — mexer na proporção do quadro é
+                  mexer em ONDE a foto é cortada, e uma proporção mais larga
+                  começa a comer as placas por baixo. */}
+              <Reveal variant="scale" delay={220}>
+                <MolduraFoto
+                  foto={QUEM_SOMOS.foto}
+                  sizes="(min-width: 1024px) 38vw, 90vw"
+                  posicao="50% 0%"
+                  className="mt-12 aspect-[9/8] w-[92%] max-w-[32rem] rounded-[1.25rem] lg:mt-16 lg:rounded-[1.75rem]"
+                />
+              </Reveal>
+            </div>
+
+            {/* `lg:pt-14` desce o parágrafo um degrau, para que a coluna da
+                direita comece na altura da MANCHETE e não na do eyebrow — sem
+                ele o texto nasce colado no topo da grade, ao lado de uma tarja
+                em caixa alta de 11px, e a seção lê como um formulário com
+                rótulo. É um degrau só, e não um desalinho grande: as duas
+                colunas continuam sendo o mesmo bloco. */}
+            <Reveal variant="right" delay={140} className="lg:pt-14">
+              <p className="max-w-md text-lg leading-relaxed text-muted-foreground">
+                {QUEM_SOMOS.texto}
+              </p>
+              <Link
+                href={QUEM_SOMOS.acao.href}
+                className="group mt-8 inline-flex items-center gap-2 text-sm font-semibold text-plum-deep transition-colors duration-300 hover:text-grape"
+              >
+                {QUEM_SOMOS.acao.rotulo}
+                <ArrowRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 03 · CULTOS ════════════════════════════════════════════════════
+          O texto à esquerda, a fotografia à direita, e OS HORÁRIOS numa laje
+          que atravessa a quina de baixo da foto. É essa laje que responde às
+          duas linhas do briefing ao mesmo tempo: "parcialmente sobreposta à
+          fotografia" e "evitar colocar tudo dentro de um card convencional" —
+          só os horários estão nela, o resto da seção mora direto na areia.
+
+          E é por isso que os horários são a maior tipografia da seção depois da
+          manchete: eles são o que a pessoa que não conhece a igreja veio
+          buscar, e o briefing pede que tenham presença de desenho, não de
+          tabela.
+
+          A LAJE SÓ FLUTUA A PARTIR DE `lg`. Abaixo disso ela desce para o
+          fluxo, embaixo da foto: em 900px de largura um bloco legível já toma
+          metade do quadro, e não há quina que ele não cubra. O `-left-10` cai
+          dentro do vão de 4rem da grade, então ele nunca encosta na coluna de
+          texto. */}
+      <section className="bg-sand py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            <Reveal variant="left">
+              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                {CULTOS.eyebrow}
+              </span>
+              <h2 className="font-display mt-5 max-w-[15ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
+                <Chave t={CULTOS.titulo} />
+              </h2>
+              <p className="mt-7 max-w-md leading-relaxed text-muted-foreground">
+                {CULTOS.texto}
+              </p>
+              <MagneticButton className="mt-9">
+                <Link
+                  href={CULTOS.acao.href}
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-plum-deep px-7 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
+                >
+                  {CULTOS.acao.rotulo}
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+              </MagneticButton>
+            </Reveal>
+
+            <Reveal variant="right" delay={140}>
+              <figure className="relative">
+                {/* Retrato (4:5) e não paisagem: o arquivo é 1800×1202 e a
+                    congregação ocupa a largura inteira, então cortar nas
+                    laterais aproxima os rostos em vez de mostrar parede. O
+                    ponto em `18%` puxa o recorte para a esquerda da foto, o
+                    que joga fora justamente o terço direito — onde estão o
+                    caixote de flores e a coluna de som. */}
+                <MolduraFoto
+                  foto={CULTOS.foto}
+                  sizes="(min-width: 1024px) 55vw, 92vw"
+                  posicao="18% center"
+                  className="aspect-[4/5] w-full rounded-[1.5rem] sm:aspect-[3/2] lg:aspect-[4/5] lg:rounded-[2rem]"
+                />
+
+                {/* `sm:max-w-[20rem]` só existe para a faixa entre `sm` e
+                    `lg`, onde a laje está no fluxo mas a coluna já é larga:
+                    sem teto ela vira uma barra de 900px com duas linhas de
+                    horário perdidas na ponta esquerda. */}
+                <div className="mt-6 sm:max-w-[20rem] lg:absolute lg:-left-10 lg:bottom-10 lg:mt-0 lg:w-[17rem] lg:max-w-none">
+                  <div className="rounded-[1.25rem] bg-bone p-7 lg:rounded-[1.5rem] lg:p-8">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                      {CULTOS.horarios.dia}
+                    </p>
+                    <div className="mt-4 space-y-1">
+                      {CULTOS.horarios.faixas.map((faixa) => (
+                        <p
+                          key={faixa}
+                          className="font-display text-[1.75rem] font-medium leading-tight text-foreground lg:text-[2rem]"
+                        >
+                          {faixa}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </figure>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 04 · CÉLULAS ═══════════════════════════════════════════════════
+          A LÓGICA DA SEÇÃO ANTERIOR, INVERTIDA — é o que o briefing pede para
+          criar ritmo: lá o texto à esquerda e a foto à direita, aqui o
+          contrário. Trocam também a superfície (bone depois da areia) e a
+          proporção do quadro (4:3 depois de 4:5), senão a inversão sozinha lê
+          como a mesma seção espelhada.
+
+          SÃO DUAS FOTOGRAFIAS e nenhum card: a célula inteira numa sala de
+          casa e, pendurado na quina, um abraço. É a diferença entre dizer
+          "comunhão, cuidado e crescimento" com três cards de benefício — que o
+          briefing manda evitar — e mostrar as duas coisas que a frase quer
+          dizer. O anel na cor da faixa (`ring-bone`) é o que separa uma foto da
+          outra; sem ele as bordas se dissolvem. */}
+      <section className="bg-bone py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            <Reveal variant="left" className="lg:order-1">
+              {/* A COLAGEM NÃO USA `absolute`, e é decisão herdada da /sobre.
+                  A `<MolduraFoto>` já desenha a própria `<div>` com
+                  `relative`, e `relative` e `absolute` disputam a MESMA
+                  propriedade — quem vence é a ordem das regras no CSS gerado,
+                  não a ordem das classes escritas aqui. Quem posicionasse
+                  teria de ser um embrulho, e aí o encaixe passaria a depender
+                  de percentuais amarrados na mão.
+
+                  Aqui o abraço está NO FLUXO e sobe por cima da quina da foto
+                  grande com margem negativa. Margem em % resolve contra a
+                  LARGURA do bloco (não a altura), então o encaixe é o mesmo em
+                  qualquer viewport.
+
+                  O ABRAÇO É CORTADO UM TRIZ ABAIXO DO CENTRO (`50% 52%`) e isso resolve
+                  duas coisas de uma vez: o arquivo traz a marca d'água da
+                  igreja no alto do quadro, que um recorte quadrado centrado
+                  mostraria pela metade, e as duas cabeças estão no terço
+                  superior — num corte mais baixo sobrava roupa escura e o
+                  quadradinho lia como uma mancha preta. */}
+              <figure>
+                <MolduraFoto
+                  foto={CELULAS.foto}
+                  sizes="(min-width: 1024px) 55vw, 92vw"
+                  className="aspect-[4/3] w-full rounded-[1.5rem] lg:rounded-[2rem]"
+                />
+                <div className="-mt-[13%] flex justify-end pr-6 lg:pr-10">
+                  <MolduraFoto
+                    foto={CELULAS.fotoAbraco}
+                    sizes="(min-width: 1024px) 16vw, 32vw"
+                    posicao="50% 52%"
+                    className="aspect-square w-[32%] max-w-[12rem] rounded-[1.25rem] ring-[8px] ring-bone lg:rounded-[1.5rem]"
+                  />
+                </div>
+              </figure>
+            </Reveal>
+
+            <Reveal variant="right" delay={140} className="lg:order-2">
+              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                {CELULAS.eyebrow}
+              </span>
+              <h2 className="font-display mt-5 max-w-[15ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
+                <Chave t={CELULAS.titulo} />
+              </h2>
+              <p className="mt-7 max-w-md leading-relaxed text-muted-foreground">
+                {CELULAS.texto}
+              </p>
+              <Link
+                href={CELULAS.acao.href}
+                className="group mt-8 inline-flex items-center gap-2 text-sm font-semibold text-plum-deep transition-colors duration-300 hover:text-grape"
+              >
+                {CELULAS.acao.rotulo}
+                <ArrowRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 05 · PARA CADA GERAÇÃO ═════════════════════════════════════════
+          A ÚNICA SEÇÃO DA PÁGINA EM CARDS, e é o formato certo justamente aqui:
+          são dois ministérios irmãos, do mesmo peso, e um par de cards é a
+          forma que diz "escolha entre dois" sem precisar escrever isso. Nas
+          outras seções o card seria o atalho preguiçoso que o briefing manda
+          evitar; nesta ele É a composição, e por isso ela não repete a forma de
+          nenhuma vizinha.
+
+          SÃO DOIS E SÓ DOIS. Um terceiro card (famílias, música, o que for)
+          transformaria a seção num menu de ministérios, que é outra página —
+          e no `md` a grade de dois vira duas colunas iguais e limpa; três
+          viram três colunas magras ou uma órfã embaixo.
+
+          NÃO HÁ TARJA DE IDADE sobre as fotos. A versão anterior tinha
+          ("0 — 14 ANOS", "12 — 29 ANOS") e ela saiu por decisão da casa; o
+          porquê está em `MINISTERIOS.cards`, no `lib/home.ts`.
+
+          O TEXTO DE ABERTURA FICA NUM BLOCO SÓ, à esquerda, e não em duas
+          áreas como na seção "Quem somos": lá a divisão em duas colunas era a
+          composição inteira, aqui quem faz o trabalho embaixo é o par de
+          cards, e um cabeçalho partido em dois roubaria dele. */}
       <section className="bg-sand py-24 sm:py-28 lg:py-32">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-              Comece por aqui
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              {MINISTERIOS.eyebrow}
             </span>
-            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
-              Três jeitos simples de dar{" "}
-              <span className="block font-normal italic text-grape">
-                o primeiro passo
-              </span>
+            {/* `20ch` e não os `14–16ch` das outras manchetes: "intensamente"
+                tem doze caracteres e, numa medida curta, virava uma linha
+                inteira sozinha — a manchete quebrava em quatro linhas, uma
+                delas só com a palavra roxa, e o destaque passava a ler como
+                erro de composição. Em 20ch ela fecha em duas. */}
+            <h2 className="font-display mt-5 max-w-[20ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
+              <Chave t={MINISTERIOS.titulo} />
             </h2>
+            <p className="mt-7 max-w-xl leading-relaxed text-muted-foreground">
+              {MINISTERIOS.texto}
+            </p>
           </Reveal>
 
-          <div className="mt-14 grid gap-5 md:grid-cols-3 lg:gap-6">
-            {nextSteps.map((step, i) => (
-              <Reveal key={step.title} delay={i * 110}>
-                <Link
-                  href={step.href}
-                  className="group flex h-full flex-col rounded-[1.75rem] bg-card p-8 transition-transform duration-300 hover:-translate-y-1.5 lg:p-9"
-                >
-                  <h3 className="font-display text-2xl font-medium text-foreground">
-                    {step.title}
-                  </h3>
-                  <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">
-                    {step.desc}
-                  </p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-grape">
-                    {step.cta}
-                    <ArrowRight
-                      size={15}
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ CÉLULAS — split animado, agora em areia quente ═══ */}
-      <CellsFeature />
-
-      {/* ═══ MINISTÉRIOS — volta pro claro, cards grandes com foto ═══ */}
-      <section className="relative overflow-hidden bg-bone py-24 sm:py-28 lg:py-32">
-        <div className="container relative mx-auto px-5 sm:px-8 lg:px-12">
-          <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-              Ministérios
-            </span>
-            <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
-              Há lugar para{" "}
-              <span className="block font-normal italic text-grape">
-                cada fase da vida
-              </span>
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:gap-6">
-            {ministries.map((m, i) => (
+          {/* `gap-5` e não `gap-12`: os dois cards são um par, e um vão largo
+              entre eles os separaria em duas ilhas. É o mesmo vão que a página
+              usa entre a fotografia e a laje dos horários. */}
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:mt-16 lg:gap-6">
+            {MINISTERIOS.cards.map((card, i) => (
               <Reveal
-                key={m.title}
-                delay={i * 130}
+                key={card.nome}
                 variant={i === 0 ? "left" : "right"}
+                delay={i * 120}
               >
+                {/* ⚠️ A ALTURA MÍNIMA MORA AQUI, NO CARTÃO, e não no bloco de
+                    texto lá embaixo. Numa primeira versão ela estava no texto,
+                    e o efeito era o oposto do pretendido: o `justify-end`
+                    encostava no pé do cartão um bloco que tinha 34rem de
+                    altura própria, então o texto começava no TOPO desse bloco
+                    — ou seja, no meio do cartão — com um vão morto embaixo e
+                    justamente fora da parte forte do véu.
+
+                    No cartão, o `min-h` dá o vão que a fotografia precisa para
+                    respirar; o texto volta a ter a altura do próprio conteúdo
+                    e o `justify-end` faz o que promete. O `h-full` iguala os
+                    dois cartões, que têm parágrafos de alturas diferentes. */}
                 <Link
-                  href={m.href}
-                  className="group relative block h-full overflow-hidden rounded-[2rem] bg-plum-deep"
+                  href={card.acao.href}
+                  className="group relative flex h-full min-h-[24rem] flex-col justify-end overflow-hidden rounded-[1.5rem] bg-plum-deep sm:min-h-[28rem] lg:min-h-[32rem] lg:rounded-[2rem]"
                 >
-                  <ImageWithFallback
-                    src={m.img}
-                    alt={m.alt}
-                    className="aspect-[4/5] w-full object-cover opacity-80 transition-all duration-700 group-hover:scale-105 group-hover:opacity-95 sm:aspect-[5/4] lg:aspect-[4/3]"
+                  {/* O `absolute` mora no embrulho e não na moldura — a
+                      moldura já nasce `relative` e as duas classes disputam a
+                      mesma propriedade (ver a colagem das células, acima).
+
+                      A FOTO É O FUNDO e o texto é irmão dela, não filho: é
+                      isso que faz o card crescer com o texto (os dois cartões
+                      têm parágrafos de alturas diferentes e `h-full` os iguala)
+                      em vez de ter altura ditada pela proporção da imagem. O
+                      `aspect` do vão vive no `min-h` abaixo. */}
+                  <div className="absolute inset-0">
+                    <MolduraFoto
+                      foto={card.foto}
+                      tom="escuro"
+                      sizes="(min-width: 768px) 46vw, 92vw"
+                      className="h-full w-full transition-transform duration-700 motion-safe:group-hover:scale-[1.04]"
+                    />
+                  </div>
+
+                  {/* O VÉU É FORTE EMBAIXO E QUASE NADA EM CIMA, e as posições
+                      dos stops (`via-42%`) importam tanto quanto as opacidades:
+                      o texto vive nos 40% de baixo, e as duas fotografias têm
+                      fundo claro exatamente ali — cadeiras brancas numa, piso
+                      branco na outra. Concentrando o escurecimento nessa faixa,
+                      a metade de cima de cada fotografia continua sendo
+                      fotografia. Aliviar o `from` é apagar o parágrafo. */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-gradient-to-t from-plum-deep via-plum-deep/60 via-42% to-plum-deep/8"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-plum-deep via-plum-deep/45 to-plum-deep/0" />
-                  <div className="absolute inset-x-0 bottom-0 p-8 lg:p-10">
-                    <span className="inline-block rounded-full border border-white/25 bg-white/10 px-3.5 py-1 text-[10px] uppercase tracking-[0.22em] text-white/85 backdrop-blur-sm">
-                      {m.tag}
-                    </span>
-                    <h3 className="font-display mt-4 text-[clamp(1.9rem,3.4vw,2.75rem)] font-medium leading-tight text-white">
-                      {m.title}
+
+                  <div className="relative p-8 lg:p-10">
+                    <h3 className="font-display text-[1.75rem] font-medium leading-tight text-white lg:text-[2.1rem]">
+                      {card.nome}
                     </h3>
-                    <p className="mt-2 max-w-sm leading-relaxed text-white/70">
-                      {m.desc}
+                    <p className="mt-3 max-w-sm leading-relaxed text-white/75">
+                      {card.texto}
                     </p>
-                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-grape-light">
-                      Saiba mais
+                    <span className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-grape-light">
+                      {card.acao.rotulo}
                       <ArrowRight
                         size={15}
                         className="transition-transform duration-300 group-hover:translate-x-1"
@@ -481,45 +603,324 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ FECHAMENTO — números + convite, escurecendo direto pro rodapé ═══ */}
-      <section className="relative overflow-hidden rounded-t-[2.5rem] bg-plum-deep lg:rounded-t-[4rem]">
-        <ImageWithFallback
-          src={IMG.culto}
-          alt="Culto de domingo"
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-plum/70 via-plum-deep/85 to-plum-deep" />
+      {/* ═══ 06 · TRILHO DO VENCEDOR ════════════════════════════════════════
+          A ÚNICA FAIXA ROXA DA PÁGINA, e é ela o "momento de maior presença da
+          identidade" que o ritmo do briefing pede. Vem depois de duas seções
+          claras seguidas de propósito: o contraste é o assunto aqui.
 
-        <div className="container relative mx-auto px-5 py-24 sm:px-8 sm:py-28 lg:px-12 lg:py-32">
-          {/* Os números (células / bairros) já são ditos, com mais força,
-              na seção dos bairros. Repeti-los aqui como troféu enfraquecia os
-              dois lugares — o fechamento é só convite. */}
-          <Reveal variant="scale" className="text-center">
-            <h2 className="font-display mx-auto max-w-3xl text-[clamp(2.4rem,6vw,4.75rem)] font-medium leading-[1.02] text-white">
-              Seja bem-vindo à{" "}
-              <span className="block font-normal italic text-grape-light">
-                família Videira
+          A ARTE OFICIAL faz o trabalho do "destaque visual" — as três palavras
+          estão no letreiro dela, e por isso não são compostas de novo em
+          tipografia ao lado. O porquê, com todas as letras, está no comentário
+          de `TRILHO.arte` em `lib/home.ts`.
+
+          O canto arredondado em cima é a segunda costura: aqui é o roxo que
+          sobe por cima do bone, e não o contrário, porque a faixa escura é o
+          elemento que chega. */}
+      <section className="relative -mt-6 rounded-t-[2rem] bg-plum-deep py-24 sm:py-28 lg:-mt-8 lg:rounded-t-[3rem] lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid items-center gap-14 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
+            <Reveal variant="left">
+              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape-light">
+                {TRILHO.eyebrow}
               </span>
+              <h2 className="font-display mt-5 max-w-[14ch] text-[2rem] font-medium leading-[1.05] text-white sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
+                <Chave t={TRILHO.titulo} escuro />
+              </h2>
+              <p className="mt-7 max-w-md leading-relaxed text-white/70">
+                {TRILHO.texto}
+              </p>
+              <MagneticButton className="mt-9">
+                <Link
+                  href={TRILHO.acao.href}
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-bone px-7 py-3.5 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
+                >
+                  {TRILHO.acao.rotulo}
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+              </MagneticButton>
+            </Reveal>
+
+            <Reveal variant="scale" delay={160}>
+              {/* A arte é quase quadrada (1222×1154) e entra inteira, sem
+                  corte: é peça gráfica com letreiro, e `object-cover` num
+                  quadro de outra proporção comeria as palavras. */}
+              <MolduraFoto
+                foto={TRILHO.arte}
+                tom="escuro"
+                sizes="(min-width: 1024px) 38vw, 92vw"
+                className="aspect-[1222/1154] w-full rounded-[1.5rem] lg:rounded-[2rem]"
+              />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 07 · NOSSA VISÃO ═══════════════════════════════════════════════
+          A PAUSA. Depois da faixa roxa, uma seção que é quase só tipografia e
+          ar — não há CTA, não há fotografia e não há nada para clicar, porque
+          o trabalho dela é dar um respiro antes das duas últimas.
+
+          AS QUATRO PALAVRAS SÃO A MANCHETE, e não uma lista de etapas: por isso
+          estão dentro de UM `<h2>`, com quebras, e não numa `<ul>` numerada —
+          numerá-las transformaria a visão num infográfico, que é o oposto de
+          uma pausa.
+
+          A ESCADA E A VARIAÇÃO DE ESCALA são o "movimento sutil" que o briefing
+          permite. Duas contenções: os degraus só existem a partir de `lg` (em
+          390px eles comeriam a largura útil e "Consolidar." quebraria em duas
+          linhas) e a variação de corpo é de 8% entre a menor e a maior — o
+          suficiente para o olho perceber ritmo, pouco o bastante para não ler
+          como erro de composição.
+
+          Este é o terceiro lugar da página em que o roxo entra em texto, e ele
+          continua sendo UM trecho: a última palavra. */}
+      <section className="relative -mt-6 rounded-t-[2rem] bg-sand py-24 sm:py-28 lg:-mt-8 lg:rounded-t-[3rem] lg:py-36">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <Reveal>
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              {VISAO.eyebrow}
+            </span>
+          </Reveal>
+
+          <Reveal variant="blur" delay={120}>
+            <h2 className="font-display mt-8 text-foreground lg:mt-10">
+              {VISAO.palavras.map((palavra, i) => (
+                <span
+                  key={palavra}
+                  className={`block font-medium leading-[1.02] ${ESCALA_VISAO[i]} ${DEGRAU_VISAO[i]} ${
+                    i === VISAO.palavras.length - 1 ? "text-grape" : ""
+                  }`}
+                >
+                  {palavra}
+                </span>
+              ))}
             </h2>
-            <p className="mx-auto mt-7 max-w-lg text-lg leading-relaxed text-white/70">
-              Não importa onde você está na sua jornada. Envie uma mensagem ou
-              apareça num domingo — nós esperamos por você.
+          </Reveal>
+
+          {/* O complemento fica NO FIM DA ESCADA, alinhado à direita a partir
+              de `lg`: é para lá que as quatro palavras estavam caminhando, e
+              largar a frase de volta na margem esquerda desfaria o movimento
+              que a escada acabou de fazer. */}
+          <Reveal delay={220} className="mt-12 lg:mt-16 lg:flex lg:justify-end">
+            <p className="max-w-md leading-relaxed text-muted-foreground lg:text-right">
+              {VISAO.complemento}
             </p>
-            <MagneticButton>
-              <Link
-                href="/contato"
-                className="group mt-11 inline-flex items-center gap-2.5 rounded-full bg-bone px-9 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_20px_45px_-18px_rgba(0,0,0,0.7)] active:scale-95"
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══ 08 · NOS ACOMPANHE ═════════════════════════════════════════════
+          A seção mais simples da página, e de propósito: sem feed, sem
+          carrossel e sem embed. O quadro à direita é uma fotografia com um
+          tratamento discreto que remete a vídeo — um véu leve e o glifo de
+          play —, não uma imitação da interface do YouTube.
+
+          O QUADRO INTEIRO É O LINK, e o botão à esquerda também — dois
+          caminhos para o mesmo canal, o que normalmente eu evitaria. Vale aqui
+          porque uma foto com botão de play que não responde ao clique é uma
+          promessa quebrada.
+
+          O QUADRO SAI DA ORDEM DE TABULAÇÃO (`tabIndex={-1}`) para que a
+          duplicata não custe uma parada a quem navega por teclado: o botão ao
+          lado, esse sim tabulável, leva ao mesmo lugar e diz para onde vai.
+          Não leva `aria-hidden` junto porque o `alt` da fotografia é conteúdo
+          — esconder o elemento apagaria a descrição da imagem, e um link com
+          nome acessível na ordem de leitura não atrapalha ninguém. */}
+      <section className="bg-bone py-24 sm:py-28 lg:py-32">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+            <Reveal variant="left">
+              <h2 className="font-display max-w-[12ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
+                <Chave t={YOUTUBE.titulo} />
+              </h2>
+              <p className="mt-7 max-w-md leading-relaxed text-muted-foreground">
+                {YOUTUBE.texto}
+              </p>
+              <MagneticButton className="mt-9">
+                <a
+                  href={YOUTUBE_IGREJA.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-plum-deep px-7 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
+                >
+                  <Play size={15} className="fill-current" />
+                  {YOUTUBE.acao}
+                </a>
+              </MagneticButton>
+            </Reveal>
+
+            <Reveal variant="right" delay={140}>
+              <a
+                href={YOUTUBE_IGREJA.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={-1}
+                className="group relative block overflow-hidden rounded-[1.5rem] bg-plum-deep lg:rounded-[2rem]"
               >
-                Quero me conectar
+                <MolduraFoto
+                  foto={YOUTUBE.foto}
+                  sizes="(min-width: 1024px) 46vw, 92vw"
+                  className="aspect-[16/10] w-full transition-transform duration-700 motion-safe:group-hover:scale-[1.03] sm:aspect-video"
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-plum-deep/55 via-transparent to-transparent"
+                />
+                <span
+                  aria-hidden
+                  className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-bone/90 text-plum-deep backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 lg:h-20 lg:w-20"
+                >
+                  {/* `translate-x-[2px]` acerta o centro ÓPTICO do triângulo:
+                      centrado pela caixa, um play parece deslocado para a
+                      esquerda dentro de um círculo. */}
+                  <Play
+                    size={24}
+                    className="translate-x-[2px] fill-current lg:size-7"
+                  />
+                </span>
+              </a>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 09 · CTA FINAL ═════════════════════════════════════════════════
+          A página termina como começou: gente ocupando a tela inteira, com o
+          texto encostado no canto inferior esquerdo. A rima com a capa é o
+          fecho — o briefing pede que a Home não acabe em informação
+          institucional, e o rodapé escuro logo abaixo continua a fotografia
+          sem emenda de cor.
+
+          A terceira e última costura está aqui, e é a mais necessária das três:
+          sem ela uma fotografia de borda a borda encostaria numa linha reta no
+          bone da seção do YouTube.
+
+          `min-h` em `svh` pelo mesmo motivo da capa.
+
+          ⚠️ A ALTURA AQUI É ENQUADRAMENTO, NÃO ESPAÇO. A fotografia é 1.94:1 e
+          a comunidade ocupa uma FAIXA no meio dela, com copa de árvore em cima
+          e grama embaixo. Numa seção de proporção parecida com a do arquivo, o
+          `object-cover` não tem o que cortar: a foto entra quase inteira e as
+          pessoas viram uma tira fina no meio de um paredão de árvore. Foi o que
+          aconteceu na primeira versão, com `85svh`.
+
+          Em `100svh` a seção fica MAIS ALTA que o arquivo, o corte passa a ser
+          horizontal e a mesma foto entra 21% maior — as pessoas crescem, a
+          árvore some pelas laterais. Encurtar esta seção não a torna mais
+          discreta; torna a comunidade menor, que é o oposto do que ela existe
+          para fazer.
+
+          E OS VÉUS SÃO MAIS LEVES QUE OS DA CAPA, ao contrário do que a rima
+          entre as duas sugeriria. Lá embaixo do texto há filmagem escura de
+          culto; aqui há gente de camiseta clara em plena luz do dia, e os
+          mesmos stops da capa (que começavam OPACOS nos 15% de baixo)
+          apagavam justamente a fileira de rostos. O texto continua legível
+          porque o roxo do lado esquerdo dá conta dele sozinho. */}
+      <section className="relative isolate -mt-6 flex min-h-[75svh] flex-col justify-end overflow-hidden rounded-t-[2rem] bg-plum-deep lg:-mt-8 lg:min-h-[100svh] lg:rounded-t-[3rem]">
+        {/* O `absolute` mora no embrulho e não na moldura — a moldura já nasce
+            `relative`, e as duas classes disputam a mesma propriedade (ver o
+            comentário da colagem das células, acima).
+
+            O ponto do recorte desce um pouco (`58%`) para o caso do celular,
+            onde a seção é MUITO mais alta que larga e o corte vira quase todo
+            horizontal: ali o que decide o enquadramento é a coluna do meio da
+            foto, e um ponto centrado deixaria mais céu do que gente. No
+            desktop ele quase não tem efeito, porque sobra pouca altura para
+            cortar. */}
+        <div className="absolute inset-0">
+          <MolduraFoto
+            foto={FECHO.foto}
+            tom="escuro"
+            sizes="100vw"
+            posicao="50% 58%"
+            className="h-full w-full"
+          />
+        </div>
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-plum-deep via-plum-deep/45 to-plum-deep/25"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-plum-deep/80 via-plum-deep/25 to-transparent lg:via-plum-deep/15"
+        />
+
+        <div className="container relative mx-auto px-5 pb-20 pt-32 sm:px-8 sm:pb-24 lg:px-12 lg:pb-28">
+          <Reveal variant="blur">
+            <h2 className="font-display max-w-[14ch] text-[2.25rem] font-medium leading-[1.02] text-white sm:text-[3rem] lg:text-[3.25rem] xl:text-[3.9rem]">
+              <Chave t={FECHO.titulo} escuro />
+            </h2>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <p className="mt-7 max-w-lg leading-relaxed text-white/75">
+              {FECHO.texto}
+            </p>
+          </Reveal>
+
+          <Reveal delay={240}>
+            {/* Dois caminhos, e o segundo NÃO é um botão cheio: dois botões
+                sólidos lado a lado disputam o clique e nenhum dos dois lê como
+                o principal. O contorno diz "também dá para ir por aqui". */}
+            <div className="mt-10 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+              <MagneticButton>
+                <Link
+                  href={FECHO.acoes[0].href}
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] active:scale-95"
+                >
+                  {FECHO.acoes[0].rotulo}
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+              </MagneticButton>
+
+              <Link
+                href={FECHO.acoes[1].href}
+                /* `self-start` no celular: empilhados, os dois botões são
+                   itens de um flex em coluna e o segundo esticaria de borda a
+                   borda enquanto o primeiro (embrulhado no `MagneticButton`,
+                   que é `inline-block`) fica do tamanho do texto. Duas pílulas
+                   de larguras diferentes uma sobre a outra parecem defeito. */
+                className="group inline-flex items-center justify-center gap-2.5 self-start rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:border-white/60 hover:bg-white/10 active:scale-95 sm:self-auto"
+              >
+                {FECHO.acoes[1].rotulo}
                 <ArrowRight
                   size={17}
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
-            </MagneticButton>
+            </div>
           </Reveal>
         </div>
       </section>
-    </>
+    </div>
   );
 }
+
+/* AS DUAS ESCADAS DA VISÃO, fora do componente porque são constantes de
+   desenho e não estado.
+
+   A escala varia 8% do primeiro ao último degrau e o passo é irregular de
+   propósito (100 → 94 → 104 → 108): uma progressão certinha lê como zoom
+   uniforme, que é justamente o que não parece movimento.
+
+   Os degraus horizontais são em `em`, não em rem nem em %, para que a escada
+   cresça junto com o corpo da fonte em cada breakpoint — em pixels fixos ela
+   ficaria discreta demais no `xl` e larga demais no `sm`.
+
+   ⚠️ AS DUAS LISTAS TÊM QUE TER O MESMO COMPRIMENTO DE `VISAO.palavras`
+   (`lib/home.ts`). Uma quinta palavra sem degrau cai em `undefined` e vira uma
+   classe vazia — nada quebra, e é exatamente por isso que passa despercebido. */
+const ESCALA_VISAO = [
+  "text-[3rem] sm:text-[4rem] lg:text-[4.25rem] xl:text-[5.25rem]",
+  "text-[2.8rem] sm:text-[3.75rem] lg:text-[4rem] xl:text-[4.95rem]",
+  "text-[3.1rem] sm:text-[4.15rem] lg:text-[4.4rem] xl:text-[5.45rem]",
+  "text-[3.25rem] sm:text-[4.3rem] lg:text-[4.6rem] xl:text-[5.7rem]",
+];
+
+const DEGRAU_VISAO = ["", "lg:pl-[0.6em]", "lg:pl-[1.2em]", "lg:pl-[1.8em]"];

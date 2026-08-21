@@ -5,7 +5,6 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
 import { MolduraFoto } from "@/components/MolduraFoto";
-import { CapaEmLoop } from "@/components/celulas/CapaEmLoop";
 import { MuralDeBairros } from "@/components/celulas/MuralDeBairros";
 import { cells, neighborhoodGroups } from "@/lib/cells";
 import type { Pedaco, Titulo } from "@/lib/celulas";
@@ -246,14 +245,13 @@ export default function Celulas() {
           numa página cujo argumento é "existe gente esperando por você", quem
           tem que falar primeiro é a gente.
 
-          A FAIXA TROCA DE CÉLULA SOZINHA, e é a resposta ao que uma foto só não
-          dava conta: a página promete vinte e quatro células e abria mostrando
-          uma casa. Agora ela passa quatro, PARANDO em cada uma — o movimento é
-          a emenda entre duas fotos, não o assunto. Não há seta, ponto nem
-          botão de navegação, e isso é decisão: uma capa que se anuncia como
-          carrossel convida a pessoa a operar a capa, e o que a página quer que
-          ela opere é o botão logo abaixo. O porquê de cada peça está no
-          `components/celulas/CapaEmLoop.tsx`.
+          A FAIXA É UMA FOTO SÓ E FICA PARADA. Ela já trocou de célula sozinha,
+          e o carrossel custava caro pelo que dava: uma capa que se troca a
+          cada cinco segundos tira do visitante o tempo de olhar uma cena com
+          trinta rostos, e uma capa que se anuncia como carrossel convida a
+          pessoa a operar a capa — quando o que a página quer que ela opere é
+          o botão logo abaixo. Quem quiser ver as outras células tem o mosaico
+          da seção 07 e o mural da 08, que são paredes paradas.
 
           NÃO HÁ TEXTO SOBRE A FOTO, e isso não é timidez. Um véu escuro sobre
           uma sala de casa apaga justamente o que ela tem para mostrar — a
@@ -275,22 +273,37 @@ export default function Celulas() {
           um terço da largura do arquivo — ou seja, quatro pessoas de trinta.
           Faixa baixa em tela estreita é o que mantém a sala inteira no quadro.
 
-          A foto NÃO passa pela `<MolduraFoto>` e NÃO tem animação de entrada:
-          ela é o provável LCP da rota, e tanto o `opacity: 0` inicial do
-          `<Reveal>` quanto um `scale` de entrada atrasariam a única coisa que
-          o visitante precisa ver imediatamente. A faixa TROCA DE FOTO, mas a
-          primeira entra parada e só se move depois de alguns segundos — o
-          movimento nasce em repouso, então não custa nada ao LCP. */}
+          A FOTO NÃO PASSA POR UM `<Reveal>`: ela é o provável LCP da rota, e o
+          `opacity: 0` inicial atrasaria justamente a única coisa que o
+          visitante precisa ver imediatamente. O único movimento da capa é o
+          `capa-afasta` — a imagem entra 6% maior e recua para o tamanho dela
+          em 1,4s, uma vez, ao carregar. Ele é de graça para o LCP porque
+          anima TRANSFORM e não opacidade: o primeiro quadro já mostra a foto
+          inteira e opaca, só um pouco mais perto. Some com
+          `prefers-reduced-motion`. */}
       <section className="bg-bone">
         <div className="relative h-[42svh] min-h-[15rem] w-full sm:h-[52svh] lg:h-[62svh]">
-          {/* A faixa passa quatro células, parando alguns segundos em cada.
-              O ritmo, o salto invisível que fecha o ciclo e a parada no
-              `prefers-reduced-motion` estão todos no componente; a ordem das
-              fotos e o recorte de cada uma, no `lib/celulas.ts`.
+          {/* `capa-afasta` (globals.css) mora no MESMO elemento que recorta a
+              foto, e tem que ser assim: quem cresce e recua é o `<img>` lá
+              dentro, e é o `overflow: hidden` da `<MolduraFoto>` que impede
+              os 6% a mais de vazarem por cima da manchete. A mesma classe faz
+              a entrada da capa da /sobre — é o gesto de abertura do site, não
+              um efeito desta página.
 
-              Ele recebe `h-full` e não a altura: quem manda na altura da capa
+              O recorte sobe acima do centro (`50% 45%`): embaixo é chão e
+              joelho, em cima é a parede e a decoração. No centro, o corte come
+              as crianças da fileira da frente — que na tela estreita, com a
+              faixa em 42svh, é metade da foto.
+
+              Ela recebe `h-full` e não a altura: quem manda na altura da capa
               é esta `<div>`, com os três degraus de `svh` explicados acima. */}
-          <CapaEmLoop fotos={HERO.fotos} className="h-full w-full" />
+          <MolduraFoto
+            foto={HERO.foto}
+            eager
+            sizes="100vw"
+            posicao="50% 45%"
+            className="capa-afasta h-full w-full"
+          />
 
           {/* A DICA DE ROLAGEM mora aqui e não junto dos botões: no pé da
               fotografia ela aponta para o texto que vem a seguir, que é

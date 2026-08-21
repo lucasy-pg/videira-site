@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
-import { GLIFOS, INSTAGRAM_IGREJA, WHATSAPP_IGREJA } from "@/lib/social";
+import {
+  GLIFOS,
+  INSTAGRAM_IGREJA,
+  WHATSAPP_IGREJA,
+  YOUTUBE_IGREJA,
+} from "@/lib/social";
 
 /* Os desenhos dos três ícones saíram daqui para `lib/social.ts` quando o
    /radicais-livres passou a precisar do mesmo glifo do Instagram para a conta
    da REDE (@rlindaiatuba, que não é esta). Duas cópias do mesmo caminho SVG em
    arquivos diferentes é o tipo de duplicata que ninguém percebe estar
-   divergindo. Os endereços continuam aqui: são do rodapé. */
+   divergindo. O do YouTube seguiu o mesmo caminho quando a Home ganhou a seção
+   "Nos acompanhe". Só o Facebook continua escrito aqui: é o único endereço que
+   nenhuma outra página usa. */
 const socials = [
   {
     href: INSTAGRAM_IGREJA.url,
@@ -14,7 +21,7 @@ const socials = [
     path: GLIFOS.instagram,
   },
   {
-    href: "https://www.youtube.com/@igrejavideiraindaiatuba",
+    href: YOUTUBE_IGREJA.url,
     label: "YouTube",
     path: GLIFOS.youtube,
   },

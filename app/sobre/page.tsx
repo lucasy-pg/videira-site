@@ -804,13 +804,14 @@ export default function Sobre() {
       </section>
 
       {/* ═══ 09 · FECHO ═════════════════════════════════════════════════════
-          A página abriu com a igreja inteira numa foto e fecha com uma pessoa
-          só — um pai com o filho no colo, no meio do culto. É a mesma ideia nas
-          duas pontas, em escalas opostas: a igreja é feita de gente.
+          A página abriu com a igreja inteira numa foto e fecha com duas
+          pessoas — um rapaz de cabeça baixa e outro com a mão na cabeça dele,
+          orando. É a mesma ideia nas duas pontas, em escalas opostas: a igreja
+          é feita de gente.
 
           A faixa é PARTIDA ao meio em vez de ter texto sobre a foto. Duas
-          razões: a foto é um retrato (numa faixa larga com texto por cima
-          sobraria fundo desfocado e sumiria o abraço), e a página já gastou o
+          razões: a foto é um retrato em pé (numa faixa larga com texto por
+          cima sobraria cortina e sumiria a oração), e a página já gastou o
           recurso "texto sobre fotografia" na chegada a Indaiatuba. No celular
           a foto vira uma faixa em cima e o texto vem embaixo, na ordem em que
           se lê.
@@ -827,11 +828,18 @@ export default function Sobre() {
               recebe um pai de altura definida e o `h-full` resolve. */}
           <div className="relative min-h-[46svh] lg:order-2 lg:min-h-[80svh]">
             <div className="absolute inset-0">
+              {/* O RECORTE DESCE BEM ABAIXO DO CENTRO (`50% 55%`). O arquivo
+                  é 2:3 em pé e este vão é quase quadrado em toda tela, então
+                  `object-cover` corta na vertical e mostra só uns dois terços
+                  da altura. Centrado, o terço que sobra por cima é cortina
+                  vazia e os dois rapazes ficam espremidos no pé do quadro. A
+                  55% a mão na cabeça cai no meio da moldura e a janela atrás
+                  vira fundo, que é o papel dela. */}
               <MolduraFoto
                 foto={FECHO.foto}
                 tom="escuro"
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                posicao="50% 30%"
+                posicao="50% 55%"
                 className="h-full w-full"
               />
             </div>

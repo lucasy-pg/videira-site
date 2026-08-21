@@ -122,9 +122,10 @@
 
   /* ---- Tipografia ----
      Duas vozes, e só uma delas fala alto. Newsreader é a serifa que carrega
-     todo o caráter — inclusive o itálico, que é o gesto da casa: toda manchete
-     vira do romano pro itálico exatamente na palavra que é promessa
-     ("você pertencer", "nas casas", "pra fazer parte"). Instrument Sans fica
+     todo o caráter — inclusive o itálico, que é o gesto da casa: nas páginas
+     que ainda a usam, a manchete vira do romano pro itálico exatamente na
+     palavra que é promessa ("bem-vindo aqui", "no Centro de Indaiatuba",
+     "programações"). Instrument Sans fica
      de propósito quieta atrás dela: grotesca neutra, sem redondezas
      geométricas competindo com a serifa.
      As famílias chegam por next/font (auto-hospedadas em app/layout.tsx). */
@@ -144,8 +145,10 @@ html {
      <Reveal>: `.reveal--left/--right` começam deslocados 40px no eixo X, e um
      elemento de largura cheia deslocado pra direita passa da borda do
      documento — mediram-se 410px de conteúdo numa tela de 390, em SEIS das
-     sete páginas (só a Home escapava). O sintoma é a página balançando de lado
-     ao rolar, justamente no aparelho em que a maior parte das visitas chega.
+     sete páginas. (A Home escapava na época por não ter nenhum `--left`/
+     `--right`; a Home nova tem, então hoje são as sete.) O sintoma é a página
+     balançando de lado ao rolar, justamente no aparelho em que a maior parte
+     das visitas chega.
 
      É `clip` e NÃO `hidden` de propósito: `hidden` cria um contêiner de
      rolagem, o que quebraria qualquer `position: sticky` da página e o
@@ -174,8 +177,9 @@ body {
   letter-spacing: -0.015em;
 }
 
-/* A /sobre e a /celulas rodam as manchetes numa geométrica (Poppins) em vez da
-   Newsreader.
+/* A Home, a /sobre e a /celulas rodam as manchetes numa geométrica (Poppins)
+   em vez da Newsreader — a Home entrou na lista com o redesenho dela, a pedido
+   do briefing, e foi o que tirou o itálico da capa do site.
    QUEM TROCA É O TOKEN, não cada `<h2>`: `.font-display` continua lendo
    `--font-display`, então redefinir a variável no <div> raiz da página vira
    Poppins em tudo que é manchete lá dentro — títulos, destaques, numerais —
@@ -221,14 +225,20 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* A ÚNICA ANIMAÇÃO DA CAPA DA /sobre. A fotografia da comunidade entra 6%
+/* A ÚNICA ANIMAÇÃO DAS CAPAS DA /sobre E DA /celulas. A fotografia entra 6%
    maior e recua para o tamanho dela — a imagem se AFASTA, e o quadro não se
    mexe: quem anima é o <img> dentro da moldura, que já tem `overflow: hidden`.
+   É por isso que a classe vai no MESMO elemento que recorta a foto.
 
-   A origem é o PÉ (`50% 100%`) porque o recorte da foto também é (ver o
-   `posicao` na capa): ancorados no mesmo lugar, o que o recuo revela é copa de
-   árvore em cima, e a fileira de gente sentada na grama não desliza durante a
-   entrada.
+   A origem é o PÉ (`50% 100%`) e nas duas capas o motivo é o mesmo: quem está
+   embaixo no quadro é a fileira da frente — gente sentada na grama numa, as
+   crianças sentadas no chão na outra —, e ancorar ali deixa essas pessoas
+   PARADAS durante a entrada. O que o recuo revela vem por cima, onde é copa
+   de árvore ou parede.
+
+   ⚠️ ANIMA TRANSFORM E NÃO OPACIDADE, e isso é o que a torna de graça nas
+   duas capas: as fotos são o LCP das rotas, e um fade de entrada atrasaria a
+   medida. Aqui o primeiro quadro já mostra a foto inteira e opaca.
 
    Herdou o lugar do antigo `heroZoom`, que tinha sobrado sem uso no arquivo.
 

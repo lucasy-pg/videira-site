@@ -12,7 +12,15 @@
    `plum-deep` full-bleed, e sem esta linha o `<main>` reservaria 4rem de bone
    acima dela — uma tira clara entre a nav e o roxo, que é exatamente o defeito
    que esta lista existe para evitar. */
+/* A "/" entrou com o redesenho da Home. A capa dela era um retângulo de vídeo
+   com margem bone em volta e header sólido por cima; virou a filmagem ocupando
+   `100svh` inteiro, e sem esta linha o <main> reservaria 4rem de bone acima do
+   vídeo — a tira clara entre a nav e a imagem que é exatamente o defeito que
+   esta lista existe para evitar. A barra continua FIXA (a Home não está na
+   `ROTAS_HEADER_ESTATICO`): ela flutua transparente sobre o vídeo e ganha
+   fundo assim que a página sai do topo. */
 export const OVERLAY_ROUTES = [
+  "/",
   "/radicais-livres",
   "/radicais-kids",
 ];

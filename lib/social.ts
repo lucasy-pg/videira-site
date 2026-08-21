@@ -70,3 +70,17 @@ export const WHATSAPP_IGREJA = {
  */
 export const linkWhatsApp = (mensagem: string) =>
   `${WHATSAPP_IGREJA.url}?text=${encodeURIComponent(mensagem)}`;
+
+/**
+ * O CANAL DA IGREJA NO YOUTUBE.
+ *
+ * Subiu para cá pelo mesmo motivo dos glifos e do WhatsApp: o endereço estava
+ * escrito à mão no rodapé, e a Home passou a precisar dele numa seção inteira
+ * ("Nos acompanhe"). Duas cópias de uma URL em arquivos diferentes é o tipo de
+ * duplicata que ninguém percebe estar divergindo — e um canal com o @ errado
+ * é uma página de erro do YouTube, não um link quebrado visível.
+ */
+export const YOUTUBE_IGREJA = {
+  url: "https://www.youtube.com/@igrejavideiraindaiatuba",
+  arroba: "@igrejavideiraindaiatuba",
+};

@@ -101,8 +101,8 @@ que aparece grande leva uma versão `-800` ao lado (`abraco-forte.jpg` +
 `abraco-forte-800.jpg`), como em `public/radicais/`; quem monta o `srcset` é o
 [`lib/galeria.ts`](../lib/galeria.ts).
 
-**O regime do `/radicais-kids`, do `/trilho-do-vencedor`, do `/sobre` e da
-`/celulas`:** essas páginas usam
+**O regime da Home, do `/radicais-kids`, do `/trilho-do-vencedor`, do `/sobre`
+e da `/celulas`:** essas páginas usam
 `next/image` de verdade (via
 [`components/MolduraFoto.tsx`](../components/MolduraFoto.tsx)), então o Next
 gera as larguras responsivas sozinho a partir de um arquivo só. Por isso
@@ -118,8 +118,8 @@ essa foto for parar numa `<img>` crua, ela precisa virar JPG antes.
 Antes de acrescentar foto numa pasta, olhe qual regime a página que vai usá-la
 segue — misturar os dois gera ou arquivo morto ou foto grande demais no 4G.
 
-⚠️ E DUAS PASTAS HOJE SERVEM OS DOIS REGIMES — `public/igreja/` e
-`public/celulas/`.
+⚠️ E TRÊS PASTAS HOJE SERVEM OS DOIS REGIMES — `public/igreja/`,
+`public/celulas/` e, por uma foto só, `public/radicais/`.
 
 Em `public/celulas/` a divisão é esta, e vale conferir antes de acrescentar
 arquivo lá:
@@ -129,9 +129,11 @@ arquivo lá:
   `celula-united`, `celula-valentes`, `celula-aprisco` e `celula-nazir`. As três
   que passam de 800px têm a variante `-800` ao lado, porque é ela que o
   [`lib/galeria.ts`](../lib/galeria.ts) anuncia no `srcset`; as duas menores não
-  têm e não devem ganhar. `celula-vitor.jpg`, que a Home lê num card, também é
-  desse regime — sem `srcset`, então o arquivo é servido inteiro e por isso foi
-  reencodado mais leve.
+  têm e não devem ganhar. `celula-vitor.jpg` ESTAVA aqui, servido inteiro numa
+  `<img>` crua da Home antiga, e foi reencodado mais leve por causa disso; com o
+  redesenho da Home ele passou para o regime de baixo e hoje as duas páginas que
+  o usam (a Home e a `/celulas`) o servem pelo `next/image`. O arquivo leve
+  ficou, e não faz mal: o Next redimensiona a partir dele igual.
 - **Regime do `next/image`.** Todas as outras, que existem para a `/celulas` e
   para a `/sobre` e entram pela [`MolduraFoto`](../components/MolduraFoto.tsx).
   Essas **não** levam variante `-800`: o Next gera as larguras sozinho, e um
@@ -144,16 +146,52 @@ maiores do que ele preenche — a foto sai levemente macia e não há nada de
 errado à vista no código. Já aconteceu com a `celula-valentes` (declarada
 1600×900, arquivo 1280×720).
 
-Sobre a `public/igreja/`: A Home lê `fachada.jpg`,
-`boas-vindas.jpg`, `abraco.jpg`, `adoracao-jovens.jpg` e `culto-todos-juntos.jpg`
-numa `<img>` crua; o `/sobre` lê `comunidade-no-gramado.jpg`, os dois registros
-de arquivo, a arena, a fachada e os dois de culto pelo `next/image`. A
-consequência é prática: os três arquivos que
-entraram com o `/sobre` são mestres grandes (1.3MB o do gramado) e só são
-aceitáveis porque quem os serve redimensiona antes. **Se algum dia a Home for
-usar um deles numa `<img>` crua, ele precisa de uma versão menor antes** — é o
-mesmo alerta do `encontro4.png` logo acima, e é por isso que ele está aqui e não
-só lá.
+Sobre a `public/igreja/`: **a pasta inteira está hoje no regime do
+`next/image`.** Ela era o caso misto mais feio do repositório — a Home lia
+`fachada.jpg`, `boas-vindas.jpg`, `abraco.jpg`, `adoracao-jovens.jpg` e
+`culto-todos-juntos.jpg` em `<img>` crua enquanto o `/sobre` lia as mesmas
+pastas pelo `next/image` —, e o redesenho da Home acabou com a divisão: as
+quatro fotos que ela ainda usa (`boas-vindas`, `abraco`, `culto-todos-juntos` e
+`adoracao-jovens`, mais `comunidade-no-gramado`, que ela passou a dividir com o
+`/sobre`) entram todas pela
+[`MolduraFoto`](../components/MolduraFoto.tsx). `fachada.jpg` saiu da Home e
+hoje é só do `/sobre`.
+
+A consequência prática é que o alerta que existia aqui deixou de ter dono, mas
+continua valendo como REGRA: os mestres grandes desta pasta (1.3MB o do
+gramado) só são aceitáveis porque quem os serve redimensiona antes. **Se algum
+dia uma página voltar a ler um deles numa `<img>` crua, ele precisa de uma
+versão menor antes** — é o mesmo alerta do `encontro4.png` logo acima.
+
+Sobre a `public/radicais/`: **a pasta é do regime antigo inteira, com TRÊS
+exceções** — a `oracao-a-dois.jpg`, que o fecho do `/sobre` serve pela
+[`MolduraFoto`](../components/MolduraFoto.tsx), e a `turma-04.jpg` e a
+`bebe-com-hamburguer.jpg`, que são os dois cards da seção "Para cada geração"
+da Home e entram pelo mesmo caminho. As três continuam sendo do acervo dos
+Radicais Livres e continuam aparecendo na parede da galeria pelo caminho
+antigo; a outra página só aponta para o MESMO arquivo em vez de gravar uma
+cópia noutra pasta, que é o que evita o visitante baixar a mesma imagem duas
+vezes.
+
+⚠️ A `bebe-com-hamburguer.jpg` é a foto do card do RADICAIS KIDS, e não do
+Livres — é uma criança da igreja, mas o arquivo mora no acervo dos Radicais
+Livres porque foi de lá que ele veio. Quem procurar a foto do Kids em
+`public/kids/` não vai achar. A variante `-800` ao lado continua ali porque o regime antigo
+precisa dela — quem serve por `next/image` simplesmente não a usa.
+
+⚠️ Não tome isso como licença para mandar foto de `public/radicais/` para
+páginas do `next/image` por atalho. O mestre desta pasta tem ~1600px no lado
+maior e veio do WhatsApp (não há original de câmera), então ele fica NO LIMITE
+num vão grande em tela retina — a `oracao-a-dois` passa porque ocupa meia tela e
+é uma cena escura, onde a maciez não aparece. Foto de `public/radicais/` num vão
+de largura cheia precisa de um mestre melhor antes.
+
+E ⚠️ NEM TODA FOTO DESTA PASTA TEM OS ~1600px. Boa parte tem, mas há mestres
+bem menores no meio, e o número precisa ser conferido arquivo a arquivo. Foi o
+que decidiu a foto do card do Radicais Livres na Home: a candidata natural era a
+`turma-luz-roxa.jpg`, com 1120px de largura, num card que pede ~590px em CSS
+(1180px em tela retina) — 60 pixels curta, e macia por isso. Entrou a
+`turma-04.jpg`, de 1600px. `sips -g pixelWidth <arquivo>` antes de escolher.
 
 Vídeo original (`.MOV`) não entra — o `.gitignore` barra. Sobe só o `.mp4`.
 
@@ -164,21 +202,31 @@ Não há um registro central; o caminho é string literal, em três padrões:
 1. **Manifesto em `lib/`** — [`galeria.ts`](../lib/galeria.ts) (114 fotos com
    `src`, dimensão e `alt`) e [`quem-somos.ts`](../lib/quem-somos.ts). Os
    componentes não sabem o nome de nenhuma foto: leem daqui. É o padrão bom.
-2. **Constante no topo da página** — `welcomePhotos` e `IMG` em
-   [`app/page.tsx`](../app/page.tsx), o array `noite` em
-   [`CellsView.tsx`](../components/CellsView.tsx).
-3. **String solta no JSX** — os logos no `Header` e no `Footer`, o `<video>` da
-   Home. Só aparecem se você abrir o arquivo.
+   [`home.ts`](../lib/home.ts) entrou nesta lista com o redesenho da Home:
+   as sete fotos e o vídeo da capa saíram do JSX e das constantes soltas que
+   estavam no topo do `app/page.tsx` (`welcomePhotos` e `IMG`) e viraram
+   manifesto como os outros.
+2. **Constante no topo da página** — o array `noite` em
+   [`CellsFeature.tsx`](../components/CellsFeature.tsx).
+3. **String solta no JSX** — os logos no `Header` e no `Footer`. Só aparecem se
+   você abrir o arquivo.
 
 Enquanto for assim, o catálogo é o que dá a lista completa — é ele que sabe o
 que existe e quem usa.
 
-## Duas fotos que não são suas
+## As duas fotos que não eram suas (e já não existem)
 
-[`app/page.tsx`](../app/page.tsx) carrega duas imagens direto do Unsplash, ao
-vivo, do servidor deles: o card do Radicais Kids e uma de culto. Não estão no
-`public/`, não estão no `material/`, não estão no repo. Se o Unsplash mudar a
-URL, o card fica vazio e ninguém é avisado — e a do Kids é criança genérica de
-banco de imagem representando o ministério infantil da Videira.
+Até o redesenho da Home, [`app/page.tsx`](../app/page.tsx) carregava duas
+imagens direto do Unsplash, ao vivo, do servidor deles: o card do Radicais Kids
+(criança genérica de banco de imagem representando o ministério infantil da
+Videira) e uma de culto no fecho da página. **As duas morreram junto com a Home
+antiga** — hoje não há uma única URL externa de imagem no site, e não deve
+voltar a haver.
 
-Assim que houver foto real, ela entra em `material/` e essa dependência morre.
+A do Kids saiu porque a seção que a exibia saiu: a Home nova não apresenta os
+ministérios (ver o cabeçalho de [`lib/home.ts`](../lib/home.ts)). A de culto foi
+substituída por `comunidade-no-gramado.jpg`, que é a própria igreja.
+
+Quando o `/radicais-kids` ganhar uma foto real de criança da Videira, ela entra
+em `material/kids/` como qualquer outra — a página já usa `next/image`, então
+basta um mestre.
