@@ -39,7 +39,7 @@ export function FraseImpacto() {
   return (
     <div ref={ref} data-cena={cena} className={s.impacto}>
       <div className={s.impactoBloco}>
-        <p className={`${s.serifa} ${s.impactoFrase}`}>
+        <p className={`${s.display} ${s.impactoFrase}`}>
           <span className={s.impactoLinha}>{copy.impacto.primeira}</span>
           <span className={`${s.impactoLinha} ${s.impactoLinha2}`}>
             {copy.impacto.segunda.texto}

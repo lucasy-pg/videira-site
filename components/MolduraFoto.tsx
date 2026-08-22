@@ -75,7 +75,7 @@ export function MolduraFoto({
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center">
         <span
-          className={`text-[10px] font-medium uppercase tracking-[0.24em] ${
+          className={`text-[10px] font-semibold uppercase tracking-[0.24em] ${
             escuro ? "text-white/45" : "text-muted-foreground"
           }`}
         >

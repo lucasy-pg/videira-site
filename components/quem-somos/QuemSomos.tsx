@@ -1,59 +1,64 @@
 import { AberturaEditorial } from "./AberturaEditorial";
-import { FraseImpacto } from "./FraseImpacto";
-import { MissaoVisaoProposito } from "./MissaoVisaoProposito";
-import { RadicalLivres } from "./RadicalLivres";
 import s from "./quem-somos.module.css";
 
 /**
- * A SEÇÃO "QUEM SOMOS" do /radicais-livres, em quatro movimentos:
+ * SEÇÃO 02 — JOVENS DESTINADOS AO AVIVAMENTO.
  *
- *   1  ABERTURA          etiqueta, a frase que vira, e a colagem de três fotos
- *   2  RADICAL LIVRES    tipografia gigante + fotografia + profundidade
- *   3  FRASE DE IMPACTO  o argumento fechado em duas linhas
- *   4  IDENTIDADE        missão, visão e propósito, empilhados e desalinhados
+ * A primeira faixa clara da página, e a primeira coisa que se lê depois da capa
+ * escura. Etiqueta, a frase que vira do romano para o itálico, uma coluna de
+ * texto estreita e a colagem de três fotografias tortas. Nada mais na mesma
+ * altura de tela: a pausa É o desenho, e qualquer coisa a mais aqui a desmancha.
  *
- * ── O QUE ESTA VERSÃO APOSENTOU ───────────────────────────────────────────
+ * ── ESTA SEÇÃO JÁ FOI QUATRO ──────────────────────────────────────────────
  *
- * Uma LOUSA ESCURA no meio da faixa clara, com o letreiro "Radical / Livre" em
- * letras de célula fixa que trocavam de fonte em onda (Archivo → Anton →
- * Newsreader → Instrument Sans → Archivo, uma letra de cada vez, para sempre),
- * malha milimetrada ao fundo e a régua de missão/visão/propósito num bentô de
- * três painéis de quina viva.
+ * ⚠️ ELA SE CHAMAVA "QUEM SOMOS" E TINHA QUATRO MOVIMENTOS numa faixa só:
+ * abertura, o letreiro RADICAL LIVRES, a frase de impacto e a régua de
+ * missão/visão/propósito. O redesenho de 21/08/2026 desmembrou os quatro pela
+ * narrativa nova da página, e é útil saber para onde cada um foi:
  *
- * Ela saiu inteira, e vale registrar o que morreu junto para quem for procurar
- * no histórico: as fontes ARCHIVO e ANTON (que só existiam na rota por causa
- * dela) e, no `globals.css`, as regras `.malha`, `.letreiro`, `.letreiro-letra`,
- * `.painel` e o `@keyframes ondaFonte`. Os comentários daquelas regras são
- * longos e valem a leitura antes de qualquer tentativa de trazer o efeito de
- * volta — em especial o que explica por que uma animação `infinite` confisca
- * para sempre as propriedades que ela cita, e portanto por que nenhum quadro da
- * onda podia tocar em `font-variation-settings`.
+ *   1  ABERTURA          ficou aqui, e virou a seção 02 sozinha
+ *   2  RADICAL LIVRES    aposentado — o sucessor é a seção 03,
+ *                        `components/radicais/DuasPalavras.tsx`
+ *   3  FRASE DE IMPACTO  abre a seção 05, "Uma geração com propósito"
+ *   4  IDENTIDADE        fecha a mesma seção 05
  *
- * A troca não foi de gosto: o desenho novo põe a FOTOGRAFIA dentro da
- * tipografia, e isso exige um fundo claro e uma serifada de alto contraste. A
- * lousa escura foi construída em torno do oposto — extrusão roxa sólida, que só
- * existe sobre escuro, e uma grotesca variável, que é o que a onda precisava.
- * As duas peças não são versões da mesma ideia; são ideias diferentes, e
- * tentar manter as duas na mesma faixa daria uma seção com duas identidades.
+ * OS COMPONENTES 3 E 4 NÃO FORAM TOCADOS. Continuam morando nesta pasta, com o
+ * CSS deles, o gatilho de entrada deles e a régua de menos-movimento deles —
+ * mudaram de lugar na página, não de implementação. Quem for editá-los edita
+ * aqui; quem for entender por que eles estão onde estão lê o
+ * `components/radicais/GeracaoComProposito.tsx`.
+ *
+ * O NOME DA PASTA FICOU. "quem-somos" já não descreve uma seção da página, e
+ * renomeá-la para acompanhar o desenho custaria um commit de puro ruído em
+ * cinco arquivos que continuam certos por dentro. Se algum dia o resto da pasta
+ * mudar de verdade, é a hora de renomear junto.
  *
  * ── O CONTRATO COM O RESTO DA PÁGINA ──────────────────────────────────────
  *
- * FUNDO `bone` DO INÍCIO AO FIM. A seção 3 logo abaixo é `sand`, e é essa
- * alternância — não uma linha divisória — que separa as faixas no site inteiro.
+ * FUNDO `bone`. A seção 03, logo abaixo, também é `bone` — e é a única emenda
+ * clara-clara da página. Não há linha divisória entre as duas de propósito: a
+ * 03 abre com uma palavra do tamanho da tela, e é ela que marca o começo do
+ * capítulo novo. Uma régua ali seria pontuação em cima de um cartaz.
  *
  * O `container` VOLTA AQUI DENTRO, com o mesmo respiro lateral das seções
- * vizinhas (`px-5 / sm:px-8 / lg:px-12`). A composição do movimento 2 sangra
- * para fora dele de propósito em alguns pontos; quem recorta é o
- * `overflow-x: clip` da própria seção. Ver o módulo.
+ * vizinhas. A colagem sangra para fora dele de propósito em alguns pontos;
+ * quem recorta é o `overflow-x: clip` da própria seção.
  */
 export function QuemSomos() {
   return (
-    <section className={s.secao}>
+    /* `id` E `scroll-mt`: a capa aponta para cá. O botão "Quem somos" da
+       primeira dobra é uma âncora interna, e este é o destino dela — a etiqueta
+       desta seção diz exatamente "Quem somos", que é o que faz o rótulo do
+       botão e o lugar onde ele chega serem a mesma palavra.
+
+       O `scroll-mt` repete o da galeria (o outro destino de âncora da página),
+       e nesta rota ele é respiro e não correção: o Header é ESTÁTICO aqui (ver
+       `ROTAS_HEADER_ESTATICO`), então não há barra fixa cobrindo o topo do
+       destino — o que sobra é a seção chegar um dedo abaixo da borda em vez de
+       colada nela. */
+    <section id="quem-somos" className={`${s.secao} scroll-mt-16 sm:scroll-mt-20`}>
       <div className="container mx-auto px-5 sm:px-8 lg:px-12">
         <AberturaEditorial />
-        <RadicalLivres />
-        <FraseImpacto />
-        <MissaoVisaoProposito />
       </div>
     </section>
   );

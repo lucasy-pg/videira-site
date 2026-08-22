@@ -111,14 +111,16 @@ function Chave({
  * lá e não está em mais lugar nenhum — se ela voltar, volta como subtítulo da
  * etapa, não como lista.
  *
- * TIPOGRAFIA. Manchetes na POPPINS, como na /sobre e na /celulas: a classe
- * `manchetes-poppins` no <div> raiz troca o token `--font-display` para a
- * subárvore inteira, então todo `.font-display` daqui — títulos, subtítulos,
- * numerais — vira geométrica de uma vez. Texto corrido segue na Instrument
- * Sans. Sem itálico colorido dentro das manchetes: foi pedido que os títulos
- * fossem literais ("Primeiros passos", "Maturidade no Espírito") e que a
- * personalidade viesse do desenho, não da frase — e a Poppins é carregada só em
- * romano, então itálico aqui dentro nem existe.
+ * TIPOGRAFIA. MANROPE em tudo, como no resto do site: manchete pelo token
+ * `--font-display`, texto corrido pelo `--font-body`, e os dois valem a mesma
+ * família. Todo `.font-display` daqui — títulos, subtítulos, numerais — troca
+ * de uma vez se o token trocar, que é o motivo de nenhum deles nomear fonte.
+ * (Até 22/08/2026 a manchete era Poppins, pela classe `manchetes-poppins` no
+ * <div> raiz; a classe saiu quando a Manrope virou a família única.) Sem
+ * itálico colorido dentro das manchetes: foi pedido que os títulos fossem
+ * literais ("Primeiros passos", "Maturidade no Espírito") e que a personalidade
+ * viesse do desenho, não da frase — e a Manrope é só romana, então itálico aqui
+ * dentro nem existe.
  *
  * COR NAS MANCHETES. Cada seção tem UM título e cada título tem um trecho
  * pintado — o resto fica na cor do texto. É o contraste da casa: roxo (`grape`
@@ -147,10 +149,7 @@ function Chave({
  */
 export default function TrilhoDoVencedor() {
   return (
-    /* `manchetes-poppins` (globals.css) troca o token `--font-display` só
-       dentro desta página; Header e Footer ficam de fora da subárvore e
-       continuam na Newsreader. */
-    <div className="manchetes-poppins bg-bone text-foreground">
+    <div className="bg-bone text-foreground">
       {/* ═══ 01 · HERO ══════════════════════════════════════════════════════
           Fundo claro, e não a capa-cartão da Home nem a faixa escura do
           Kids: os três blocos de curso mais abaixo é que são o peso desta
@@ -165,7 +164,7 @@ export default function TrilhoDoVencedor() {
           <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
             <div>
               <Reveal>
-                <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                   {HERO.eyebrow}
                 </span>
               </Reveal>
@@ -201,7 +200,7 @@ export default function TrilhoDoVencedor() {
                       que impede o header fixo de cobrir o título ao chegar. */}
                   <Link
                     href="#primeiros-passos"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground/15 px-8 py-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/30 hover:bg-foreground/[0.04] active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground/15 px-8 py-4 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/30 hover:bg-foreground/[0.04] active:scale-95"
                   >
                     Conheça o Trilho
                   </Link>
@@ -236,7 +235,7 @@ export default function TrilhoDoVencedor() {
       <section className="overflow-hidden bg-sand py-16 sm:py-20 lg:py-24">
         <div className="container mx-auto grid gap-10 px-5 sm:px-8 lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-20 lg:px-12">
           <Reveal variant="left">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
               {VISAO.eyebrow}
             </span>
             <h2 className="font-display mt-5 max-w-md text-[clamp(1.9rem,4vw,3rem)] font-medium leading-[1.08] text-foreground">
@@ -416,7 +415,7 @@ export default function TrilhoDoVencedor() {
 
                 <Link
                   href={curso.href}
-                  className={`group mt-9 inline-flex items-center gap-2 text-sm font-medium transition-colors ${
+                  className={`group mt-9 inline-flex items-center gap-2 text-sm font-semibold transition-colors ${
                     escura
                       ? "text-white/85 hover:text-white"
                       : "text-foreground/80 hover:text-foreground"
@@ -464,7 +463,7 @@ export default function TrilhoDoVencedor() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-20">
             <Reveal variant="left">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 {ESCOLA_FAMILIA.eyebrow}
               </span>
               <h2 className="font-display mt-5 text-[clamp(2rem,4.4vw,3.2rem)] font-medium leading-[1.05] text-foreground">
@@ -514,7 +513,7 @@ export default function TrilhoDoVencedor() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start lg:gap-20">
             <Reveal variant="left">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 {ESCOLA_MINISTERIOS.eyebrow}
               </span>
               <h2 className="font-display mt-5 max-w-lg text-[clamp(2rem,4.4vw,3.2rem)] font-medium leading-[1.05] text-foreground">

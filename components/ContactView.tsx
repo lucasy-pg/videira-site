@@ -80,22 +80,24 @@ export function ContactView() {
     "w-full rounded-xl border border-foreground/10 bg-sand px-4 py-3 text-sm text-foreground transition-colors placeholder:text-muted-foreground/60 focus:border-grape focus:outline-none focus:ring-1 focus:ring-grape";
 
   const labelClass =
-    "mb-2 block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground";
+    "mb-2 block text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground";
 
   return (
     <div className="bg-bone text-foreground">
       {/* ═══ ABERTURA — tipográfica ═══ */}
-      {/* `manchetes-poppins` fica NA SEÇÃO, não no <div> raiz como na /sobre e
-          na /celulas: aqui só a abertura roda na geométrica. As manchetes do
-          formulário e do mapa, mais abaixo, continuam na Newsreader.
-          Como a Poppins é carregada só em romano (app/layout.tsx), o destaque
-          do <h1> perdeu o itálico e ficou só no roxo — mesma troca que a
-          /celulas fez. Deixar `italic` aqui renderia o oblíquo sintético do
+      {/* AQUI HAVIA UM `manchetes-poppins` NESTA SEÇÃO, e ele saiu junto com a
+          troca do site para a Manrope (22/08/2026): a abertura rodava numa
+          geométrica enquanto as manchetes do formulário e do mapa ficavam na
+          serifa, e não existe mais nem uma nem outra — a página inteira é
+          Manrope, pelo token, e a diferença entre abertura e seção passou a ser
+          só de corpo e de peso.
+          O destaque do <h1> continua sendo COR e não itálico: a Manrope é uma
+          família só romana, então `italic` aqui renderia o oblíquo sintético do
           navegador. */}
-      <section className="manchetes-poppins bg-bone pb-20 pt-14 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
+      <section className="bg-bone pb-20 pt-14 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
               Fale conosco
             </span>
           </Reveal>
@@ -108,11 +110,14 @@ export function ContactView() {
             </h1>
           </Reveal>
           <Reveal delay={180}>
-            {/* O subtítulo acompanha o título na Poppins. Vai pela família
-                direta, e não por `.font-display`, porque essa classe carrega o
-                tracking de manchete (-0.025em) — num parágrafo de corpo ele
-                aperta demais. */}
-            <p className="mt-7 max-w-xl font-[family-name:var(--font-poppins)] leading-relaxed text-muted-foreground sm:text-lg">
+            {/* O subtítulo NÃO leva `.font-display`, e a razão continua a mesma
+                de quando este parágrafo apontava para a Poppins no braço: a
+                classe carrega o tracking de manchete (-0.02em) e o `text-wrap:
+                balance`, e num parágrafo de corpo os dois atrapalham. Hoje ele
+                simplesmente herda o `--font-body` do site — que é a mesma
+                Manrope do título, então o casamento saiu de graça e a família
+                escrita à mão no markup pôde ir embora. */}
+            <p className="mt-7 max-w-xl leading-relaxed text-muted-foreground sm:text-lg">
               Para visitar pela primeira vez, entrar numa célula, pedir oração
               ou apenas tirar uma dúvida — não é preciso ter um motivo formal.
             </p>
@@ -132,7 +137,7 @@ export function ContactView() {
                   entrada. */}
               <Reveal variant="left">
                 <div className="rounded-[1.75rem] bg-card p-7">
-                  <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                     Jeito mais rápido
                   </span>
                   <p className="mt-4 leading-relaxed text-muted-foreground">
@@ -167,7 +172,7 @@ export function ContactView() {
                     variant="left"
                     className="py-6 first:pt-8 last:pb-0"
                   >
-                    <h3 className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                       {item.label}
                     </h3>
                     <div className="mt-2.5 space-y-0.5">
@@ -185,12 +190,18 @@ export function ContactView() {
             {/* ── Coluna direita: o formulário ── */}
             <Reveal variant="right" delay={120} className="lg:col-span-3">
               <div className="rounded-[1.75rem] bg-card p-8 sm:p-10">
-                <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                   Ou escreva aqui
                 </span>
+                {/* DESTAQUE SÓ NA COR, sem itálico e sem baixar o peso — a
+                    regra da casa, a mesma da `<Chave>` da /celulas. Este
+                    trecho já foi `font-normal italic`: funcionava enquanto a
+                    manchete era Newsreader, que tem itálico de verdade. Sob a
+                    Manrope, que é uma família só romana, o `italic` virava
+                    oblíquo sintético (a letra torta por software) e o
+                    `font-normal` abria um degrau de peso no meio da linha. */}
                 <h2 className="font-display mt-5 text-[clamp(1.75rem,3.4vw,2.5rem)] font-medium leading-[1.05] text-foreground">
-                  Envie sua{" "}
-                  <span className="font-normal italic text-grape">mensagem</span>
+                  Envie sua <span className="text-grape">mensagem</span>
                 </h2>
 
                 {sent && (
@@ -325,14 +336,14 @@ export function ContactView() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 Como chegar
               </span>
+              {/* Mesmo caso do título do formulário acima: destaque só na cor,
+                  sem itálico e no mesmo peso da manchete. */}
               <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
                 Estamos{" "}
-                <span className="block font-normal italic text-grape">
-                  no Centro de Indaiatuba
-                </span>
+                <span className="block text-grape">no Centro de Indaiatuba</span>
               </h2>
               <p className="mt-6 flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin size={15} className="mt-0.5 flex-shrink-0 text-grape" />

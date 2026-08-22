@@ -269,8 +269,8 @@ export const ENCONTRO = {
      precisam dar também.
 
      A REGRA DE QUAL FOTO VAI EM QUAL MOMENTO É LITERAL: braços para o alto na
-     chegada, o teclado no louvor, a Bíblia junto ao peito na Palavra, os
-     balões e a mesa na comunhão.
+     chegada, o teclado no louvor, os balões e a mesa na comunhão. A da Palavra
+     é a exceção — ver o comentário do momento 03.
 
      ⚠️ A DO LOUVOR É A ÚNICA QUE NÃO É UMA TURMA, e é de propósito. As outras
      três mostram gente reunida; esta é um close de duas mãos no teclado. Não
@@ -319,10 +319,21 @@ export const ENCONTRO = {
       titulo: "Palavra",
       texto:
         "Um compartilhar prático e participativo baseado nos ensinamentos da Bíblia.",
+      /* A ÚNICA DAS QUATRO QUE NÃO ILUSTRA O MOMENTO AO PÉ DA LETRA. Aqui
+         estava a `celula-vitor`, com a Bíblia junto ao peito — cena literal,
+         mas a MESMA foto abre a seção de células na Home (ver `lib/home.ts`),
+         e a repetição pesava mais do que a literalidade valia. A Kingdom é uma
+         turma inteira de jovens em pé numa sala, que é o retrato do que essa
+         célula é; o texto do lado já diz que a Palavra é "compartilhar
+         prático e participativo", e uma turma reunida sustenta isso.
+
+         Vertical no original (3024×4032) — entra no quadro 4:3 por um corte
+         alto, não centralizado: o centro geométrico decapitaria a fileira de
+         trás e cortaria o estandarte. */
       foto: {
-        src: "/celulas/celula-vitor.jpg",
-        alvo: "public/celulas/celula-vitor.jpg",
-        alt: "Célula reunida numa sala, uma das pessoas segurando a Bíblia junto ao peito",
+        src: "/celulas/celula-kingdom.jpg",
+        alvo: "public/celulas/celula-kingdom.jpg",
+        alt: "Turma de jovens da célula Kingdom reunida numa sala, segurando um estandarte azul com uma coroa dourada",
       } satisfies Foto,
       proporcao: QUADRO,
       altura: ALTURA,
@@ -432,12 +443,20 @@ export const GALERIA = {
      franja de JPEG entre a calha e a imagem), foi reescalada para a nova
      largura de coluna e recortada no centro.
 
-     OS VÃOS SÃO 8px, e eram uns 27. A margem de topo e de base é 4px de
-     propósito, e não 8: ela é somada consigo mesma na emenda do looping — a
-     base de uma cópia encosta no topo da seguinte —, então 4+4 dá exatamente o
-     mesmo 8px dos vãos internos. É isso que faz a volta do looping não
-     aparecer como uma faixa preta mais grossa que as outras. Mexer num dos
-     dois números sem mexer no outro põe a emenda para fora. */
+     OS VÃOS SÃO 8px, e eram uns 27. A margem de topo e de base é 4px porque
+     nasceu para ser somada consigo mesma na emenda de um looping de duas
+     cópias — 4+4 dando os mesmos 8px dos vãos internos. Esse looping não
+     existe mais e o motivo está no `app/globals.css`, em `.janela-parede`: a
+     ÚLTIMA FILEIRA DE CADA COLUNA é uma fatia truncada pela borda do arquivo
+     (96px na coluna 1, 158 na 2, 146 na 3, 169 na 4 — cabeças cortadas), e a
+     primeira também. A emenda era perfeita em geometria e colava as duas
+     faixas de sobras no meio da tela.
+
+     ⚠️ REFAZER ESTA COLAGEM É O QUE DEVOLVE O LOOPING INFINITO. O que falta é
+     cada coluna somar exatamente a altura do arquivo em FOTOS INTEIRAS mais
+     as calhas — hoje elas fecham a conta com sobras nas duas pontas. Feito
+     isso, duas cópias voltam a emendar sem mostrar foto cortada, e aí os 4px
+     de margem passam a valer de novo. */
   parede: {
     src: "/celulas/celulas-colagem.jpg",
     alvo: "public/celulas/celulas-colagem.jpg",

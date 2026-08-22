@@ -74,16 +74,20 @@ export const metadata: Metadata = {
  * Uma TERCEIRA seção de duas colunas quebra o sistema — aí a página vira uma
  * pilha de blocos parecidos.
  *
- * TIPOGRAFIA: as manchetes são POPPINS, como as da /sobre — a troca é feita
- * pelo token, com a classe `manchetes-poppins` no <div> raiz (globals.css), e
- * não manchete por manchete. Corpo de texto e eyebrows continuam em Instrument
- * Sans; a Newsreader não aparece nesta página.
+ * TIPOGRAFIA: MANROPE em tudo, manchete e corpo, pelos tokens
+ * `--font-display` e `--font-body` do `globals.css` — nenhuma manchete desta
+ * página escolhe fonte. Esta página já rodou em Poppins, por uma classe
+ * `manchetes-poppins` no <div> raiz; a classe saiu em 22/08/2026, quando a
+ * Manrope virou a família única do site. O que separa manchete de corpo aqui é
+ * ESCALA, não peso: toda manchete daqui é 500 (`font-medium`) e a prosa é 400.
+ * O que muda entre a capa, a seção e o card é o `font-size` — ver `H2` e
+ * `H2_CALMO` logo abaixo. Os eyebrows em caixa alta são 600, que é o degrau de
+ * interface, não de título.
  *
- * ⚠️ SEM ITÁLICO. A Poppins entra no site só em romano (app/layout.tsx), então
- * o gesto antigo desta página — a manchete virando do romano pro itálico na
- * palavra que é promessa — não existe mais aqui: o destaque é SÓ A COR ROXA.
- * Deixar um `<em>` solto devolve o itálico sintético do navegador, que é a
- * Poppins torta por software. Ver `Chave`, logo abaixo.
+ * ⚠️ SEM ITÁLICO. A Manrope é uma família só romana, então o gesto antigo desta
+ * página — a manchete virando do romano pro itálico na palavra que é promessa —
+ * continua não existindo: o destaque é SÓ A COR ROXA. Deixar um `<em>` solto
+ * devolve o itálico sintético do navegador. Ver `Chave`, logo abaixo.
  *
  * A REGRA DO ROXO É DE CONTAGEM, herdada da /sobre: UM TRECHO POR MANCHETE,
  * mais o eyebrow. Fora isso, roxo só nos numerais, nos filetes e nos pontos.
@@ -120,14 +124,13 @@ export const metadata: Metadata = {
  * dois publica uma palavra ilegível.
  *
  * ⚠️ O DESTAQUE É SÓ COR, e o `not-italic` é obrigatório. A página roda em
- * Poppins (ver `manchetes-poppins` mais abaixo) e a Poppins entra no site sem
- * arquivo itálico — o `<em>`, que o navegador inclina sozinho, cairia num
- * oblíquo sintético: a mesma letra torta por software, com os "o" e "e"
- * abertos. O `<em>` fica pela semântica; a inclinação, que era o gesto da
- * Newsreader, sai. É o mesmo caminho da /sobre, que também é Poppins.
+ * Manrope, que não tem arquivo itálico — o `<em>`, que o navegador inclina
+ * sozinho, cairia num oblíquo sintético: a mesma letra torta por software, com
+ * os "o" e "e" abertos. O `<em>` fica pela semântica; a inclinação, que era o
+ * gesto da Newsreader, sai. É o mesmo caminho de todas as outras páginas.
  *
- * O peso também não muda mais: dentro de uma manchete `font-medium` a Poppins
- * em 400 abre um degrau visível no meio da linha, e o destaque passa a parecer
+ * O peso também não muda: dentro de uma manchete, baixar o trecho forte um
+ * degrau abre um buraco visível no meio da linha e o destaque passa a parecer
  * um erro de peso em vez de uma ênfase.
  */
 function Chave({ t, escuro = false }: { t: Titulo; escuro?: boolean }) {
@@ -209,9 +212,9 @@ const PROSA = "max-w-[46ch]";
 const PROSA_LARGA = "max-w-[54ch]";
 
 const EYEBROW =
-  "text-[11px] font-medium uppercase tracking-[0.28em] text-grape";
+  "text-[11px] font-semibold uppercase tracking-[0.28em] text-grape";
 const EYEBROW_ESCURO =
-  "text-[11px] font-medium uppercase tracking-[0.28em] text-grape-light";
+  "text-[11px] font-semibold uppercase tracking-[0.28em] text-grape-light";
 
 /** A manchete de seção. Uma medida só para as sete que encimam a seção. */
 const H2 =
@@ -232,12 +235,7 @@ const H2_CALMO =
 
 export default function Celulas() {
   return (
-    /* `manchetes-poppins` (globals.css) troca o token `--font-display` só
-       nesta subárvore: tudo que é manchete aqui dentro — os <h1>/<h2>/<h3>, os
-       numerais, as declarações de corpo grande — sai da Newsreader e vira
-       Poppins, sem tocar em Header, Footer e nas outras páginas. O corpo de
-       texto e os eyebrows continuam em Instrument Sans. */
-    <div className="manchetes-poppins bg-bone text-foreground">
+    <div className="bg-bone text-foreground">
       {/* ═══ 01 · CAPA ══════════════════════════════════════════════════════
           A PÁGINA ABRE COM ROSTOS E SÓ DEPOIS COM PALAVRAS, e essa inversão é
           a decisão inteira desta capa. O caminho comum — manchete de um lado,
@@ -376,7 +374,7 @@ export default function Celulas() {
                     é o que impede o título de parar embaixo da barra fixa. */}
                 <Link
                   href="#o-que-e"
-                  className={`inline-flex w-full items-center justify-center gap-2 rounded-full border border-foreground/20 px-8 py-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-foreground/5 active:scale-95 sm:w-auto ${FOCO}`}
+                  className={`inline-flex w-full items-center justify-center gap-2 rounded-full border border-foreground/20 px-8 py-4 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-foreground/5 active:scale-95 sm:w-auto ${FOCO}`}
                 >
                   {HERO.acaoSecundaria}
                 </Link>
@@ -502,7 +500,7 @@ export default function Celulas() {
               <blockquote className="font-display max-w-[52ch] text-[clamp(1.05rem,1.9vw,1.3rem)] leading-[1.45] text-white/75">
                 {`“${VISAO.versiculo}”`}
               </blockquote>
-              <figcaption className="mt-4 shrink-0 text-[11px] font-medium uppercase tracking-[0.24em] text-grape-light lg:mt-0">
+              <figcaption className="mt-4 shrink-0 text-[11px] font-semibold uppercase tracking-[0.24em] text-grape-light lg:mt-0">
                 {VISAO.referencia}
               </figcaption>
             </figure>
@@ -556,7 +554,7 @@ export default function Celulas() {
                       <span className="font-display text-[2.25rem] font-medium leading-none text-grape lg:text-[2.75rem]">
                         {item.n}
                       </span>
-                      <span className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                         {item.rotulo}
                       </span>
                     </div>
@@ -795,14 +793,17 @@ export default function Celulas() {
           completo, e por que não é `background-attachment: fixed` nem
           `position: fixed`, está no `globals.css`, no bloco `.janela`.
 
-          ═══ E A PAREDE SOBE SOZINHA ═══
+          ═══ E A PAREDE ANDA SOZINHA ═══
 
-          A janela desliza pela página quando você rola; a parede sobe em
-          looping mesmo quando você para. São dois movimentos independentes e
+          A janela desliza pela página quando você rola; a parede percorre a
+          colagem mesmo quando você para. São dois movimentos independentes e
           é a soma deles que faz a seção parecer um vão para alguma coisa que
           está viva atrás — uma parede parada atrás de um buraco é um pôster.
-          O looping é o mesmo movimento que a capa antiga tinha, agora atrás
-          de uma janela em vez de ocupar a tela inteira.
+
+          Ela vai de ponta a ponta e VOLTA, em vez de girar em looping: a
+          colagem tem as fileiras das pontas truncadas pela borda do arquivo,
+          e emendar duas cópias trazia essas sobras cortadas para o meio da
+          tela. O porquê inteiro está no `globals.css`, em `.janela-parede`.
 
           O `-z-10` PÕE A PAREDE ATRÁS DO TEXTO sem tirá-la da seção: o
           `isolate` cria um contexto de empilhamento próprio, então o número
@@ -811,43 +812,54 @@ export default function Celulas() {
           OS DOIS VÉUS não são exagero, são a conta do contraste. A colagem é
           um mosaico claro — dezenas de fotos com flash — e branco sobre ela
           crua fica ilegível. O chapado derruba tudo para uma tinta escura; o
-          gradiente reforça topo e pé, onde a seção encosta nas vizinhas e a
-          emenda apareceria como uma linha. */}
+          gradiente reforça topo e pé, onde a seção encosta nas vizinhas e o
+          encontro apareceria como uma linha. */}
       <section className="janela relative isolate grid bg-plum-deep">
         <div className="col-start-1 row-start-1 -z-10">
           <div className="sticky top-0 h-svh overflow-hidden">
-            {/* A PISTA DO LOOPING: a colagem DUAS VEZES, uma embaixo da
-                outra. A animação sobe a pista em -50% — ou seja, exatamente
-                uma cópia —, então ao fim do percurso a segunda está no pixel
-                onde a primeira começou e o retorno ao zero cai entre dois
-                quadros idênticos. É isso que faz a volta não ter tranco.
+            {/* UMA CÓPIA SÓ, E ELA VAI E VOLTA. Aqui havia duas colagens
+                empilhadas girando em looping infinito (-50% da pista, para
+                que a volta caísse entre dois quadros idênticos). A emenda era
+                perfeita em geometria e defeituosa em fotografia: a colagem é
+                um mosaico de canvas fixo, e a ÚLTIMA FILEIRA DE CADA COLUNA é
+                uma fatia truncada pela borda do arquivo — 96px na primeira
+                coluna, 146 na terceira, gente cortada no meio da cabeça. Ao
+                emendar, essa faixa de sobras aparecia no MEIO da janela,
+                colada na primeira fileira, que é truncada pelo mesmo motivo.
+                Duas fileiras de fotos cortadas juntas no meio da tela.
 
-                ⚠️ A SEGUNDA CÓPIA NÃO É DESCUIDO e não pode ser removida:
-                sem ela o looping mostra o vão embaixo da colagem a cada
-                volta. O porquê completo está no `globals.css`, em
-                `.janela-parede`.
+                As calhas das quatro colunas não se alinham em altura nenhuma,
+                então não existe recorte da colagem que resolva isso sem
+                perder fotos — e o que a parede tem de melhor é ter as vinte e
+                quatro. O que dá para fazer é NUNCA EMENDAR: uma cópia só,
+                percorrida de cima a baixo e de volta. As fatias truncadas
+                continuam existindo, mas agora só encostam na borda de cima e
+                na de baixo da janela, que é onde toda parede rolando corta
+                fotos — ali o corte lê como janela, não como defeito.
 
-                `min-h-svh` junto do `aspect`: a colagem é retrato (1800×2008)
-                e no desktop ela nasce mais alta que a janela, que é o que dá
-                o que percorrer. No celular a proporção a deixaria MAIS BAIXA
-                que a tela e apareceria fundo entre as cópias — o `min-h`
-                segura o piso e o `object-cover` cuida do corte. */}
-            <div className="janela-parede absolute inset-x-0 top-0">
-              {[0, 1].map((copia) => (
-                <div
-                  key={copia}
-                  aria-hidden
-                  className="relative aspect-[900/1004] min-h-svh w-full"
-                >
-                  <Image
-                    src={GALERIA.parede.src!}
-                    alt=""
-                    fill
-                    sizes="100vw"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
+                ⚠️ SÓ DÁ PARA VOLTAR AO LOOPING INFINITO REFAZENDO A COLAGEM,
+                com cada coluna somando exatamente a altura do arquivo em
+                fotos inteiras. Enquanto o arquivo for este, duas cópias
+                trazem a faixa cortada de volta.
+
+                `min-h-[130svh]` junto do `aspect`: a colagem é retrato
+                (1800×2008) e no desktop ela nasce bem mais alta que a janela,
+                que é o que dá o que percorrer. No celular a proporção a
+                deixaria MAIS BAIXA que a tela — e uma parede da altura exata
+                da janela não tem para onde ir. O piso de 130svh garante o
+                percurso nas duas orientações; o `object-cover` cuida do corte
+                lateral que isso custa no retrato. */}
+            <div
+              aria-hidden
+              className="janela-parede absolute inset-x-0 top-0 aspect-[900/1004] min-h-[130svh] w-full"
+            >
+              <Image
+                src={GALERIA.parede.src!}
+                alt=""
+                fill
+                sizes="100vw"
+                className="object-cover"
+              />
             </div>
             <div aria-hidden className="absolute inset-0 bg-plum-deep/72" />
             <div
@@ -960,7 +972,7 @@ export default function Celulas() {
                 </p>
               ))}
 
-              <p className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+              <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 {MULTIPLICACAO.refraoIntro}
               </p>
               <p className="font-display mt-5 text-[clamp(1.5rem,3.4vw,2.5rem)] font-medium leading-[1.2] text-foreground">

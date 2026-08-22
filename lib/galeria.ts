@@ -454,15 +454,6 @@ export const acervo: FotoGaleria[] = [
     camada: "perto",
   },
   {
-    id: "adoracao-bone",
-    src: "/radicais/adoracao-bone.jpg",
-    w: 1600,
-    h: 1067,
-    alt: "Jovem de boné e camiseta bordô cantando de olhos fechados e mão erguida, num salão claro, com outros ao lado",
-    capitulo: "cultos",
-    camada: "perto",
-  },
-  {
     id: "batismo-bracos-erguidos",
     src: "/radicais/batismo-bracos-erguidos.jpg",
     w: 1068,
@@ -611,6 +602,47 @@ export const acervo: FotoGaleria[] = [
     alt: "Salão escuro com a turma inteira reunida diante do telão, que projeta as letras “RL”",
     capitulo: "cultos",
     camada: "longe",
+  },
+  /* ═══ AS SETE FOTOS DE 22/08/2026 ═══════════════════════════════════════
+     Entraram por pedido do Lucas, direto de `material/radicais/`, e são o
+     primeiro lote a chegar DEPOIS do redesenho da página. Seis delas estão
+     espalhadas por este acervo daqui para baixo; a sétima (`assistindo-ao-culto`)
+     não está aqui — ela foi para a seção 07 e mora no `lib/radicais.ts`.
+
+     ⚠️ NENHUMA DELAS ENTRA EM CENA NO PALCO, e isso é decisão, não esquecimento.
+     O Ato II é uma partitura fechada: cada foto tem quadro, camada e cena, e
+     encaixar uma nova ali significa recalcular a composição da etapa inteira.
+     Elas entram no MURAL, que é onde o acervo cabe todo e onde o pedido
+     ("espalhadas") faz sentido — a parede é justamente a peça que promete "o
+     acervo dos Radicais, todo ele, procure a sua".
+
+     A CONSEQUÊNCIA PRÁTICA é que o `capitulo` delas é só uma ETIQUETA: ele
+     agrupa a entrada no arquivo e não decide nada na tela, porque quem lê o
+     capítulo é a coreografia do palco. Está preenchido honestamente, pelo que
+     se vê na foto, para o dia em que alguma delas for promovida a uma cena.
+
+     A POSIÇÃO DE CADA UMA é a alfabética dentro da corrida de capítulo em que
+     ela cai — que é como este acervo sempre esteve organizado. No mural isso
+     vira "espalhadas" de verdade: `montarLinhas` reparte as fotos pelas três
+     faixas na ordem do arquivo, então seis entradas em seis pontos diferentes
+     caem em faixas e alturas diferentes da parede. Enfileiradas no fim, as
+     seis sairiam juntas na mesma ponta.
+
+     O ORIGINAL DE CADA UMA É UM PNG PESADO (de 1,7MB a 18MB) e continua em
+     `material/radicais/`, fora do git. O que está no ar saiu do mesmo pipeline
+     do `preparar-galeria.py` — EXIF endireitado, LANCZOS, JPEG progressivo
+     otimizado na qualidade 86, 1600px no lado maior e a variante `-800`.
+
+     ⚠️ E UMA SÉTIMA FOTO DO LOTE NÃO ENTROU: a `selfie-almocando`. Ver a nota
+     no fim deste bloco de comentário do arquivo — ela está em `material/` e
+     não foi processada, de propósito. */
+  {
+    id: "tocando-teclado",
+    src: "/radicais/tocando-teclado.jpg",
+    w: 1067,
+    h: 1600,
+    alt: "Tecladista de gorro tocando no escuro, iluminado pela tela do notebook e por um cordão de luzinhas preso ao teclado, com uma mão erguida em adoração ao lado",
+    capitulo: "cultos",
   },
 
   /* ── ENCONTROS · 23 fotos ─────────────────────────────────────── */
@@ -837,6 +869,48 @@ export const acervo: FotoGaleria[] = [
     alt: "Grupo de rapazes dentro de um riacho no meio do mato, posando para a câmera",
     capitulo: "nos",
   },
+  /* ⚠️ A POSIÇÃO DESTA ENTRADA NO ARRAY É DESENHO, NÃO ARRUMAÇÃO — é a única
+     do acervo assim, e mexer nela move a foto na parede.
+
+     O Lucas pediu a `foto-com-dog` num lugar específico do mural: a terceira
+     foto da faixa do meio, logo no começo. Esse lugar não se escolhe
+     diretamente em lugar nenhum — ele é RESULTADO de duas etapas em sequência,
+     e a única alavanca que existe é o índice aqui:
+
+       1. `fotosDoMural` embaralha o acervo por capítulo, num revezamento
+          proporcional (logo abaixo neste arquivo). O que decide a vez de uma
+          foto é a posição dela DENTRO DA FILA DO PRÓPRIO CAPÍTULO.
+       2. `montarLinhas` varre essa ordem e joga cada foto na faixa mais curta
+          no momento — então a faixa em que ela cai depende das larguras de
+          todas as fotos que vieram antes.
+
+     Simulando as duas etapas sobre o acervo inteiro, UMA posição acerta o
+     alvo: esta, com `capitulo: "nos"`. É por isso que a entrada está no meio
+     da corrida alfabética de `encontros` (entre `cachoeira-no-mato` e
+     `calcada-numero-257`) em vez de junto das outras de `nos` — a organização
+     alfabética do arquivo perde para o pedido, e esta é a exceção.
+
+     ⚠️ E ELA É FRÁGIL DE UM JEITO ESPECÍFICO: acrescentar, remover ou trocar a
+     PROPORÇÃO de qualquer foto que venha antes desta muda o resultado das duas
+     etapas e leva a `foto-com-dog` para outro lugar da parede — sem erro, sem
+     aviso, e sem nada parecer errado no código. Quem mexer no acervo e quiser
+     manter o pedido de pé tem de simular de novo e reposicionar esta entrada.
+
+     ── E O QUE ELA SUBSTITUIU ──────────────────────────────────────────────
+
+     Esta foto entrou no lugar da `adoracao-bone` (um jovem de boné cantando de
+     olhos fechados e mão erguida), por pedido do Lucas em 22/08/2026. A
+     `adoracao-bone` saiu do acervo e os arquivos dela saíram do `public/`; ela
+     só existia no mural — não estava em nenhuma cena do palco —, então a troca
+     não encostou na experiência imersiva. */
+  {
+    id: "foto-com-dog",
+    src: "/radicais/foto-com-dog.jpg",
+    w: 1600,
+    h: 1200,
+    alt: "Dois rapazes posando para uma selfie ao lado de alguém fantasiado de cachorro no corredor de um shopping, um deles fazendo sinal de positivo",
+    capitulo: "nos",
+  },
   {
     id: "calcada-numero-257",
     src: "/radicais/calcada-numero-257.jpg",
@@ -976,6 +1050,14 @@ export const acervo: FotoGaleria[] = [
     alt: "Selfie numa praça de alimentação, com dois rapazes atrás segurando bebidas",
     capitulo: "nos",
   },
+  {
+    id: "selfie-no-parque",
+    src: "/radicais/selfie-no-parque.jpg",
+    w: 1600,
+    h: 900,
+    alt: "Selfie de seis rapazes sentados na grama de um parque no fim da tarde, com capacetes de moto no chão ao lado deles",
+    capitulo: "encontros",
+  },
 
   /* ── NÓS · de perto · 38 fotos ──────────────────────────────────── */
   {
@@ -1074,6 +1156,14 @@ export const acervo: FotoGaleria[] = [
     camada: "meio",
   },
   {
+    id: "discipulado-eleitos",
+    src: "/radicais/discipulado-eleitos.jpg",
+    w: 1200,
+    h: 1600,
+    alt: "Grupo de sete jovens posando abraçados numa sala de paredes claras, quatro em pé atrás e três à frente",
+    capitulo: "nos",
+  },
+  {
     id: "duas-amigas",
     src: "/radicais/duas-amigas.jpg",
     w: 1537,
@@ -1152,6 +1242,20 @@ export const acervo: FotoGaleria[] = [
     capitulo: "nos",
   },
   {
+    id: "lideres-eleitos",
+    src: "/radicais/lideres-eleitos.jpg",
+    w: 900,
+    h: 1200,
+    /* 900px DE LARGURA, e é o original: o arquivo entregue tinha 900×1200 e o
+       pipeline não amplia. É a segunda menor do acervo (só a `celula-nazir`,
+       com 269, é menor) e por isso ela não tem variante de 1600 — o `-800` ao
+       lado é redução de verdade, o mestre é o que veio. Na parede, onde a foto
+       ocupa ~280px, sobra resolução; se um dia ela for para o palco ou para um
+       vão grande, precisa de um original maior antes. */
+    alt: "Três jovens posando embaixo de um pergolado de madeira numa chácara, um deles apontando para o outro",
+    capitulo: "nos",
+  },
+  {
     id: "pintura-verde-e-amarela",
     src: "/radicais/pintura-verde-e-amarela.jpg",
     w: 1200,
@@ -1227,6 +1331,14 @@ export const acervo: FotoGaleria[] = [
     alt: "Selfie de três pessoas num pavilhão de cadeiras brancas: o pastor à frente, um rapaz atrás fazendo sinal de paz e uma jovem de jaqueta bordô ao lado",
     capitulo: "nos",
     camada: "perto",
+  },
+  {
+    id: "selfie-consolidacao",
+    src: "/radicais/selfie-consolidacao.jpg",
+    w: 1600,
+    h: 1200,
+    alt: "Selfie de cinco jovens sentados na grama de uma praça no fim da tarde, todos sorrindo para a câmera",
+    capitulo: "nos",
   },
   {
     id: "selfie-em-casa",

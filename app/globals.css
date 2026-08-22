@@ -121,16 +121,33 @@
   --color-seminario-claro: #f2953f;
 
   /* ---- Tipografia ----
-     Duas vozes, e só uma delas fala alto. Newsreader é a serifa que carrega
-     todo o caráter — inclusive o itálico, que é o gesto da casa: nas páginas
-     que ainda a usam, a manchete vira do romano pro itálico exatamente na
-     palavra que é promessa ("bem-vindo aqui", "no Centro de Indaiatuba",
-     "programações"). Instrument Sans fica
-     de propósito quieta atrás dela: grotesca neutra, sem redondezas
-     geométricas competindo com a serifa.
-     As famílias chegam por next/font (auto-hospedadas em app/layout.tsx). */
-  --font-display: var(--font-newsreader), Georgia, 'Times New Roman', serif;
-  --font-body: var(--font-instrument-sans), system-ui, -apple-system, sans-serif;
+     UMA família, e ela é a Manrope. Os dois tokens abaixo apontam para a
+     mesma fonte de propósito: `--font-display` é o CANAL da manchete e
+     `--font-body` o do corpo, e é por eles que a troca acontece — nenhum
+     componente escreve `font-family` no braço. Manter os dois separados, mesmo
+     valendo o mesmo, é o que permite uma subárvore trocar só a manchete (a
+     capa do /radicais-livres faz isso) sem arrastar o texto corrido junto.
+
+     A HIERARQUIA É DE PESO E DE CORPO, não de família — a Manrope é variável
+     (200–800) e o site usa quatro degraus dela:
+       400  texto corrido, parágrafos, descrições
+       500  apoio: legendas, numerais pequenos, rótulos de card
+       600  navegação, botões, rótulos e os títulos de seção
+       700  a manchete de capa de cada página, e só ela
+
+     A serifa saiu daqui. Eram Newsreader (manchete) e Instrument Sans (corpo);
+     as duas foram substituídas pela Manrope no site inteiro, e com a Newsreader
+     foi embora o itálico da casa — a Manrope é uma família só romana, então
+     `<em>` e `italic` caem no oblíquo sintético do navegador em qualquer página.
+     Onde havia gesto de itálico, hoje o destaque é de COR (o roxo da marca).
+
+     A MANCHETE É MANROPE EM TODAS AS SETE ROTAS, sem exceção. A única coisa
+     que ainda escapa é o CORPO da /radicais-livres, que segue em Instrument
+     Sans para acompanhar a Instrument Serif dos cartazes de lá — ver
+     `.tipografia-radicais`, mais abaixo neste arquivo. As famílias chegam por
+     next/font (auto-hospedadas em app/layout.tsx). */
+  --font-display: var(--font-manrope), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-manrope), system-ui, -apple-system, sans-serif;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
@@ -168,50 +185,81 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* `font-optical-sizing: auto` é o padrão do browser, mas está explícito aqui
-   porque só funciona porque o eixo `opsz` foi pedido no next/font — sem ele o
-   arquivo vem sem o eixo e a linha vira silenciosamente um no-op. */
+/* A CLASSE DE MANCHETE DO SITE. Ela não nomeia fonte nenhuma: lê o token
+   `--font-display`, que vale Manrope nas sete rotas. É esse desacoplamento que
+   faz a troca de família ser uma linha no `@theme` e não uma varredura por
+   dezenas de componentes — foi assim que a Newsreader saiu, depois a Poppins.
+
+   O PESO NÃO MORA AQUI, e é de propósito: cada manchete traz o dela no markup.
+   Se esta regra fixasse um peso, ela venceria as utilidades do Tailwind — que
+   ficam em `@layer utilities` e perdem para uma regra sem camada — e apagaria
+   os degraus de uma vez.
+
+   ⚠️ E O PESO DE MANCHETE É 500 (`font-medium`), DA CAPA AO CARD. Chegaram a
+   ser 700 no `<h1>` de cada página e 600 nos títulos de seção; o Lucas olhou e
+   pediu mais leve (22/08/2026) — "estão muito fortes… seria medium". Numa
+   grotesca de traço uniforme como a Manrope, o semibold em corpo de manchete
+   vira bloco. **A HIERARQUIA AQUI É DE ESCALA, NÃO DE PESO**: o que separa a
+   capa da seção e a seção do card é o `font-size`, e é por isso que os
+   tamanhos desta casa pulam nos mesmos breakpoints do `container`.
+
+   O 600 continua existindo, mas fora da manchete: navegação, botões, rótulos
+   em caixa alta e labels de formulário. Ali ele é presença de interface, não
+   peso de título.
+
+   `letter-spacing: -0.02em`. A Manrope já nasce mais apertada que a serifa que
+   rodava aqui, então o `-0.015em` calibrado para a Newsreader ficou frouxo e o
+   `-0.025em` que a Poppins pedia (contrapontos circulares, traço uniforme)
+   ficou justo demais e começava a fechar o "rn". O meio-termo vale do rótulo
+   de 12px à manchete de 76px.
+
+   `font-optical-sizing: auto` é o padrão do browser e sobrou de quando a
+   manchete era Newsreader, que trazia o eixo `opsz`. A Manrope não tem esse
+   eixo, então hoje a linha é inofensiva — fica para o dia em que uma óptica
+   voltar ao token.
+
+   `text-wrap: balance` SUBIU PARA CÁ e antes valia só nas páginas de Poppins —
+   que, no fim, eram todas. Ele impede a manchete de terminar numa palavra
+   sozinha: reparte as linhas para que fiquem parecidas em vez de deixar a
+   sobra no fim, e resolve sozinho em qualquer viewport, o que é bem mais
+   confiável do que caçar `max-width` um a um. Vale até 6 linhas no Chrome —
+   muito além do que qualquer manchete daqui tem. Ele é a rede de segurança da
+   troca de fonte: a Manrope é mais ESTREITA que a Poppins no mesmo corpo, toda
+   medida ganhou caracteres de uma hora para outra e várias manchetes mudaram
+   de ponto de quebra. */
 .font-display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  letter-spacing: -0.015em;
-}
-
-/* A Home, a /sobre e a /celulas rodam as manchetes numa geométrica (Poppins)
-   em vez da Newsreader — a Home entrou na lista com o redesenho dela, a pedido
-   do briefing, e foi o que tirou o itálico da capa do site.
-   QUEM TROCA É O TOKEN, não cada `<h2>`: `.font-display` continua lendo
-   `--font-display`, então redefinir a variável no <div> raiz da página vira
-   Poppins em tudo que é manchete lá dentro — títulos, destaques, numerais —
-   sem tocar em Header, Footer e nas outras páginas, que estão fora dessa
-   subárvore.
-
-   ⚠️ QUEM PÕE ESTA CLASSE HERDA UMA PÁGINA SEM ITÁLICO: a Poppins é carregada
-   só em romano (app/layout.tsx), e todo `<em>`/`italic` que sobrar dentro da
-   subárvore cai no oblíquo sintético do navegador. Foi o que obrigou a
-   /celulas a trocar o destaque de itálico roxo para só roxo.
-
-   O peso continua sendo o 500 das classes do markup: o 600 foi testado e pesou
-   — a Poppins tem traço uniforme e no corpo de manchete o semibold vira bloco.
-
-   O tracking aperta: `-0.015em` foi calibrado para a serifa, e os contrapontos
-   circulares da Poppins pedem um pouco mais.
-
-   `text-wrap: balance` é o que impede a manchete de terminar numa palavra
-   sozinha. A Poppins é MAIS LARGA que a Newsreader no mesmo corpo (cerca de
-   10%), então toda medida da página encolheu em número de caracteres de uma
-   hora para outra, e a última linha ficava órfã. O `balance` reparte as linhas
-   para que fiquem parecidas em vez de deixar a sobra no fim — e ele resolve
-   sozinho em qualquer viewport, que é mais confiável do que caçar `max-width`
-   um a um. Só vale até 6 linhas no Chrome, que é muito mais do que qualquer
-   manchete daqui tem. */
-.manchetes-poppins {
-  --font-display: var(--font-poppins), system-ui, -apple-system, sans-serif;
-}
-
-.manchetes-poppins .font-display {
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+/* ── O QUE SOBROU DA EXCEÇÃO DA /radicais-livres ──────────────────────────
+   Esta classe já foi a exceção inteira: quando o site trocou para a Manrope
+   (22/08/2026), a rota dos Radicais Livres ficou de fora e continuou em
+   Poppins na manchete e em Instrument Sans no corpo. **A POPPINS SAIU DALI
+   POUCO DEPOIS, a pedido do Lucas** — a manchete daquela rota é Manrope como a
+   de todo mundo, e com ela a família saiu do projeto inteiro.
+
+   O QUE AINDA É EXCEÇÃO, e é só isto: o CORPO DE TEXTO da rota continua em
+   Instrument Sans. Ela é companheira de projeto da Instrument Serif (mesmo
+   estúdio), que é a fonte de cartaz de lá — RADICAIS, LIVRES, CONTRAMÃO —, e
+   esse par serifa/grotesca é metade do que faz a página não ler como enxerto
+   de outro site. A manchete em Manrope se junta a eles como a voz que informa.
+
+   O `font-family` explícito é OBRIGATÓRIO e não é redundância: `--font-body` é
+   consumido lá em cima pelo `body`, que resolve a variável no próprio elemento
+   e passa aos filhos a FAMÍLIA já resolvida, não a variável. Sem esta linha,
+   redefinir `--font-body` numa subárvore não mudaria uma letra.
+
+   ⚠️ NÃO HÁ MAIS TRACKING PRÓPRIO AQUI. Havia um `-0.025em` que a Poppins
+   pedia (contrapontos circulares, traço uniforme); com a Manrope a rota usa o
+   `-0.02em` do `.font-display` do site, e os módulos de lá foram acertados
+   junto — `radicais.module.css`, `quem-somos.module.css` e
+   `capa-radicais.module.css`. Se este número mudar, muda nos quatro. */
+.tipografia-radicais {
+  --font-body: var(--font-instrument-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body);
 }
 
 ::selection {
@@ -525,40 +573,80 @@ body {
    O `overflow-hidden` que existe está no PRÓPRIO elemento grudento, que é
    permitido, e serve só para conter a sobra da regra abaixo. */
 
-/* ── E a parede SOBE, sozinha e para sempre ───────────────────────────────
-   Presa, a parede mostraria sempre o mesmo pedaço da colagem. Aqui ela sobe
-   em looping: é o mesmo movimento que a capa antiga tinha, agora atrás de uma
-   janela em vez de ocupar a tela inteira. As duas coisas trabalham juntas — a
-   janela desliza pela página quando você rola, a parede sobe mesmo quando
-   você para.
+/* ── E a parede PASSEIA, de cima a baixo e de volta ───────────────────────
+   Presa, a parede mostraria sempre o mesmo pedaço da colagem. Aqui ela
+   percorre a colagem inteira e volta, sem parar: a janela desliza pela página
+   quando você rola, a parede se move mesmo quando você para. São dois
+   movimentos independentes e é a soma deles que faz a seção parecer um vão
+   para alguma coisa viva atrás.
 
-   ⚠️ SÃO DUAS CÓPIAS DA COLAGEM, EMPILHADAS, E O CURSO É EXATAMENTE -50%.
-   É o que faz a emenda desaparecer: ao fim do percurso a segunda cópia está
-   no pixel onde a primeira começou, e o salto de volta ao zero acontece entre
-   dois quadros idênticos. Um curso de -100% mostraria o vazio embaixo da
-   segunda; qualquer valor entre os dois produz um tranco visível a cada
-   volta. Tirar uma das cópias quebra o looping — não é imagem repetida por
-   descuido.
+   ⚠️ ISTO ERA UM LOOPING INFINITO E NÃO PODE VOLTAR A SER — não com este
+   arquivo de colagem. Eram duas cópias empilhadas e um curso de -50%, o que
+   dava uma emenda geometricamente perfeita: a segunda cópia terminava no
+   pixel em que a primeira começava e a volta caía entre dois quadros
+   idênticos. O defeito não era de geometria, era de FOTOGRAFIA.
 
-   Como o -50% é da altura da PISTA (as duas cópias somadas), ele vale um
-   quadro inteiro da colagem em qualquer largura de tela, sem medir nada.
+   A colagem é um mosaico de canvas fixo (1800×2008, quatro colunas), e a
+   última fileira de cada coluna é uma FATIA TRUNCADA PELA BORDA DO ARQUIVO —
+   96px na primeira coluna, 158 na segunda, 146 na terceira, 169 na quarta:
+   gente cortada no meio da cabeça. A primeira fileira é truncada pelo mesmo
+   motivo. Emendar as duas cópias colava essas duas faixas de sobras uma na
+   outra NO MEIO DA JANELA, e o que se via a cada volta era uma fileira dupla
+   de fotos cortadas passando pela tela.
 
-   A DURAÇÃO É LONGA DE PROPÓSITO. São 55 segundos para percorrer a colagem
-   inteira, algo em torno de 30 pixels por segundo: devagar o bastante para
+   Não há recorte que conserte isso: as calhas das quatro colunas não coincidem
+   em altura nenhuma, então qualquer linha horizontal na colagem corta foto em
+   pelo menos três colunas. Cortar o arquivo custaria fotos, e ter as vinte e
+   quatro é o que a parede tem de melhor.
+
+   A SAÍDA FOI NÃO EMENDAR. Uma cópia só, percorrida de ponta a ponta e de
+   volta (`alternate`). As fatias truncadas continuam no arquivo, mas agora só
+   alcançam a BORDA da janela — e uma foto cortada pela borda de uma parede
+   que rola lê como janela, que é o que ela é. No meio da tela lia como
+   defeito.
+
+   Para devolver o looping infinito é preciso REFAZER A COLAGEM com cada
+   coluna somando exatamente a altura do arquivo em fotos inteiras. Enquanto o
+   arquivo for este, a segunda cópia traz a faixa cortada de volta.
+
+   O CURSO SAI DA PRÓPRIA GEOMETRIA, sem medir nada em JS: `100%` num
+   `translateY` é a altura da parede e `100svh` é a altura da janela (o
+   elemento grudento tem exatamente isso), então `100svh - 100%` é o negativo
+   da sobra — o tanto de colagem que existe além da janela. Vale em qualquer
+   tela, e é zero quando não há o que percorrer.
+
+   `ease-in-out` NÃO É ENFEITE: com `linear` a volta é uma inversão seca de
+   direção, que é justamente o instante em que se percebe que há uma animação.
+   A curva desacelera na chegada e acelera na saída, e o retorno passa
+   despercebido.
+
+   A DURAÇÃO É LONGA DE PROPÓSITO. São 60 segundos para atravessar a colagem,
+   algo em torno de 20 pixels por segundo num desktop: devagar o bastante para
    que o movimento seja percebido como o fundo respirando, e não como uma
    esteira passando. Numa parede que fica atrás de texto, movimento rápido
-   rouba a leitura — e esta seção tem uma frase só, que precisa ser lida. */
-@keyframes paredeSobe {
+   rouba a leitura — e esta seção tem uma frase só, que precisa ser lida.
+
+   No retrato a sobra é bem menor (a parede tem o piso de 130svh do `page.tsx`
+   e não a altura cheia da colagem), então o mesmo tempo daria um rastejo. O
+   `@media` abaixo encurta a duração para manter a velocidade na mesma faixa. */
+@keyframes paredePasseia {
   from { transform: translateY(0); }
-  to   { transform: translateY(-50%); }
+  to   { transform: translateY(calc(100svh - 100%)); }
 }
 
 .janela-parede {
-  animation: paredeSobe 55s linear infinite;
+  animation: paredePasseia 60s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (max-width: 639px) {
+  .janela-parede {
+    animation-duration: 26s;
+  }
 }
 
 /* Quem pediu menos movimento recebe a parede parada — e ela continua inteira,
-   porque o repouso é o primeiro quadro: a primeira cópia no lugar. */
+   porque o repouso é o primeiro quadro: o topo da colagem no topo da janela. */
 @media (prefers-reduced-motion: reduce) {
   .janela-parede {
     animation: none;

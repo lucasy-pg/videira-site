@@ -326,9 +326,58 @@
    moldura — medido.
 
    ⚠️ Se a descrição ganhar ou perder uma linha, ou se entrar um quarto botão,
-   estes números mudam. É rodar de novo a medida do centro do `<h1>`. */
+   estes números mudam. É rodar de novo a medida do centro do `<h1>`.
+
+   ── E JÁ ACONTECEU DUAS VEZES, EM DOIS DIAS ───────────────────────────────
+
+   Em 21/08/2026 o redesenho encolheu a descrição (de duas frases para uma) e
+   derrubou dois dos três botões; em 22/08 um dos dois voltou, porque a capa
+   deixou de apontar para a /contato e passou a oferecer /celulas e a âncora da
+   galeria. Hoje são DOIS botões e UMA descrição.
+
+   ⚠️ OS NÚMEROS FORAM CALCULADOS, NÃO MEDIDOS NO NAVEGADOR, e a diferença
+   importa o bastante para estar escrita aqui. `--assenta` é metade da diferença
+   entre o que existe ABAIXO do nome e o que existe acima dele:
+
+       assenta = (abaixo − acima) / 2
+
+   Somando as caixas declaradas no próprio arquivo:
+
+     acima    etiqueta ~15px + `margin-top` do `<h1>` (1,25rem = 20px)     = 35px
+
+     abaixo   celular   descrição 28 + ~53 (2 linhas de 16px/1,65)
+                        + botões 36 + 116 (DOIS empilhados: 2×52 mais o
+                        `gap` de 0,75rem)                                  = 233px
+              ≥640px    descrição 28 + ~30 (1 linha de 18px/1,65)
+                        + botões 36 + 52 (os dois na MESMA linha)          = 146px
+
+     celular  (233 − 35) / 2 = 99   →  100px
+     ≥640px   (146 − 35) / 2 = 55,5 →   56px
+
+   ⚠️ SÓ O DO CELULAR SE MEXE QUANDO UM BOTÃO ENTRA OU SAI, e é por isso que os
+   dois números divergem tanto: acima de 640px os botões ficam lado a lado e a
+   fileira tem a mesma altura com um, dois ou três; abaixo disso eles empilham,
+   e cada botão vale 64px de coluna (52 de altura mais 12 de `gap`), ou seja 32px
+   de `--assenta`. A fronteira é exatamente a dos `.botoes` logo abaixo, e não
+   por acaso — é ela que decide se a fileira quebra.
+
+   O OUTRO NÚMERO FRÁGIL É QUANTAS LINHAS A DESCRIÇÃO OCUPA. A conta acima
+   assume DUAS no celular, que é o que "Uma geração que decidiu andar na
+   contramão do mundo." dá numa tela de 390px (350px úteis). Numa tela de 320px
+   ela vira três, e aí o valor certo passa a ser ~113px. Vale conferir com a
+   régua do navegador na próxima vez que alguém abrir esta capa num aparelho de
+   verdade — e, se estiver errado, é este comentário que tem de mudar junto com
+   o número. */
 .palcoTexto {
-  --assenta: 135px;
+  --assenta: 100px;
+
+  /* AQUI MORAVA UMA TROCA DE TOKEN: `--font-display` valia Poppins dentro desta
+     coluna, e o parágrafo abaixo (`.descricao`) ia junto de carona para que a
+     capa lesse como uma voz só. A Poppins saiu da rota a pedido do Lucas
+     (22/08/2026) e a linha virou desnecessária — a capa herda a Manrope do
+     site, que é o que o `<h1>` já queria. O `.descricao` continua colado à
+     manchete por `var(--font-display)`, e não por um nome de família, para que
+     essa relação sobreviva à próxima troca sem ninguém precisar lembrar dela. */
 
   position: absolute;
   inset: 0;
@@ -343,7 +392,7 @@
 
 @media (min-width: 640px) {
   .palcoTexto {
-    --assenta: 57px;
+    --assenta: 56px;
     padding: 7rem 2rem 3.5rem;
   }
 }
@@ -379,18 +428,27 @@
   line-height: 0.95;
   color: #fff;
   text-shadow: 0 4px 40px rgba(24, 9, 41, 0.45);
+  /* O mesmo `-0.02em` do `.font-display` do site. Era `-0.025em` enquanto a
+     capa rodava em Poppins, cujos contrapontos circulares pediam mais aperto. */
+  letter-spacing: -0.02em;
 }
 
+/* ⚠️ SEM ITÁLICO, e não é esquecimento: a Manrope é uma família só romana
+   (como a Poppins que rodava aqui antes), então um `font-style: italic` cairia
+   no oblíquo sintético do navegador — que numa grotesca de 9rem entorta os
+   contrapontos e fica evidente. A palavra continua se separando do "Radicais" pela cor, que é
+   o mesmo caminho que a /celulas tomou quando trocou de fonte. */
 .nomeVirado {
   display: block;
   font-weight: 400;
-  font-style: italic;
   color: var(--color-grape-light);
 }
 
 .descricao {
   margin-top: 1.75rem;
   max-width: 34rem;
+  /* Segue a manchete, seja ela qual for — ver o comentário do `.palcoTexto`. */
+  font-family: var(--font-display);
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.86);
 }

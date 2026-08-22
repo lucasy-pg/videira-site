@@ -115,7 +115,7 @@ export function Header() {
             />
             <div className="leading-tight">
               <div
-                className={`font-display text-lg font-medium transition-colors duration-500 sm:text-xl ${onPhoto ? "text-white" : "text-foreground"}`}
+                className={`font-display text-lg font-semibold transition-colors duration-500 sm:text-xl ${onPhoto ? "text-white" : "text-foreground"}`}
               >
                 Igreja Videira
               </div>
@@ -143,7 +143,7 @@ export function Header() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`group relative rounded-md px-3.5 py-2 text-sm font-medium transition-colors duration-300 ${onPhoto
+                className={`group relative rounded-md px-3.5 py-2 text-sm font-semibold transition-colors duration-300 ${onPhoto
                   ? isActive(item.path)
                     ? "text-white"
                     : "text-white/70 hover:text-white"
@@ -203,7 +203,7 @@ export function Header() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className={`font-display block px-2 py-2.5 text-2xl transition-all duration-300 ${isActive(item.path)
+                  className={`font-display block px-2 py-2.5 text-2xl font-semibold transition-all duration-300 ${isActive(item.path)
                     ? "text-grape"
                     : "text-foreground/70 hover:translate-x-1 hover:text-foreground"
                     } ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"}`}

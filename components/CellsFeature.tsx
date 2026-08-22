@@ -82,14 +82,15 @@ export function CellsFeature() {
             precisa vir antes dos cards — leitor de tela e celular leem a
             explicação primeiro, a pilha depois. */}
         <div className="lg:sticky lg:top-24 lg:order-2 lg:self-start">
-          <span className="block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+          <span className="block text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
             Sistema de células
           </span>
+          {/* DESTAQUE SÓ NA COR, sem itálico e no mesmo peso — a regra da
+              casa. O `italic` daqui vinha de quando a manchete do site era
+              Newsreader; a Manrope não tem arquivo itálico e o navegador
+              entortaria a letra por software. */}
           <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
-            A igreja acontece{" "}
-            <span className="block font-normal italic text-grape">
-              nas casas
-            </span>
+            A igreja acontece <span className="block text-grape">nas casas</span>
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
             Toda semana, em casas espalhadas pela cidade, grupos de 8 a 15
@@ -126,7 +127,7 @@ export function CellsFeature() {
           {/* Mesmo elemento e mesmas classes da eyebrow da coluna vizinha —
               como as duas ficam lado a lado, `<p>` de um lado e `<span>` do
               outro desalinhavam a linha de base em ~6px. */}
-          <span className="mb-7 block text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+          <span className="mb-7 block text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
             Como é uma noite
           </span>
 

@@ -66,7 +66,7 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  *   4 e no meio da semana         → composição invertida, célula numa casa
  *   5 e na idade que você tem     → o par de cards, Kids e Livres
  *   6 há um caminho a percorrer   → faixa roxa, a arte oficial do Trilho
- *   7 é esta a visão              → pausa tipográfica, quatro palavras
+ *   7 é esta a visão              → pausa tipográfica, a frase do encargo
  *   8 continue conosco na semana  → duas colunas limpas, quadro de vídeo
  *   9 agora entra você            → a comunidade inteira, foto sangrando
  *
@@ -93,17 +93,24 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  * no `lib/home.ts`, onde `antes + forte + depois` remontam a frase exata do
  * briefing. Nenhuma manchete leva dois destaques.
  *
- * TIPOGRAFIA. O briefing pede Poppins nos títulos, então esta página entra na
- * mesma exceção do /sobre e da /celulas: `manchetes-poppins` (globals.css)
- * troca o token `--font-display` só nesta subárvore. O corpo segue em
- * Instrument Sans.
+ * TIPOGRAFIA. Nada nesta página escolhe fonte: manchete e corpo saem dos
+ * tokens `--font-display` e `--font-body` do `globals.css`, que hoje valem
+ * Manrope nos dois. A página já rodou em Newsreader (serifa) e depois em
+ * Poppins, por uma classe `manchetes-poppins` que ficava neste <div> raiz — a
+ * classe saiu em 22/08/2026, quando a Manrope passou a ser a família única do
+ * site e a exceção deixou de ter o que excetuar.
  *
- * ⚠️ E ISSO SIGNIFICA UMA PÁGINA SEM ITÁLICO. A Poppins é carregada só em
- * romano (app/layout.tsx); todo `<em>` que aparecer aqui cai no oblíquo
- * sintético do navegador. Nenhuma frase desta página tem um — e a versão
- * anterior da Home era construída em cima de itálico (o gesto da Newsreader,
- * que era a fonte de manchete dela). Quem for reintroduzir um itálico aqui
- * está reabrindo essa decisão, não ajustando um detalhe.
+ * O QUE SEPARA MANCHETE DE CORPO AQUI É ESCALA, NÃO PESO: toda manchete é 500
+ * (`font-medium`), da capa ao card, e o texto corrido é 400. Chegaram a ser 700
+ * na capa e 600 nos títulos de seção; o Lucas olhou e pediu mais leve
+ * (22/08/2026). O 600 sobrou para navegação, botões e rótulos em caixa alta.
+ *
+ * ⚠️ E CONTINUA SENDO UMA PÁGINA SEM ITÁLICO. A Manrope é uma família só
+ * romana; todo `<em>` que aparecer aqui cai no oblíquo sintético do navegador.
+ * Nenhuma frase desta página tem um — e a versão original da Home era
+ * construída em cima de itálico (o gesto da Newsreader, que era a fonte de
+ * manchete dela). Quem for reintroduzir um itálico aqui está reabrindo essa
+ * decisão, não ajustando um detalhe.
  *
  * E POR ISSO AS MANCHETES NÃO USAM `clamp(...vw...)`. O `container` do
  * Tailwind não cresce liso: ele TRAVA numa largura fixa e só pula no
@@ -112,7 +119,9 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  * mesma largura de coluna para caber — era aí que a manchete estourava na
  * tela de notebook. Os tamanhos daqui pulam nos MESMOS breakpoints do
  * container. É a mesma escada do /sobre, e mexer num tamanho é mexer numa
- * quebra.
+ * quebra. A troca para a Manrope não mexeu em nenhum: ela é MAIS ESTREITA que
+ * a Poppins no mesmo corpo, então toda manchete ganhou folga em vez de perder,
+ * e o `text-wrap: balance` do `.font-display` reparte as linhas sozinho.
  *
  * FOTOGRAFIA. Nove imagens, todas reais e da própria Videira, todas pela
  * `<MolduraFoto>` — ou seja, todas por `next/image`, que gera as larguras
@@ -129,9 +138,7 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  */
 export default function Home() {
   return (
-    /* `manchetes-poppins` (globals.css) troca o token `--font-display` só nesta
-       subárvore: as manchetes saem da Newsreader e vão para a Poppins. */
-    <div className="manchetes-poppins bg-bone text-foreground">
+    <div className="bg-bone text-foreground">
       {/* ═══ 01 · HERO ══════════════════════════════════════════════════════
           A FILMAGEM OCUPA A TELA INTEIRA, sem moldura e sem margem — a versão
           anterior punha o vídeo dentro de um retângulo arredondado com bone em
@@ -258,7 +265,7 @@ export default function Home() {
           <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24">
             <div>
               <Reveal>
-                <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                   {QUEM_SOMOS.eyebrow}
                 </span>
               </Reveal>
@@ -342,7 +349,7 @@ export default function Home() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
             <Reveal variant="left">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                 {CULTOS.eyebrow}
               </span>
               <h2 className="font-display mt-5 max-w-[15ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
@@ -386,7 +393,7 @@ export default function Home() {
                     horário perdidas na ponta esquerda. */}
                 <div className="mt-6 sm:max-w-[20rem] lg:absolute lg:-left-10 lg:bottom-10 lg:mt-0 lg:w-[17rem] lg:max-w-none">
                   <div className="rounded-[1.25rem] bg-bone p-7 lg:rounded-[1.5rem] lg:p-8">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                       {CULTOS.horarios.dia}
                     </p>
                     <div className="mt-4 space-y-1">
@@ -461,7 +468,7 @@ export default function Home() {
             </Reveal>
 
             <Reveal variant="right" delay={140} className="lg:order-2">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                 {CELULAS.eyebrow}
               </span>
               <h2 className="font-display mt-5 max-w-[15ch] text-[2rem] font-medium leading-[1.05] text-foreground sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
@@ -509,7 +516,7 @@ export default function Home() {
       <section className="bg-sand py-24 sm:py-28 lg:py-32">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
               {MINISTERIOS.eyebrow}
             </span>
             {/* `20ch` e não os `14–16ch` das outras manchetes: "intensamente"
@@ -620,7 +627,7 @@ export default function Home() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid items-center gap-14 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
             <Reveal variant="left">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape-light">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape-light">
                 {TRILHO.eyebrow}
               </span>
               <h2 className="font-display mt-5 max-w-[14ch] text-[2rem] font-medium leading-[1.05] text-white sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem]">
@@ -663,51 +670,98 @@ export default function Home() {
           ar — não há CTA, não há fotografia e não há nada para clicar, porque
           o trabalho dela é dar um respiro antes das duas últimas.
 
-          AS QUATRO PALAVRAS SÃO A MANCHETE, e não uma lista de etapas: por isso
-          estão dentro de UM `<h2>`, com quebras, e não numa `<ul>` numerada —
-          numerá-las transformaria a visão num infográfico, que é o oposto de
-          uma pausa.
+          A FRASE DO ENCARGO É A MANCHETE, e é o conteúdo inteiro da seção.
+          Aqui estavam "Ganhar. Consolidar. Treinar. Enviar." numa escada de
+          quatro degraus — uma composição de que eu gostava e que caiu por um
+          motivo que não é de desenho: aquele quarteto é vocabulário do modelo
+          G12, que a Videira não segue, e apresentá-lo como a visão da casa era
+          publicar como dela uma visão de outra igreja. A visão da Videira é o
+          encargo, e é ele que está aqui agora (`lib/home.ts`, que importa a
+          frase do `lib/sobre.ts` para não haver duas cópias dela no site).
 
-          A ESCADA E A VARIAÇÃO DE ESCALA são o "movimento sutil" que o briefing
-          permite. Duas contenções: os degraus só existem a partir de `lg` (em
-          390px eles comeriam a largura útil e "Consolidar." quebraria em duas
-          linhas) e a variação de corpo é de 8% entre a menor e a maior — o
-          suficiente para o olho perceber ritmo, pouco o bastante para não ler
-          como erro de composição.
+          É A MESMA COMPOSIÇÃO DO /sobre, e isso é decisão do Lucas: frase
+          centralizada, entre aspas penduradas nas quinas opostas, na largura
+          inteira do container. Aqui ela já foi ALINHADA À ESQUERDA e sem
+          aspas, com o argumento de que "a Home DIZ o encargo e o /sobre o
+          CITA" — na tela a diferença não lia como intenção, lia como duas
+          versões da mesma frase com dois tratamentos, e a alinhada à esquerda
+          parecia um parágrafo grande e não a pausa que a seção é. As duas
+          páginas agora mostram a MESMA citação; quem vem da Home reconhece.
 
-          Este é o terceiro lugar da página em que o roxo entra em texto, e ele
-          continua sendo UM trecho: a última palavra. */}
+          ⚠️ POR ISSO ESTA SEÇÃO E A 04 DO /sobre ANDAM JUNTAS. São duas
+          cópias do mesmo desenho em dois arquivos (o texto, esse sim, é um
+          só: `ENCARGO`, em `lib/sobre.ts`, importado pelos dois). Mexeu na
+          composição aqui, mexa lá — e se um dia uma TERCEIRA página quiser a
+          citação, aí ela vira componente em vez de uma terceira cópia. É a
+          mesma regra do `Chave` no topo deste arquivo.
+
+          O QUE NÃO VEIO IGUAL É A ENTRELINHA. O /sobre fixa `leading-[64px]`
+          em todos os tamanhos, o que no celular abre 64px de entrelinha para
+          uma fonte de 22px. Aqui é `leading-[1.55]`: dá os mesmos ~64px no
+          `xl`, onde a composição foi desenhada, e acompanha o corpo para
+          baixo em vez de esparramar a frase no telefone.
+
+          O DESTAQUE CONTINUA SENDO UM SÓ (o miolo, roxo e itálico de uma vez)
+          e "CRISTO" continua subindo por CSS e não no texto — as duas
+          decisões são da frase, não da página, e estão explicadas no
+          `ENCARGO` em `lib/sobre.ts`. Este é o terceiro lugar da Home em que
+          o roxo entra em texto.
+
+          ⚠️ `text-pretty`, NÃO o `text-balance` do resto da página: numa frase
+          longa o `balance` encolhe todas as linhas até a mais curta caber e
+          devolve o bloco para o meio da medida, desfazendo a largura que a
+          seção existe para ter. */}
       <section className="relative -mt-6 rounded-t-[2rem] bg-sand py-24 sm:py-28 lg:-mt-8 lg:rounded-t-[3rem] lg:py-36">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+            <span className="block text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
               {VISAO.eyebrow}
             </span>
           </Reveal>
 
           <Reveal variant="blur" delay={120}>
-            <h2 className="font-display mt-8 text-foreground lg:mt-10">
-              {VISAO.palavras.map((palavra, i) => (
-                <span
-                  key={palavra}
-                  className={`block font-medium leading-[1.02] ${ESCALA_VISAO[i]} ${DEGRAU_VISAO[i]} ${
-                    i === VISAO.palavras.length - 1 ? "text-grape" : ""
-                  }`}
-                >
-                  {palavra}
-                </span>
-              ))}
-            </h2>
-          </Reveal>
+            {/* ⚠️ O `px` deste bloco e o `py` do <h2> são a FOLGA DAS ASPAS,
+                não respiro solto: sem eles a primeira e a última linha
+                encostam nos dois glifos das quinas na tela estreita.
 
-          {/* O complemento fica NO FIM DA ESCADA, alinhado à direita a partir
-              de `lg`: é para lá que as quatro palavras estavam caminhando, e
-              largar a frase de volta na margem esquerda desfaria o movimento
-              que a escada acabou de fazer. */}
-          <Reveal delay={220} className="mt-12 lg:mt-16 lg:flex lg:justify-end">
-            <p className="max-w-md leading-relaxed text-muted-foreground lg:text-right">
-              {VISAO.complemento}
-            </p>
+                As aspas são DESENHO — ficam fora do texto, em `grape-light`,
+                e vão com `aria-hidden` para o leitor de tela ouvir a frase
+                limpa em vez de dois caracteres soltos no meio dela. */}
+            <div className="relative mt-10 px-8 sm:mt-12 sm:px-14 lg:mt-14 lg:px-16">
+              <span
+                aria-hidden
+                className="font-display absolute left-0 top-0 select-none text-[clamp(3rem,5vw,4.5rem)] leading-none text-grape-light"
+              >
+                {"“"}
+              </span>
+
+              <h2 className="font-display text-pretty py-8 text-center text-[1.4rem] font-medium leading-[1.55] text-foreground sm:py-10 sm:text-[1.9rem] lg:text-[2.3rem] xl:text-[2.6rem]">
+                {VISAO.encargo.map((pedaco, i) =>
+                  pedaco.forte ? (
+                    /* `not-italic` obrigatório: o `<em>` fica pela semântica,
+                       mas a Manrope é uma família só romana e a inclinação
+                       viria do navegador, não da fonte. O destaque é a cor. */
+                    <em key={i} className="not-italic text-grape">
+                      {pedaco.texto}
+                    </em>
+                  ) : (
+                    <span
+                      key={i}
+                      className={pedaco.caixaAlta ? "uppercase" : undefined}
+                    >
+                      {pedaco.texto}
+                    </span>
+                  )
+                )}
+              </h2>
+
+              <span
+                aria-hidden
+                className="font-display absolute bottom-0 right-0 select-none text-[clamp(3rem,5vw,4.5rem)] leading-none text-grape-light"
+              >
+                {"”"}
+              </span>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -902,25 +956,4 @@ export default function Home() {
   );
 }
 
-/* AS DUAS ESCADAS DA VISÃO, fora do componente porque são constantes de
-   desenho e não estado.
 
-   A escala varia 8% do primeiro ao último degrau e o passo é irregular de
-   propósito (100 → 94 → 104 → 108): uma progressão certinha lê como zoom
-   uniforme, que é justamente o que não parece movimento.
-
-   Os degraus horizontais são em `em`, não em rem nem em %, para que a escada
-   cresça junto com o corpo da fonte em cada breakpoint — em pixels fixos ela
-   ficaria discreta demais no `xl` e larga demais no `sm`.
-
-   ⚠️ AS DUAS LISTAS TÊM QUE TER O MESMO COMPRIMENTO DE `VISAO.palavras`
-   (`lib/home.ts`). Uma quinta palavra sem degrau cai em `undefined` e vira uma
-   classe vazia — nada quebra, e é exatamente por isso que passa despercebido. */
-const ESCALA_VISAO = [
-  "text-[3rem] sm:text-[4rem] lg:text-[4.25rem] xl:text-[5.25rem]",
-  "text-[2.8rem] sm:text-[3.75rem] lg:text-[4rem] xl:text-[4.95rem]",
-  "text-[3.1rem] sm:text-[4.15rem] lg:text-[4.4rem] xl:text-[5.45rem]",
-  "text-[3.25rem] sm:text-[4.3rem] lg:text-[4.6rem] xl:text-[5.7rem]",
-];
-
-const DEGRAU_VISAO = ["", "lg:pl-[0.6em]", "lg:pl-[1.2em]", "lg:pl-[1.8em]"];

@@ -1,9 +1,23 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   QUEM SOMOS — /radicais-livres, seção 2
+   QUEM SOMOS — /radicais-livres
 
-   Quatro movimentos numa faixa só: abertura, o letreiro RADICAL LIVRES, a frase
-   de impacto e a régua de missão/visão/propósito. Este arquivo carrega a
-   composição e a coreografia; o `QuemSomos.tsx` e os quatro componentes ao lado
+   ⚠️ ESTE ARQUIVO SERVE HOJE DUAS SEÇÕES QUE NÃO SÃO VIZINHAS, e é a primeira
+   coisa a saber antes de mexer nele. Ele nasceu servindo UMA seção de quatro
+   movimentos (abertura, o letreiro RADICAL LIVRES, a frase de impacto e a
+   régua de missão/visão/propósito); o redesenho de 21/08/2026 desmembrou essa
+   seção pela narrativa nova da página:
+
+     `.abertura` + `.colagem`     → seção 02, "Jovens destinados ao Avivamento"
+     o letreiro RADICAL LIVRES    → APOSENTADO (ver a lápide no meio do arquivo)
+     `.impacto` + `.identidade`   → seção 05, "Uma geração com propósito"
+
+   Os componentes não mudaram de implementação, só de lugar na página. A seção
+   05 monta os dois num `<section>` próprio (`components/radicais/`), que
+   devolve a eles o fundo `bone` e o `overflow-x: clip` que a `.secao` daqui
+   dava — sem o segundo, a indentação em `vw` da régua abre rolagem lateral nas
+   telas estreitas.
+
+   Este arquivo carrega a composição e a coreografia; os componentes ao lado
    carregam a marcação e o conteúdo.
 
    ── A DECISÃO QUE EXPLICA O RESTO DO ARQUIVO ──────────────────────────────
@@ -32,10 +46,10 @@
 
    ── COMO LER A COREOGRAFIA ────────────────────────────────────────────────
 
-   Os `transition-delay` do movimento 2 são a linha do tempo do briefing em
-   milissegundos: RADICAL em 0, foto de fundo em 350, fotos médias em 550 e 670,
-   LIVRES em 800, microtextos em 1250 e 1350. Mexer num atraso solto desmancha
-   o encontro entre RADICAL e LIVRES, que é o ponto inteiro da peça.
+   Sobrou uma linha do tempo com ordem interna, a da frase de impacto: as duas
+   linhas se revelam por recorte com 150ms entre elas e o fecho vem 300ms
+   depois. A escada do antigo movimento 2 (RADICAL em 0, foto de fundo em 350,
+   médias em 550 e 670, LIVRES em 800) saiu junto com a peça que ela servia.
 
    ── AMPLITUDE DO PARALLAX ─────────────────────────────────────────────────
 
@@ -56,10 +70,9 @@
      cria um contêiner de rolagem e mataria o `position: sticky` de qualquer
      coisa que venha a morar aqui dentro. `clip` só recorta.
 
-     E ele é REDE DE SEGURANÇA, não solução: a sangria das fotos e o passeio
-     horizontal de LIVRES são dimensionados para caber de verdade (ver as
-     contas em `.livresDeriva`). Se esta linha estiver segurando alguma coisa,
-     é bug. */
+     E ele é REDE DE SEGURANÇA, não solução: as derivas das cartas da colagem
+     são dimensionadas para caber de verdade. Se esta linha estiver segurando
+     alguma coisa, é bug. */
   overflow-x: clip;
   background: var(--color-bone);
   color: var(--color-foreground);
@@ -77,19 +90,59 @@
   }
 }
 
-/* A serifada editorial da seção. Vale para os quatro movimentos, e é ela que
-   distingue esta faixa do resto da página — ver o porquê no `page.tsx`, onde a
-   fonte é carregada. */
-.serifa {
-  font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
-  font-weight: 400;
+/* ── A TIPOGRAFIA DE TÍTULO DESTAS SEÇÕES ─────────────────────────────────
+
+   MANROPE, como no resto do site. Quem escolhe a fonte é o token
+   `--font-display`, não esta regra, e ele vale a mesma família nas sete rotas.
+   Esta seção já rodou em Poppins, por uma troca de token na raiz da
+   /radicais-livres; a troca saiu em 22/08/2026 e a Poppins saiu do projeto
+   junto.
+
+   ⚠️ ESTA CLASSE JÁ FOI UMA SERIFADA, e por dois dias. Ela carregou a
+   Instrument Serif — uma display de alto contraste — nos títulos desta seção e
+   na frase de impacto. O Lucas olhou a manchete "Jovens destinados ao
+   Avivamento!" renderizada nela e pediu para trocar (22/08/2026).
+
+   A REGRA QUE SAIU DISSO, e que vale para a página inteira: a serifada é só
+   para CARTAZ — tipografia acima de ~100px, onde a palavra é a própria
+   composição da seção e não um título em cima de um texto. Sobraram três
+   lugares assim, e os três estão em `components/radicais/`: RADICAIS/LIVRES,
+   CONTRAMÃO e AINDA NÃO VIVEMOS TUDO. Nada nesta seção se qualifica: a
+   manchete da abertura fecha em 82px e a frase de impacto em 96px, e nessa
+   faixa a Instrument Serif ainda está no território de um título — onde o
+   sistema da casa já tem uma resposta, que é a Manrope.
+
+   ⚠️ E A MANROPE NÃO TEM ITÁLICO. A família é só romana (a Poppins que rodava
+   aqui antes também era), então `font-style: italic` aqui dentro cairia no
+   oblíquo sintético do navegador. Os dois itálicos desta seção saíram por causa
+   disso, não por esquecimento: ver `.fraseVirada` e `.blocoCitacao`, que
+   explicam o que ficou no lugar de cada um. É a mesma troca que a /celulas fez.
+
+   O peso 500 é o das manchetes do site inteiro, da capa ao card. O 600 foi
+   testado e pesa: numa grotesca de traço uniforme, o semibold em corpo de
+   manchete vira bloco — e o Lucas confirmou isso olhando a página pronta. */
+.display {
+  font-family: var(--font-display);
   font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 /* ═══ MOVIMENTO 1 — ABERTURA ═══════════════════════════════════════════════ */
 
+/* ⚠️ O RESPIRO DE BAIXO ENTROU EM 21/08/2026 e antes não existia — não porque
+   faltasse, mas porque não fazia falta: a abertura era o primeiro de quatro
+   movimentos na mesma faixa, e quem dava o respiro embaixo dela era o
+   `padding-top` do palco que vinha em seguida. Desmembrada a seção, a abertura
+   passou a TERMINAR a faixa, e sem isto a colagem encostava na costura com a
+   seção seguinte.
+
+   Ele é menor que o de cima de propósito. O respiro de cima é a entrada da
+   página inteira depois da capa (a pausa É o desenho); o de baixo só precisa
+   separar duas seções. */
 .abertura {
   padding-top: clamp(120px, 18vh, 220px);
+  padding-bottom: clamp(96px, 14vh, 170px);
 }
 
 /* A etiqueta com o traço roxo de 40px à esquerda. O traço é `::before` e não um
@@ -119,23 +172,59 @@
    roxo. É o gesto da casa (toda manchete do site vira no itálico exatamente na
    palavra que é promessa), aqui levado ao limite: a linha inteira vira.
 
-   18ch é estreito de propósito. A frase precisa QUEBRAR onde está escrito que
-   quebra, e sobra em volta é o que faz a pausa existir. */
+   ⚠️ ERAM 18ch E VIRARAM 20ch NUMA TROCA DE FONTE, e a mudança é obrigatória,
+   não estética. O teto é estreito de propósito — a frase precisa QUEBRAR onde
+   está escrito que quebra, e a sobra em volta é o que faz a pausa existir —,
+   mas ele não pode ficar mais estreito que a linha mais longa, senão a quebra
+   deixa de ser a escrita e passa a ser a largura.
+
+   A conta que produziu o 20ch foi feita na Poppins: "Jovens destinados ao"
+   media ~10,6em (18 letras a ~0,56em mais dois espaços a ~0,26em) e o "0"
+   valia ~0,60em, então 18ch davam 10,8em — dois por cento de folga, e qualquer
+   diferença de renderização jogava o "ao" para uma terceira linha. Em 20ch
+   eram 12em, com 13% de folga.
+
+   NA MANROPE A MEDIDA CONTINUA VALENDO, e por sorte, não por projeto: ela é
+   mais estreita que a Poppins nos dois lados da conta ao mesmo tempo — no
+   texto e no "0" —, então a folga não encolheu. Foi conferido no navegador
+   quando a rota trocou de fonte (22/08/2026).
+
+   Na Instrument Serif a mesma conta fechava com folga porque o "0" dela é mais
+   estreito e o texto também — trocar de fonte muda os dois lados do `ch` ao
+   mesmo tempo, e é por isso que uma medida em `ch` não sobrevive a uma troca
+   de família sem ser refeita.
+
+   O tracking acompanha: `-0.025em` é o valor que a `.tipografia-radicais` do
+   `globals.css` aplica em toda esta rota. Os `-0.012em` que estavam aqui foram
+   calibrados para a serifa. */
 .frase {
   margin-top: 32px;
-  max-width: 18ch;
+  max-width: 20ch;
   font-size: clamp(38px, 5.2vw, 82px);
   line-height: 1.05;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .fraseLinha {
   display: block;
 }
 
+/* A SEGUNDA LINHA MUDA DE VOZ, e é o gesto da casa: toda manchete do site vira
+   exatamente na palavra que é promessa — aqui, "Avivamento!".
+
+   ⚠️ ELA VIRAVA EM DUAS COISAS AO MESMO TEMPO (romana → itálica E tinta →
+   roxo) e hoje vira só de cor. O itálico saiu quando a manchete deixou de ter
+   arquivo itálico — ver `.display`. É a mesma perda que a /celulas teve e pelo
+   mesmo motivo.
+
+   O GESTO NÃO SE PERDEU, ficou mais quieto. Se um dia o itálico fizer falta de
+   verdade, o conserto NÃO é devolver uma serifada só para esta linha, e nem
+   existe atalho de `next/font`: a Manrope não tem itálico no Google Fonts. É
+   decisão de sistema — trocar a família de manchete do site inteiro — e por
+   isso não se resolve neste arquivo. */
 .fraseVirada {
   display: block;
-  font-style: italic;
   color: var(--color-grape);
 }
 
@@ -470,709 +559,49 @@
   --dx: -30px;
 }
 
-/* ═══ MOVIMENTO 2 — RADICAL LIVRES ═════════════════════════════════════════
-   O núcleo da seção. Seis camadas de profundidade sobre um palco só:
-
-     0  foto de fundo, grande e desfocada           (`.fundo`)
-     1  RADICAL, com fotografia dentro das letras   (`.radical`)
-     2  duas fotos médias, nítidas                  (`.media`)
-     3  LIVRES, itálico e roxo, à direita           (`.livres`)
-     4  uma foto pequena, POR CIMA de LIVRES        (`.pequena`)
-     5  os microtextos                              (`.micro`)
-
-   E, atrás de todas elas, o PANO (`.pano`): a fotografia de tela cheia que é o
-   chão da composição. Ele não tem número porque não disputa profundidade com
-   ninguém — é a superfície em que as seis camadas se apoiam.
-
-   Este lugar já foi de outra coisa: uma foto a 6% de opacidade que só existia
-   dentro de um círculo perseguindo o cursor. Ver o `RadicalLivres.tsx`.
-
-   O PALCO É MISTO — parte em fluxo, parte em `absolute` —, e isso é o que faz o
-   celular funcionar sem uma segunda composição. RADICAL e LIVRES estão no fluxo
-   normal e por isso DÃO altura ao palco; as fotos estão em `absolute` e
-   posicionadas em % dessa altura. No celular, as fotos voltam ao fluxo
-   (`position: static`) e a pilha se monta sozinha na ordem do documento:
-   RADICAL → foto → LIVRES. Nenhuma marcação duplicada, nenhum bloco escondido
-   por media query carregando bytes à toa. */
-
-.palco {
-  position: relative;
-  /* ⚠️ ESTE RESPIRO É O MAIOR DA SEÇÃO E FOI PEDIDO ASSIM. A abertura termina
-     numa colagem solta, de contorno irregular, e o movimento seguinte abre com
-     um letreiro em corpo de cartaz — se os dois chegam perto, a colagem parece
-     estar em cima do RADICAL em vez de ter acabado. Passou de
-     `clamp(96px, 16vh, 200px)` para quase o dobro em 18/08/2026.
-
-     ⚠️ E É POR ISSO QUE O PISO SUBIU JUNTO COM O TETO. Só levantar o teto
-     resolveria no monitor grande e não resolveria no celular, que é onde o
-     `16vh` entrega os 96px do piso — e é justamente no celular que a colagem e
-     o letreiro brigam mais, porque a tela é curta e os dois cabem juntos. */
-  margin-top: clamp(180px, 26vh, 380px);
-
-  /* ⚠️ CONTÊINER DE CONSULTA, e é disto que sai o corpo das duas palavras.
-
-     `100cqw` é a MEDIDA DA COLUNA — a largura útil depois do `container` e do
-     respiro lateral —, e o corpo do tipo é derivado dela em `.radical`. Sem
-     isto, o cálculo teria de usar `vw`, que não sabe nada sobre o `max-width`
-     do container: num monitor de 1920px o `vw` diria 1920 e a coluna teria
-     1440, e a palavra sairia 33% maior que a caixa.
-
-     Um elemento não consulta a si mesmo, então o `calc` NÃO pode morar aqui —
-     ele mora nos descendentes. */
-  container-type: inline-size;
-}
-
-@media (min-width: 1024px) {
-  .palco {
-    /* A altura do movimento, entre 130vh e 160vh. Ela precisa ser grande: o
-       parallax só se percebe se houver curso de rolagem para percorrer, e uma
-       composição de seis camadas dentro de meia tela vira um logotipo. */
-    min-height: 134vh;
-    padding-top: clamp(40px, 8vh, 110px);
-    padding-bottom: clamp(24px, 4vh, 64px);
-
-    /* COLUNA FLEX, e é o que RESOLVE A DISTRIBUIÇÃO VERTICAL. RADICAL fica no
-       alto, LIVRES leva `margin-top: auto` e é empurrada para o PÉ do palco,
-       e o vão entre as duas é o que sobrar — que é exatamente onde as
-       fotografias moram.
-
-       A alternativa era um `margin-top` fixo em LIVRES, e ela não fecha: o
-       palco tem altura em `vh` e o conteúdo tem altura em `em`, então a
-       margem que acerta o alvo num monitor de 1000px de altura deixa LIVRES
-       boiando no meio num de 1440. Foi o primeiro desenho e deu justamente
-       isso — um palco com o terço de baixo vazio. Com `auto`, a distância se
-       recalcula sozinha e as fotos, posicionadas em % da altura do palco,
-       continuam caindo no vão. */
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-/* ── A palavra RADICAL ────────────────────────────────────────────────────── */
-
-/* Três elementos aninhados para UMA palavra, e cada um existe por uma razão
-   diferente. Todos os três mexem em `transform`/`translate`, e empilhá-los num
-   elemento só faria a última declaração apagar as outras duas:
-
-     .radicalDeriva   — crescimento lento com a rolagem (scrub, scale 1 → 1.06)
-     .radicalEntrada  — a revelação de baixo para cima (clip-path + translateY)
-     .radical         — a fotografia dentro das letras (background-clip: text)
-
-   A SEPARAÇÃO TAMBÉM É PROTEÇÃO DE RENDERIZAÇÃO. `-webkit-background-clip:
-   text` no MESMO elemento que recebe `transform` é um caminho conhecido para o
-   texto sumir no Safari — a promoção a camada composta às vezes descarta o
-   recorte. Com o `scale` dois níveis acima, o elemento recortado nunca é
-   transformado diretamente. */
-.radicalDeriva {
-  position: relative;
-  z-index: 10;
-  /* Sangra para fora da margem do container, de propósito: a palavra é peça
-     gráfica e não obedece à grade do texto. */
-  margin-left: -2vw;
-  /* Cresce a partir da BORDA ESQUERDA e não do centro. Com origem no centro, os
-     6% do crescimento se repartem para os dois lados e a palavra avança sobre a
-     margem esquerda da página, que já está comida pelos -2vw da sangria.
-     Ancorada à esquerda, ela cresce só para dentro do palco. */
-  transform-origin: 0% 50%;
-  animation: radicalCresce linear both;
-  animation-timeline: view();
-  animation-range: cover;
-}
-
-@keyframes radicalCresce {
-  from {
-    scale: 1;
-  }
-
-  to {
-    scale: 1.06;
-  }
-}
-
-.radicalEntrada {
-  /* `block` E NÃO `inline`, E DISTO DEPENDE A PALAVRA EXISTIR. Este elemento é
-     um `<span>` e carrega o `clip-path` da revelação; um `<span>` sem `display`
-     é caixa em linha, e a caixa em linha de um elemento cujo único filho é
-     `display: block` é DEGENERADA — o bloco filho quebra para fora dela e o
-     retângulo de referência do recorte fica vazio. `inset(0)` sobre um
-     retângulo vazio não recorta "tudo": recorta para nada, e a palavra
-     simplesmente não pinta.
-
-     Foi exatamente o que aconteceu no celular, e só no celular: no desktop
-     `.radicalLinha` era `flex`, o que blocifica os filhos e escondia o
-     problema. Medido em 390px: `display: inline`, caixa de 379×70, `clip-path:
-     inset(0px)`, e nenhum pixel na tela. */
-  display: block;
-  /* Folga embaixo para o `clip-path` não decepar nada no estado final: a caixa
-     do bloco pode ser mais curta que o desenho do tipo em corpo de cartaz, e
-     `inset(0)` recorta exatamente na caixa. A margem negativa devolve o espaço
-     ao layout. */
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-
-/* A linha da palavra é BLOCO em toda largura, e o microtexto desceu para a
-   linha de baixo. Ele já esteve ao lado, no mesmo flex, e não cabe mais: agora
-   que RADICAL ocupa a coluna inteira (ver `.radical`, logo abaixo), não há
-   ponta sobrando para pendurar uma anotação. */
-.radicalLinha {
-  display: block;
-}
-
-/* ── A PALAVRA, E A CONTA QUE A DIMENSIONA ─────────────────────────────────
-   ⚠️ O CORPO NÃO É `clamp(110px, 15vw, 280px)`, que era o que o desenho pedia,
-   E A TROCA FOI MEDIDA — não é liberdade de implementação.
-
-   O desenho pede duas coisas ao mesmo tempo: o `clamp` acima E "deve ocupar
-   quase toda a largura útil da tela em desktop". Com a Instrument Serif as duas
-   não podem ser verdade juntas. Medido no navegador: "RADICAL" nesta fonte,
-   com o espacejamento de -0,02em, mede 2,87× o corpo do tipo — ela é uma
-   serifada de alto contraste e caixa estreita. A 216px (os 15vw de um monitor
-   de 1440) a palavra dá 619px numa coluna de 1184: 52% da largura. Fica grande,
-   mas não DOMINA — e "peça gráfica, não heading estilizado" é justamente a
-   diferença entre as duas coisas. O `clamp` do briefing foi escrito para uma
-   fonte de caixa larga (a DM Serif Display, uma das alternativas citadas, mede
-   ~4,1×; nela os 15vw fechariam a conta).
-
-   Entre obedecer ao número e obedecer ao desenho, o desenho ganha. O corpo
-   agora SAI DA MEDIDA DA COLUNA:
-
-     corpo = (largura da coluna + sangria) × 0,97 ÷ 2,87
-
-   `2,87` é a largura da palavra em ems, medida na fonte real. É o único número
-   deste arquivo que conhece o desenho do tipo — se a fonte mudar, ele muda
-   junto, e está isolado numa variável para poder ser encontrado.
-
-   `0,97` É PARA O CRESCIMENTO DA ROLAGEM CABER. O `.radicalDeriva` cresce até
-   1,06 conforme a página rola, ancorado na borda esquerda; sem a folga de 3% a
-   palavra terminaria 6% fora da coluna no fim do curso e o "L" seria decepado
-   pelo `overflow-x: clip`. Com ela, o avanço máximo cai dentro do respiro
-   lateral da página e nenhuma letra é cortada em nenhum ponto da rolagem.
-
-   `+ 2vw` é a sangria da esquerda, casada com o `margin-left: -2vw` do
-   `.radicalDeriva`: a palavra começa um pouco antes da margem do container e
-   termina rente a ela.
-
-   A CONTA VALE EM TODA LARGURA e substitui as media queries de corpo que
-   estavam aqui — inclusive as do celular. Num iPhone de 390px ela dá ~121px,
-   acima dos 22vw que o desenho pedia para o celular, o que é o lado certo do
-   erro: "RADICAL e LIVRES CONTINUAM GRANDES, eles são a alma da seção". */
-.radical {
-  --medida: 2.87;
-
-  display: block;
-  font-size: calc((100cqw + 2vw) * 0.97 / var(--medida));
-  line-height: 0.85;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--color-foreground);
-  white-space: nowrap;
-}
-
-/* O MICROTEXTO DE RADICAL cai na linha de baixo, indentado até ficar embaixo do
-   "C" — a letra do meio da palavra, e a que fecha a leitura de "contra". Não
-   embaixo de onde a palavra COMEÇA (viraria legenda) nem centralizado (viraria
-   subtítulo); embaixo do "C" ele lê como anotação apontando para a letra certa.
-
-   ⚠️ 18/08/2026: A INDENTAÇÃO ESTAVA CURTA DEMAIS (38%/12%), e a causa era uma
-   pegadinha de box model, não gosto de design. `.microRadical` é `display:
-   block` sem `width` própria, então a caixa dele não tem a largura do TEXTO —
-   tem a largura que SOBRA no `.radicalLinha` depois do `margin-left` (é o que
-   `width: auto` faz num bloco). Medir essa caixa (o que `getBoundingClientRect`
-   devolve) faz parecer que o texto ocupa ~750px e está prestes a estourar a
-   palavra; o texto de verdade, medido letra por letra, tem 137px FIXOS (a
-   fonte é 11px cravado, não cresce com a tela) — a caixa só tinha um oceano de
-   espaço em branco depois dele. A indentação anterior foi tunada pensando que
-   750px eram o texto, e por isso parou cedo demais, embaixo do "D".
-
-   COM O NÚMERO CERTO NA MÃO, o resto é só achar onde o "C" cai. Medido nas
-   quatro larguras de referência (390/1024/1280/1440/1920), o centro do "C"
-   fica entre 42% e 57% da largura do `.radicalLinha` — a faixa sobe com a
-   tela porque a palavra (em `cqw`) cresce mais rápido que o texto fixo de
-   11px. Um valor só por breakpoint (em vez de uma fórmula com `calc`) já
-   acerta a régua inteira porque o texto tem 137px em QUALQUER largura — nunca
-   chega perto de estourar a caixa disponível, então não precisa de teto de
-   segurança como o `--medida` do `.radical` precisa. */
-.microRadical {
-  display: block;
-  margin-top: 1.5em;
-  margin-left: 43%;
-}
-
-@media (min-width: 1024px) {
-  .microRadical {
-    margin-left: 55%;
-  }
-}
-
-/* ── A FOTOGRAFIA DENTRO DAS LETRAS ────────────────────────────────────────
-   A técnica prioritária do briefing, e ela funcionou: uma fotografia só,
-   revelada através das sete letras.
-
-   O VÉU AMEIXA NÃO É ENFEITE, é o que torna a palavra legível. A foto vive
-   recortada sobre o bone (#fdfbf7), e sem escurecer ela o miolo claro de cada
-   letra encosta na luminosidade do fundo — a palavra deixa de ter contorno e
-   vira textura. Não dá para usar `filter` aqui (filtro se aplica ao elemento
-   inteiro, inclusive ao recorte), então o escurecimento entra como uma PRIMEIRA
-   camada de `background-image`: um gradiente chapado por cima da foto, dentro
-   da mesma pilha, que o `background-clip` recorta junto.
-
-   `--foto-radical` vem do componente, não daqui, para o nome do arquivo morar
-   no `lib/quem-somos.ts` com o resto do acervo.
-
-   A DEGRADAÇÃO É EXPLÍCITA e não depende de sorte: sem `background-clip: text`,
-   a palavra volta a ser tinta sólida. É a mesma palavra, no mesmo lugar, no
-   mesmo corpo — perde-se a fotografia, não a leitura. */
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-  .radical {
-    background-image:
-      linear-gradient(rgba(24, 9, 41, 0.76), rgba(24, 9, 41, 0.82)),
-      var(--foto-radical);
-    background-size: cover;
-    background-position: 50% 42%;
-    background-repeat: no-repeat;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
-
-/* ── A palavra LIVRES ──────────────────────────────────────────────────────
-   O contraste com RADICAL é narrativo, não decorativo:
-
-     RADICAL   romana, preta, pesada, à esquerda, sangrando para fora
-     LIVRES    itálica, roxa, fluida, à direita, deslocada e por cima da foto
-
-   Empilhar as duas centralizadas, na mesma cor e no mesmo alinhamento, seria
-   escrever o nome — e a seção inteira existe para dizer que o nome não é
-   estilo, é uma decisão. A diferença tipográfica É o argumento. */
-.livresLinha {
-  position: relative;
-  z-index: 30;
-  text-align: right;
-  margin-top: clamp(56px, 9vh, 120px);
-}
-
-@media (min-width: 1024px) {
-  .livresLinha {
-    /* Ver o `.palco`: é este `auto` que joga LIVRES para o pé do movimento e
-       abre o vão onde as fotografias vivem. */
-    margin-top: auto;
-  }
-}
-
-/* PILHA À DIREITA, e ela é `inline-flex` — não bloco de largura cheia. Disto
-   depende a seção não ganhar barra de rolagem horizontal.
-
-   O passeio de LIVRES é `translate` em PORCENTAGEM, e porcentagem de translate
-   mede a caixa DO PRÓPRIO ELEMENTO. Num bloco de largura cheia (1184px na
-   coluna de um monitor de 1440), os +6% do fim do curso seriam 71px para fora
-   da margem direita. Encolhida à largura da palavra (~1050px com o respiro),
-   a mesma fração dá ~63px — e o `padding-right` de 4vw (~58px) é a folga que
-   recebe quase todo esse avanço; o que sobra cai dentro do respiro lateral da
-   página, que tem 48px. Trocar o `inline-flex` por `block` reabre o bug.
-
-   COLUNA, E NÃO LINHA: o microtexto fica ACIMA da palavra, não ao lado. Ao lado
-   ele somaria a própria largura à da palavra dentro da mesma caixa, e é essa
-   soma que estourava a coluna — medido em 768px, 39px para fora. Acima, a caixa
-   mede o que a palavra mede. */
-.livresDeriva {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding-right: 4vw;
-  animation: livresPasseia linear both;
-  animation-timeline: view();
-  animation-range: cover;
-}
-
-/* O passeio também passa pelo `--amp`, senão ele seria a única amplitude da
-   seção que NÃO encolhe fora do desktop — e é a mais perigosa das amplitudes,
-   porque é a única horizontal. */
-@keyframes livresPasseia {
-  from {
-    translate: calc(-8% * var(--amp)) 0;
-  }
-
-  to {
-    translate: calc(6% * var(--amp)) 0;
-  }
-}
-
-.livresEntrada {
-  /* `block` pela mesma razão do `.radicalEntrada`: ele carrega o estado de
-     entrada e não pode ser caixa em linha com filho em bloco. */
-  display: block;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-
-/* MESMO CORPO DE RADICAL, MEDIDA DIFERENTE — e é aí que está a hierarquia.
-   "LIVRES" tem seis letras contra sete, é itálica e mede 2,43× o corpo contra
-   2,87×; no mesmo tamanho de tipo, ela ocupa ~85% do que RADICAL ocupa. Não é
-   ajuste: é o resultado honesto de duas palavras diferentes no mesmo corpo, e é
-   o que impede as duas de lerem como um par simétrico. */
-.livres {
-  display: block;
-  font-style: italic;
-  font-size: calc((100cqw + 2vw) * 0.97 / 2.87);
-  line-height: 0.85;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: var(--color-grape);
-  white-space: nowrap;
-}
-
-/* ── OS MICROTEXTOS ────────────────────────────────────────────────────────
-   "contra o pecado" e "da religiosidade" são ANOTAÇÕES DE MARGEM, não
-   subtítulos, e a diferença está inteira no posicionamento.
-
-   NENHUM DOS DOIS ESTÁ EM `absolute` COM COORDENADA PERCENTUAL. Eles andam no
-   fluxo, presos à palavra a que pertencem, e é o que garante que continuem
-   "perto do final" dela em qualquer largura de tela — uma coordenada fixa
-   descolaria da ponta da palavra assim que o corpo do tipo mudasse.
-
-   A ASSIMETRIA ENTRE OS DOIS É O DESENHO: o de RADICAL fica ABAIXO da palavra,
-   indentado até perto de onde ela acaba; o de LIVRES fica ACIMA, encostado à
-   direita. Um em cada lado da composição e em relações verticais opostas —
-   simétricos, os dois voltariam a ler como legenda. */
-.micro {
-  flex: none;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-grape);
-  white-space: nowrap;
-
-  /* ⚠️ O HALO DE OSSO É CONTRASTE MEDIDO, NÃO BRILHO DECORATIVO, e ele entrou
-     junto com o pano fotográfico de 17/08/2026.
-
-     A conta: o roxo da casa é rgb(109,40,217), luminância 0,076. Para os 4,5:1
-     que a WCAG pede num texto de 11px, o que passa ATRÁS dele precisa de
-     luminância ≥ 0,52 — ou seja, precisa ser claro. Sobre o osso da seção
-     (0,93) sobra folga: dá 7,4:1. Sobre a fotografia do pano, medido no lugar
-     em que o "CONTRA O PECADO" cai (o rosto do bebê e o pão do hambúrguer), o
-     pior pixel dava 1,00:1 — o texto simplesmente sumia.
-
-     Mover o texto não era opção (a posição é do comp) e baixar o pano inteiro
-     por causa de uma linha de 11px seria desmanchar a peça para consertar a
-     legenda. O halo resolve LOCALMENTE: três sombras de osso empilhadas
-     constroem uma plaquinha macia em volta das letras, do tamanho exato delas.
-     Sobre fundo claro ele é invisível (osso sobre osso), então não precisa de
-     media query nem de exceção para o celular.
-
-     Se o pano sair um dia, esta regra pode sair junto — mas confira antes se
-     nenhum microtexto ficou sobre foto. */
-  text-shadow:
-    0 0 4px var(--color-bone),
-    0 0 10px var(--color-bone),
-    0 1px 3px var(--color-bone);
-}
-
-/* ABAIXO de LIVRES, encostado à direita — e ele já esteve ACIMA. Mudou porque
-   acima ele caía em cima da foto de fundo, e microtexto de 11px sobre
-   fotografia não se lê. Embaixo, ele fecha o palco sobre o osso limpo e ainda
-   resolve o vazio que sobrava no pé do movimento.
-
-   Continua assimétrico em relação ao par: o de RADICAL está indentado no meio
-   da coluna, este está rente à direita. */
-.microLivres {
-  order: 2;
-  margin-top: 1.4em;
-  margin-right: 6%;
-}
-
-/* ── AS FOTOS DO PALCO ─────────────────────────────────────────────────────
-   No celular elas estão no fluxo; a partir de 1024px sobem para `absolute` e a
-   composição em camadas se monta. */
-
-.palcoFoto {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  box-shadow: 0 20px 50px rgba(20, 10, 30, 0.08);
-}
-
-/* Celular: "colagem vira composição vertical com 2 fotos sobrepostas" — a de
-   fundo em largura cheia e a média A cavalgando o pé dela, deslocada para a
-   direita. As outras duas somem, e somem por `display: none` de propósito: uma
-   imagem `lazy` que nunca chega a intersectar a janela não é baixada, então o
-   celular não paga por camadas que não vai ver. */
-/* NO CELULAR ELA NÃO É "CAMADA 0" — É UMA FOTO. Não há composição em
-   profundidade num palmo de tela: são duas fotografias empilhadas, e desfocar a
-   de baixo ali não cria fundo, cria a impressão de arquivo corrompido. O
-   desfoque e a transparência só entram a partir de 1024px, onde existem seis
-   camadas para uma delas recuar.
-
-   `--op` EXISTE PARA A COREOGRAFIA NÃO PRECISAR SABER DISSO. A entrada anima a
-   opacidade de 0 até o repouso, e o repouso muda com a largura da tela; sem a
-   variável, a regra de entrada teria de ser reescrita dentro de cada media
-   query — inclusive dentro da de menos-movimento, que é onde esse tipo de
-   duplicata costuma ficar para trás e travar a foto num valor errado. */
-.fundo {
-  --op: 1;
-  margin-top: clamp(28px, 5vh, 48px);
-}
-
-.mediaA {
-  width: 62%;
-  margin-left: auto;
-  margin-top: -14%;
-  rotate: -2deg;
-}
-
-.mediaB,
-.pequena {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .palcoFoto {
-    position: absolute;
-    margin: 0;
-  }
-
-  /* Camada 0 — sangra para fora da margem direita. Sangria é permitida (e
-     desejada) porque o `overflow-x: clip` da seção a recorta sem gerar
-     rolagem. */
-  .fundo {
-    /* O desenho pedia `blur(1.5px)`, e 1,5px NUMA FOTO DE 600px DE LARGURA é
-       invisível — medido na tela: a camada 0 saía tão nítida quanto as médias,
-       e sem diferença de foco a composição perde a profundidade que as seis
-       camadas existem para construir. Com 5px e 72% ela finalmente RECUA. */
-    --op: 0.72;
-    filter: blur(5px);
-    top: 31%;
-    right: -12vw;
-    width: 54%;
-    z-index: 1;
-    animation: fundoDeriva linear both;
-    animation-timeline: view();
-    animation-range: cover;
-  }
-
-  /* Camada 2 — as duas médias, nítidas, giradas para lados opostos. Nenhuma
-     das duas se alinha com nada: nem entre si, nem com as bordas. */
-  .mediaA {
-    top: 40%;
-    left: 1%;
-    width: 29%;
-    margin: 0;
-    z-index: 20;
-    rotate: -2deg;
-    animation: mediaADeriva linear both;
-    animation-timeline: view();
-    animation-range: cover;
-  }
-
-  .mediaB {
-    display: block;
-    top: 58%;
-    right: 7%;
-    width: 20%;
-    z-index: 20;
-    rotate: 2deg;
-    animation: mediaBDeriva linear both;
-    animation-timeline: view();
-    animation-range: cover;
-  }
-
-  /* Camada 4 — a única foto acima de LIVRES. Ela cobre um pedaço das letras e
-     deixa o resto da palavra respirando em volta, que é o encaixe pedido: a
-     foto não pode engolir a palavra nem ficar ao lado dela. */
-  .pequena {
-    display: block;
-    top: 76%;
-    left: 12%;
-    width: 13%;
-    z-index: 40;
-    rotate: -1.5deg;
-    animation: pequenaDeriva linear both;
-    animation-timeline: view();
-    animation-range: cover;
-  }
-}
-
-@keyframes fundoDeriva {
-  from {
-    translate: 0 0;
-    scale: 1;
-  }
-
-  to {
-    translate: 0 calc(-70px * var(--amp));
-    scale: 1.05;
-  }
-}
-
-@keyframes mediaADeriva {
-  from {
-    translate: 0 0;
-  }
-
-  to {
-    translate: 0 calc(-50px * var(--amp));
-  }
-}
-
-@keyframes mediaBDeriva {
-  from {
-    translate: 0 0;
-  }
-
-  to {
-    translate: 0 calc(35px * var(--amp));
-  }
-}
-
-@keyframes pequenaDeriva {
-  from {
-    translate: 0 0;
-  }
-
-  to {
-    translate: calc(-25px * var(--amp)) calc(-20px * var(--amp));
-  }
-}
-
-/* ── O PANO DE FUNDO ───────────────────────────────────────────────────────
-   A fotografia de tela cheia sobre a qual o movimento inteiro se apoia. Atrás
-   de todas as camadas, inclusive da camada 0 — que continua se chamando
-   `fundo` porque é o fundo da COMPOSIÇÃO; o pano é o chão da SEÇÃO.
-
-   ── A LANTERNA ────────────────────────────────────────────────────────────
-
-   O pano fica DESFOCADO E LAVADO — a fotografia está lá, mas escondida. Sobre
-   ele, um círculo de 340px que persegue o cursor revela a MESMA foto nítida e
-   quase opaca. O gesto é o de uma lanterna passando por uma parede escura, e é
-   a razão de existirem dois `<img>` com o mesmo `src`.
-
-   AS TRÊS COISAS QUE FAZEM ISSO LER COMO LANTERNA, e nenhuma delas sozinha
-   basta:
-
-     · o CONTRASTE DE FOCO — 22px de desfoque contra nitidez cheia
-     · o CONTRASTE DE PESO — 50% de opacidade contra 90%
-     · a BORDA CURTA do feixe — opaco até 58% do raio, apagado em 85%
-
-   Sem o peso, o círculo "aproxima" em vez de acender. Sem a borda curta, vira
-   uma mancha levemente mais nítida. Já esteve nos três valores fracos (7px,
-   as duas camadas em 55%, queda longa de 0 a 70%) e o efeito não se lia.
-
-   ⚠️ ISTO REAPROVEITOU INTEIRO o mecanismo que revelava uma OUTRA fotografia
-   sob o cursor, a 6% de opacidade sobre o osso. A perseguição em
-   `requestAnimationFrame` é a mesma e o `RadicalLivres.tsx` continua sendo quem
-   escreve `--mx`/`--my`. O que mudou é o que o círculo faz: antes trazia
-   conteúdo novo, agora traz à tona o que já está no fundo.
-
-   SEM CURSOR, SEM LANTERNA: em ponteiro grosso, tela estreita ou pedido de
-   menos movimento o atributo `data-cursor` nunca entra, e a camada fica
-   invisível. O repouso da composição é o pano desfocado — que é uma peça
-   completa, não uma versão degradada à espera de mouse. */
-.pano,
-.lanterna {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-}
-
-.pano {
-  /* 50% E 22px DE DESFOQUE: a foto tem de estar ESCONDIDA, não discreta. É o
-     que dá à lanterna o que revelar — com o pano legível, o círculo não acende
-     nada, só aproxima. */
-  opacity: 0.5;
-  filter: blur(22px);
-  /* ⚠️ A ESCALA ACOMPANHA O DESFOQUE, e não é enfeite. O `blur` puxa
-     transparência de fora para dentro, então a foto encolhe pelas bordas na
-     medida do raio: 22px de desfoque comem ~44px de cada lado, o que num palco
-     de ~1180px dá 3,7%. A escala precisa cobrir isso com folga, senão aparece
-     um halo de osso em volta do palco inteiro. Mexeu no desfoque, refaz esta
-     conta. */
-  scale: 1.06;
-}
-
-/* A LANTERNA em repouso não existe: sem cursor confirmado, o atributo nunca
-   entra e ela fica invisível. O repouso da composição é o pano desfocado — uma
-   peça completa, não uma versão degradada à espera de mouse. */
-.lanterna {
-  opacity: 0;
-}
-
-/* A partir do momento em que o componente confirma cursor fino, tela larga e
-   nenhum pedido de menos movimento, o atributo entra e a máscara assume.
-
-   O CÍRCULO É DE 340px e a borda dele é CURTA de propósito: opaco até 58% do
-   raio, apagado em 85%. Uma queda longa (a primeira versão ia de 0 a 70% num
-   degradê só) lê como "área levemente mais nítida"; uma queda curta lê como
-   FEIXE, que é o que uma lanterna faz. O que sobra de maciez é o bastante para
-   a borda não serrilhar.
-
-   90% CONTRA OS 50% DO PANO: a lanterna é mais presente que o fundo, e é essa
-   diferença de peso — não só a de foco — que faz o círculo acender. Ver o
-   `RadicalLivres.tsx` para o que acontecia quando as duas eram iguais. */
-[data-cursor="ativo"] .lanterna {
-  opacity: 0.9;
-  -webkit-mask-image: radial-gradient(circle 340px at var(--mx, 50%) var(--my, 50%),
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 58%,
-      rgba(0, 0, 0, 0) 85%);
-  mask-image: radial-gradient(circle 340px at var(--mx, 50%) var(--my, 50%),
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 58%,
-      rgba(0, 0, 0, 0) 85%);
-}
-
-/* ── A CODA: a prosa das duas metades do nome ──────────────────────────────
-   Os dois parágrafos que explicam "radical" e "livres" NÃO estavam no desenho
-   do movimento 2, e não entraram nele: a composição é tipografia, fotografia e
-   dois microtextos, e enfiar prosa lá dentro desmancharia o silêncio que ela
-   depende.
-
-   Eles ficaram aqui embaixo, num par discreto, porque o texto é REAL e é o
-   único lugar do site onde o nome do movimento é explicado. O comentário
-   original dizia, sobre estas duas direções: "perder isso é perder o nome
-   inteiro". Publicar a peça sem elas seria trocar um argumento por um cartaz.
-
-   Se a rede decidir que a composição basta, apagar este bloco não mexe em mais
-   nada — ele é irmão do palco, não filho dele. */
-.coda {
-  margin-top: clamp(64px, 10vh, 120px);
-  display: grid;
-  gap: clamp(32px, 4vw, 64px);
-}
-
-@media (min-width: 768px) {
-  .coda {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.codaRotulo {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-grape);
-}
-
-.codaTexto {
-  margin-top: 14px;
-  max-width: 38ch;
-  line-height: 1.7;
-  color: color-mix(in srgb, var(--color-foreground) 75%, transparent);
-}
+/* ═══ O MOVIMENTO 2 SAIU DAQUI ═════════════════════════════════════════════
+   Moravam neste ponto do arquivo o palco do letreiro RADICAL LIVRES e tudo o
+   que ele precisava: `.palco`, `.radical*`, `.livres*`, `.micro*`,
+   `.palcoFoto`, `.fundo`, `.mediaA`, `.mediaB`, `.pequena`, `.pano`,
+   `.lanterna` e a `.coda`, mais os keyframes `radicalCresce`, `livresPasseia`,
+   `fundoDeriva`, `mediaADeriva`, `mediaBDeriva` e `pequenaDeriva`. Cerca de
+   700 linhas, das quais a maior parte era comentário.
+
+   Saíram junto com o `RadicalLivres.tsx` no redesenho de 21/08/2026, e o
+   sucessor está em `components/radicais/` — a seção 03 da página, que continua
+   trabalhando as duas palavras em escala de cartaz mas as ATRAVESSA uma na
+   outra durante a rolagem, em vez de mostrar as duas no mesmo palco.
+
+   O QUE SOBREVIVEU DA PEÇA ANTIGA, e sobreviveu de propósito: a fotografia
+   dentro das letras (mesmo arquivo, mesmo véu ameixa — decisão da rede em
+   17/08/2026), o contraste narrativo entre uma palavra romana e preta e outra
+   itálica e roxa, e a prosa dos dois blocos, palavra por palavra.
+
+   O QUE MORREU JUNTO: a máscara de lanterna que seguia o cursor (efeito sem
+   alternativa em toque, invisível para metade das visitas) e o pano
+   fotográfico de tela cheia. Antes de tentar trazer qualquer um dos dois de
+   volta, ler o código original no histórico do git — em especial a perseguição
+   em `requestAnimationFrame`, que escrevia direto em duas variáveis CSS
+   justamente para não pôr a posição do cursor no estado do React.
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ═══ MOVIMENTO 3 — FRASE DE IMPACTO ═══════════════════════════════════════
    Muito ar em cima e embaixo, e a frase deslocada para o centro-direita — nunca
    centralizada de forma simétrica. O deslocamento é `margin-left` em `vw` e
-   colapsa sozinho no celular, sem media query: `clamp` com piso zero. */
+   colapsa sozinho no celular, sem media query: `clamp` com piso zero.
+
+   ⚠️ O RESPIRO DE CIMA ENCOLHEU EM 21/08/2026 — era o mesmo do de baixo
+   (120–200px) e passou a ser um terço disso. A razão é o que está ACIMA da
+   frase hoje: antes vinha o palco de RADICAL LIVRES, uma peça de tela cheia,
+   e era preciso todo aquele ar para a frase não ler como legenda dele. Agora
+   vem a etiqueta "Uma geração com propósito" da seção 05, a três linhas de
+   distância — e 200px entre uma etiqueta e o título que ela anuncia desmancha
+   o par. O respiro grande de cima passou a ser o `padding` da própria seção 05.
+
+   O DE BAIXO NÃO MUDOU: embaixo da frase continua vindo outro movimento (hoje
+   a pauta dos cinco conceitos), e o ar entre os dois é o mesmo de sempre. */
 .impacto {
-  padding-top: clamp(120px, 15vh, 200px);
+  padding-top: clamp(40px, 5vh, 72px);
   padding-bottom: clamp(120px, 15vh, 200px);
 }
 
@@ -1192,10 +621,13 @@
   max-width: 100%;
 }
 
+/* `-0.02em` e não o `-0.012em` da serifa que rodava aqui: é o valor do
+   `.font-display` do `globals.css`, o mesmo do site inteiro. Passou por
+   `-0.025em` enquanto a manchete foi Poppins. */
 .impactoFrase {
   font-size: clamp(40px, 6vw, 96px);
   line-height: 1.05;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.02em;
   color: var(--color-foreground);
 }
 
@@ -1475,8 +907,21 @@
   color: var(--color-foreground);
 }
 
+/* ⚠️ ERA ITÁLICO, e o itálico ali não era estilo: era o que dizia, junto das
+   aspas e do `<blockquote>`, que aquelas são as palavras de OUTRA pessoa. A
+   diferença é de PROCEDÊNCIA — o propósito é citação literal do pr. Naor
+   Pedroza, de 2000, e a missão e a visão não são.
+
+   Ele saiu quando a manchete deixou de ter itálico (ver `.display`). O QUE CARREGA O RECADO
+   AGORA são as aspas tipográficas, o `<blockquote>` e a assinatura logo
+   abaixo — os três já faziam a maior parte do trabalho, e os dois últimos
+   continuam de pé para quem escuta a página, que é onde o itálico nunca ajudou
+   ninguém. O que se perde é o sinal para quem varre a página com os olhos.
+
+   A tinta um fio mais clara é o que sobrou de diferença visual entre a citação
+   e os outros dois blocos da régua. */
 .blocoCitacao {
-  font-style: italic;
+  color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
 }
 
 .blocoFonte {
@@ -1502,124 +947,21 @@
    primeira delas é o armar: o elemento nasce visível (sem atributo), o script
    monta, o atributo "armada" entra e o elemento ANIMA ATÉ SUMIR — com os
    mesmos atrasos escritos abaixo. Medido no navegador meio segundo depois da
-   montagem: LIVRES em opacidade 0,90 caminhando para 0, a foto de fundo em
-   0,07, e os microtextos ainda intactos porque o atraso de 1250ms deles nem
-   tinha começado. Quem carregasse a página já rolado até aqui veria a
-   composição inteira se apagar antes de entrar.
+   montagem, na época em que esta seção tinha quatro movimentos: as peças em
+   opacidade 0,90 caminhando para 0. Quem carregasse a página já rolado até
+   aqui veria a composição inteira se apagar antes de entrar.
 
    Com a `transition` só no estado final, o armar é INSTANTÂNEO (nenhuma
    transição declarada no destino "armada") e apenas a entrada anima. É o mesmo
    truque que evita o "flash de animação na montagem" em qualquer componente
    que nasça escondido por classe.
 
-   AS DUAS PALAVRAS ENTRAM DE MANEIRAS DIFERENTES DE PROPÓSITO. RADICAL é
-   REVELADA, de baixo para cima, por um recorte que abre — parece impressa,
-   como se a tinta estivesse subindo no papel. LIVRES CHEGA, deslizando da
-   direita com uma curva que freia tarde (a `expo.out` do briefing, aqui em
-   bézier). Se as duas fizessem a mesma coisa, seriam uma palavra em duas
-   linhas; fazendo coisas diferentes, elas se ENCONTRAM no meio do palco, que é
-   o que a peça está contando.
-
-   Os números conferidos na tela, do gatilho em diante: RADICAL abre o recorte
-   de 100% a 12,6% em 120ms e fecha em 900ms; a foto de fundo só começa a
-   acender depois dos 350ms (0,02 em 120ms, 0,51 em 400ms); LIVRES fica parada
-   até os 800ms e chega em ~1,8s. */
-
-/* t = 0 — RADICAL revela de baixo para cima. */
-[data-cena="armada"] .radicalEntrada {
-  clip-path: inset(100% 0 0 0);
-  transform: translateY(40px);
-}
-
-[data-cena="ativa"] .radicalEntrada {
-  clip-path: inset(0 0 0 0);
-  transform: translateY(0);
-  transition:
-    clip-path 900ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* t = 350ms — a foto de fundo cresce para o lugar e acende até a opacidade de
-   repouso, que muda com a largura da tela (ver o `--op` em `.fundo`). */
-[data-cena="armada"] .fundo {
-  opacity: 0;
-  scale: 1.08;
-}
-
-[data-cena="ativa"] .fundo {
-  opacity: var(--op);
-  scale: 1;
-  transition:
-    opacity 1100ms cubic-bezier(0.22, 1, 0.36, 1) 350ms,
-    scale 1100ms cubic-bezier(0.22, 1, 0.36, 1) 350ms;
-}
-
-/* t = 550ms e 670ms — as duas médias em stagger, por recorte lateral. */
-[data-cena="armada"] .mediaA,
-[data-cena="armada"] .mediaB {
-  clip-path: inset(0 100% 0 0);
-  transform: translateY(30px);
-}
-
-[data-cena="ativa"] .mediaA,
-[data-cena="ativa"] .mediaB {
-  clip-path: inset(0 0 0 0);
-  transform: translateY(0);
-  transition:
-    clip-path 800ms cubic-bezier(0.16, 1, 0.3, 1) 550ms,
-    transform 800ms cubic-bezier(0.16, 1, 0.3, 1) 550ms;
-}
-
-[data-cena="ativa"] .mediaB {
-  transition-delay: 670ms;
-}
-
-/* t = 790ms — a foto pequena entra junto da última média: ela é camada 4, mas
-   coreograficamente pertence ao mesmo gesto. */
-[data-cena="armada"] .pequena {
-  opacity: 0;
-  transform: translateY(24px);
-}
-
-[data-cena="ativa"] .pequena {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 800ms cubic-bezier(0.16, 1, 0.3, 1) 790ms,
-    transform 800ms cubic-bezier(0.16, 1, 0.3, 1) 790ms;
-}
-
-/* t = 800ms — LIVRES chega da direita. */
-[data-cena="armada"] .livresEntrada {
-  opacity: 0;
-  transform: translateX(120px);
-}
-
-[data-cena="ativa"] .livresEntrada {
-  opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1) 800ms,
-    transform 1000ms cubic-bezier(0.19, 1, 0.22, 1) 800ms;
-}
-
-/* t = 1250ms e 1350ms — os microtextos, por último e quase de leve. */
-[data-cena="armada"] .micro {
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-[data-cena="ativa"] .micro {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 500ms ease-out 1250ms,
-    transform 500ms ease-out 1250ms;
-}
-
-[data-cena="ativa"] .microLivres {
-  transition-delay: 1350ms;
-}
+   ⚠️ SOBROU UM GATILHO SÓ NESTE ARQUIVO, o da frase de impacto. Os do palco de
+   RADICAL LIVRES saíram com o movimento 2 em 21/08/2026 (ver a lápide lá em
+   cima). A frase de impacto continua sendo servida por este arquivo mesmo
+   tendo MUDADO DE SEÇÃO na página — hoje ela abre a "Uma geração com
+   propósito", que é a seção 05 e mora em `components/radicais/`. O componente
+   não mudou; o lugar dele na narrativa, sim. */
 
 /* Movimento 3 — revelação linha a linha, com 150ms entre elas. */
 [data-cena="armada"] .impactoLinha,
@@ -1662,12 +1004,6 @@
      decorativa parada é movimento a menos, não um buraco — não há conteúdo
      dentro dela. */
   .forma,
-  .radicalDeriva,
-  .livresDeriva,
-  .fundo,
-  .mediaA,
-  .mediaB,
-  .pequena,
   /* Os três blocos da régua estão nesta lista e NÃO na dos gatilhos, e é por
      isso que trocá-los do `<Reveal>` para a linha do tempo de rolagem não
      violou o contrato do arquivo ("entrada que não dispara é conteúdo que
@@ -1693,48 +1029,23 @@
   .carta2,
   .carta3,
   .forma,
-  .radicalDeriva,
-  .livresDeriva,
-  .fundo,
-  .mediaA,
-  .mediaB,
-  .pequena,
   .bloco1,
   .bloco2,
   .bloco3 {
     animation: none;
   }
 
-  [data-cena="armada"] .radicalEntrada,
-  [data-cena="armada"] .mediaA,
-  [data-cena="armada"] .mediaB,
   [data-cena="armada"] .impactoLinha,
-  [data-cena="armada"] .impactoFecho,
-  [data-cena="armada"] .fundo,
-  [data-cena="armada"] .pequena,
-  [data-cena="armada"] .livresEntrada,
-  [data-cena="armada"] .micro {
+  [data-cena="armada"] .impactoFecho {
     clip-path: none;
     transform: none;
     scale: 1;
     opacity: 0;
   }
 
-  [data-cena="armada"] .fundo {
-    opacity: 0;
-  }
-
-  [data-cena="ativa"] .radicalEntrada,
-  [data-cena="ativa"] .mediaA,
-  [data-cena="ativa"] .mediaB,
   [data-cena="ativa"] .impactoLinha,
   [data-cena="ativa"] .impactoLinha2,
-  [data-cena="ativa"] .impactoFecho,
-  [data-cena="ativa"] .pequena,
-  [data-cena="ativa"] .livresEntrada,
-  [data-cena="ativa"] .micro,
-  [data-cena="ativa"] .microLivres,
-  [data-cena="ativa"] .fundo {
+  [data-cena="ativa"] .impactoFecho {
     clip-path: none;
     transform: none;
     scale: 1;
@@ -1744,18 +1055,8 @@
     transition-delay: 0ms;
   }
 
-  [data-cena="ativa"] .radicalEntrada,
-  [data-cena="ativa"] .mediaA,
-  [data-cena="ativa"] .mediaB,
   [data-cena="ativa"] .impactoLinha,
-  [data-cena="ativa"] .impactoFecho,
-  [data-cena="ativa"] .pequena,
-  [data-cena="ativa"] .livresEntrada,
-  [data-cena="ativa"] .micro {
+  [data-cena="ativa"] .impactoFecho {
     opacity: 1;
-  }
-
-  [data-cena="ativa"] .fundo {
-    opacity: var(--op);
   }
 }

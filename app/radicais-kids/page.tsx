@@ -34,12 +34,14 @@ export const metadata: Metadata = {
  * filete e chip, nunca em texto corrido, nunca em gradiente.
  *
  * TIPOGRAFIA. Nenhum título usa a fonte da marca Kids. A voz é a mesma das
- * outras páginas internas (Poppins nas manchetes, pelo token, Instrument Sans
- * no texto) e o infantil entra pela cor, pelo personagem e pelo logo — não pela
- * letra. É isso que faz a página parecer do mesmo site sem deixar de ser do
- * ministério.
+ * outras páginas internas — Manrope na manchete e no texto, pelos tokens
+ * `--font-display` e `--font-body` — e o infantil entra pela cor, pelo
+ * personagem e pelo logo, não pela letra. É isso que faz a página parecer do
+ * mesmo site sem deixar de ser do ministério. (Até 22/08/2026 a manchete era
+ * Poppins, por uma classe `manchetes-poppins` no <div> raiz; a classe saiu
+ * quando a Manrope virou a família única do site.)
  *
- * ⚠️ A Poppins é carregada só em romano, então esta página não tem itálico
+ * ⚠️ A Manrope é uma família só romana, então esta página continua sem itálico
  * nenhum: o versículo da etapa 02 era italic e virou romano entre aspas. Um
  * `italic` que reapareça aqui dentro cai no oblíquo sintético do navegador.
  *
@@ -76,11 +78,7 @@ const COR = {
 
 export default function RadicaisKids() {
   return (
-    /* `manchetes-poppins` (globals.css) troca o token `--font-display` só
-       nesta subárvore: manchetes, subtítulos e numerais saem da Newsreader e
-       viram Poppins, sem tocar em Header, Footer e nas outras páginas. O corpo
-       de texto e os eyebrows continuam em Instrument Sans. */
-    <div className="manchetes-poppins bg-bone text-foreground">
+    <div className="bg-bone text-foreground">
       {/* ═══ 01 · HERO ══════════════════════════════════════════════════════
           Sangra por baixo do header (a rota entrou em `OVERLAY_ROUTES`). É o
           que dá o primeiro segundo de "isto é uma seção do site" antes de
@@ -131,7 +129,7 @@ export default function RadicaisKids() {
                   </MagneticButton>
                   <Link
                     href="/celulas"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
                   >
                     Ver as células
                   </Link>
@@ -182,7 +180,7 @@ export default function RadicaisKids() {
       <section className="relative overflow-hidden bg-bone py-16 sm:py-20 lg:py-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
               O ministério pelo mundo
             </span>
           </Reveal>
@@ -245,7 +243,7 @@ export default function RadicaisKids() {
       <section className="overflow-hidden bg-sand py-20 sm:py-24 lg:py-28">
         <div className="container mx-auto grid items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:px-12">
           <Reveal variant="left">
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
               Radicais Kids
             </span>
             <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
@@ -322,7 +320,7 @@ export default function RadicaisKids() {
 
                 {/* Os chips carregam o dado concreto do bloco: as salas por
                     idade no culto, os dois formatos na célula. */}
-                <p className="mt-7 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+                <p className="mt-7 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   {bloco.detalhesRotulo}
                 </p>
                 <ul className="mt-3 flex flex-wrap gap-2">
@@ -341,7 +339,7 @@ export default function RadicaisKids() {
                 {bloco.href && bloco.hrefRotulo && (
                   <Link
                     href={bloco.href}
-                    className="group mt-7 inline-flex items-center gap-2 text-sm font-medium text-grape transition-colors hover:text-plum"
+                    className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-grape transition-colors hover:text-plum"
                   >
                     {bloco.hrefRotulo}
                     <ArrowRight
@@ -367,7 +365,7 @@ export default function RadicaisKids() {
       <section className="bg-plum py-16 sm:py-20">
         <div className="container mx-auto grid gap-10 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16 lg:px-12">
           <Reveal>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/55">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">
               Como trabalhamos
             </span>
             <h2 className="font-display mt-5 text-[clamp(2rem,4.2vw,3rem)] font-medium leading-[1.05] text-white">
@@ -516,7 +514,7 @@ export default function RadicaisKids() {
       <section className="relative overflow-hidden bg-bone py-24 sm:py-28 lg:py-32">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
               Treinamento na prática
             </span>
             <h2 className="font-display mt-5 max-w-xl text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
@@ -542,7 +540,7 @@ export default function RadicaisKids() {
                     <h3 className="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium leading-tight text-foreground">
                       {p.nome}
                     </h3>
-                    <p className="mt-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                    <p className="mt-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                       <span
                         aria-hidden
                         className={`h-1.5 w-1.5 shrink-0 rounded-full ${COR[p.cor].fundo}`}
@@ -622,7 +620,7 @@ export default function RadicaisKids() {
               </MagneticButton>
               <Link
                 href="/celulas"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
               >
                 Ver as células
               </Link>

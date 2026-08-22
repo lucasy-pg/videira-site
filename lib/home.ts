@@ -37,6 +37,7 @@
 
 export type { Foto } from "./foto";
 import type { Foto } from "./foto";
+import { ENCARGO } from "./sobre";
 
 /**
  * Uma manchete com o trecho que vai em roxo.
@@ -233,9 +234,9 @@ export const MINISTERIOS = {
        * maior — a escolha era essa ou uma foto levemente borrada.
        */
       foto: {
-        src: "/radicais/turma-04.jpg",
-        alvo: "public/radicais/turma-04.jpg",
-        alt: "Turma de jovens dos Radicais Livres reunida à noite, sorrindo para a foto sob luzinhas roxas",
+        src: "/radicais/quadra-poses.jpg",
+        alvo: "public/radicais/quadra-poses.jpg",
+        alt: "Turma de jovens dos Radicais Livres reunida em poses descontraídas em quadra poliesportiva",
       } satisfies Foto,
     },
     {
@@ -319,17 +320,26 @@ export const TRILHO = {
 export const VISAO = {
   eyebrow: "Nossa visão",
   /**
-   * As quatro palavras SÃO a manchete desta seção — não há `<h2>` separado
-   * acima delas, do mesmo jeito que a frase da visão do /sobre é a própria
-   * manchete de lá.
+   * A FRASE É A DO /sobre, E VEM DE LÁ POR IMPORTAÇÃO — não há uma segunda
+   * cópia dela neste arquivo de propósito. É a frase oficial da igreja, com o
+   * mesmo ⚠️ de não reescrever que está em `lib/sobre.ts`; duas cópias do
+   * mesmo encargo em dois arquivos de conteúdo é uma delas envelhecendo
+   * sozinha na primeira vez que alguém ajustar uma vírgula.
    *
-   * O DESTAQUE ROXO CAI NA ÚLTIMA, e a escolha não é arbitrária: "Enviar" é o
-   * único dos quatro verbos que aponta para fora da igreja, e é onde a visão
-   * termina. Pintar um dos três do meio seria escolher no gosto.
+   * AQUI ANTES ESTAVAM QUATRO PALAVRAS — "Ganhar. Consolidar. Treinar.
+   * Enviar." — numa escada tipográfica, apresentadas como a visão da casa.
+   * Elas saíram porque não são a visão da Videira: esse quarteto é vocabulário
+   * do modelo G12 (Castellanos), que a Videira não segue, e metade do material
+   * sobre células na internet mistura as duas coisas. A visão da Videira é o
+   * encargo, e é ele que a Home passa a dizer.
+   *
+   * SEM `complemento` AGORA. A frase que ficava embaixo ("Fazemos discípulos
+   * para alcançar nossa geração e cumprir o propósito de Deus.") dizia em
+   * prosa o mesmo que o fim do encargo já diz — "conquistando assim nossa
+   * geração para Cristo" —, e esta é a seção de respiro da página. Vale a
+   * mesma decisão do /sobre: depois da frase não vem mais nada.
    */
-  palavras: ["Ganhar.", "Consolidar.", "Treinar.", "Enviar."],
-  complemento:
-    "Fazemos discípulos para alcançar nossa geração e cumprir o propósito de Deus.",
+  encargo: ENCARGO,
 };
 
 /* ─────────────────────────────────────────────────────────────────────────

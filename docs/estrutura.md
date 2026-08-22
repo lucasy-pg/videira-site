@@ -169,6 +169,15 @@ Quando houver quem publique semanalmente, a agenda passa a fazer sentido.
 O que o site afirma e a igreja ainda não confirmou. **Cada linha aqui é um
 risco de credibilidade, não um to-do de conteúdo.**
 
+> ⚠️ **A /radicais-livres foi reestruturada em 21/08/2026** e as seções mudaram
+> de nome e de número. O mapa novo está no cabeçalho de
+> [`app/radicais-livres/page.tsx`](../app/radicais-livres/page.tsx); as linhas
+> abaixo já apontam para a numeração nova. Uma pendência nasceu com o
+> redesenho: **a copy das seções 03, 04, 05, 09 e 13 é estrutural, não
+> definitiva** — o briefing pediu para desenhar a arquitetura primeiro e
+> escrever depois. O que é texto da rede e o que é rascunho está anotado
+> bloco a bloco em [`lib/radicais.ts`](../lib/radicais.ts).
+
 | Pendência | Onde | Situação |
 |---|---|---|
 | E-mail `igrejavideiraindaituba@hotmail.com` | rodapé, /contato | Informado pela igreja. Grafia sem o 2º "a" de Indaiatuba — **testar envio antes do lançamento** |
@@ -176,12 +185,12 @@ risco de credibilidade, não um to-do de conteúdo.**
 | "Juvenis" como quarto público | `lib/cells.ts` só conhece Adultos/Jovens/Kids | A igreja tem quatro; o site tem três |
 | Prosa das seis etapas | /trilho-do-vencedor | Formato e duração são fatos conferidos. **O texto que descreve cada etapa é nosso** e não passou pela liderança |
 | Legenda da foto do Encontro | /trilho-do-vencedor | Afirma que a foto é de um Encontro com Deus — veio do nome do arquivo, não de conferência |
-| Bio de Gustavo e Mariana Pires | /radicais-livres, seção Liderança | **Não é pendência de fato — é conteúdo que falta.** A descrição é opcional desde a especificação da página, e a seção está no ar sem ela: nome, função e foto são conferidos. Um ou dois parágrafos em `liderancaRede.bio` e o bloco aparece |
-| Missão da rede | /radicais-livres, seção Quem somos | Redação nossa. Visão e propósito vêm do encargo do pr. Naor (2000); a missão não tem fonte, e por isso está escrita sem número, meta ou promessa |
-| Células de jovens "todos os sábados" | /radicais-livres | Cadência informada pela liderança em 11/08/2026. `lib/cells.ts` ainda não tem nenhuma célula de jovens listada, então o botão "Ver as células" leva a uma lista onde elas não aparecem |
+| ~~Bio de Gustavo e Mariana Pires~~ | /radicais-livres, seção 08 | **Encerrada em 22/08/2026.** A rede entregou os dois parágrafos e eles estão no ar, em [`lib/radicais.ts`](../lib/radicais.ts). Vieram junto os cargos completos de cada um ("Líder de jovens · Obreiro" e "· Obreira"), no lugar do "Obreiros" compartilhado que a seção usava |
+| Missão da rede | /radicais-livres, seção 05 (Uma geração com propósito) | ⚠️ **Provavelmente já resolvida e a linha não foi baixada.** O [`lib/quem-somos.ts`](../lib/quem-somos.ts) registra que a liderança devolveu a missão oficial no Figma de 17/08/2026 e que é ela que está no ar. Confirmar com a rede e apagar esta linha e a gêmea, mais abaixo |
+| Células de jovens "todos os sábados" | /radicais-livres, seção 06 | Cadência informada pela liderança em 11/08/2026. `lib/cells.ts` ainda não tem nenhuma célula de jovens listada, então o CTA "Encontre uma célula" leva a uma lista onde elas não aparecem. **É a pendência mais visível da página** — o convite da seção 06 é o mais forte da narrativa e desemboca numa lista sem nenhuma célula de jovens |
 | "Começou com 350 jovens" | /radicais-livres | Sem fonte |
-| **Missão** dos Radicais Livres | /radicais-livres | Redação nossa, não passou pela liderança. Visão e propósito, ao lado dela, são citação do pr. Naor — só a missão é nossa. Escrita sem número e sem promessa de propósito, para ser segura enquanto não for conferida |
-| **Liderança** dos Radicais Livres | /radicais-livres | Seção construída e **não publicada**: o array `lideranca` está vazio e a seção inteira não renderiza. Falta nome, função e foto de cada líder |
+| **Missão** dos Radicais Livres | /radicais-livres | Linha gêmea da de cima — as duas descrevem a mesma pendência e as duas provavelmente já venceram. Apagar as duas juntas quando a rede confirmar |
+| **Demais líderes** dos Radicais Livres | /radicais-livres, seção 08 | ~~Grade construída e não publicada~~ — **encerrada em 21/08/2026**. A grade de cards dos outros líderes saiu no redesenho: o briefing a proíbe nesta seção, e ela nunca renderizou uma linha (o array estava vazio desde o primeiro dia). Se a rede mandar os nomes, é decisão de desenho nova, não é reabrir o arquivo |
 | **Células de jovens no sábado** | /radicais-livres | A cadência ("todos os sábados") veio da liderança nesta rodada. Vale conferir junto com as células que faltam em `lib/cells.ts` |
 | Três etapas do Kids | /radicais-kids | Sem fonte |
 | FAQ | /radicais-kids | Sem fonte. O do /radicais-livres foi removido na reestruturação da página |

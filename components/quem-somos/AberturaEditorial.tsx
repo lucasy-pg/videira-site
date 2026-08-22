@@ -41,7 +41,7 @@ export function AberturaEditorial() {
     <div className={s.abertura}>
       <Reveal variant="left">
         <p className={s.etiqueta}>{copy.etiqueta}</p>
-        <h2 className={`${s.serifa} ${s.frase}`}>
+        <h2 className={`${s.display} ${s.frase}`}>
           <span className={s.fraseLinha}>{copy.abertura.primeira}</span>
           <span className={s.fraseVirada}>{copy.abertura.segunda}</span>
         </h2>

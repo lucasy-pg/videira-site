@@ -75,13 +75,13 @@ export function MissaoVisaoProposito() {
 
           {"citacao" in item ? (
             <blockquote>
-              <p className={`${s.serifa} ${s.blocoCorpo} ${s.blocoCitacao}`}>
+              <p className={`${s.display} ${s.blocoCorpo} ${s.blocoCitacao}`}>
                 “{item.citacao}”
               </p>
               <footer className={s.blocoFonte}>— {item.fonte}</footer>
             </blockquote>
           ) : (
-            <p className={`${s.serifa} ${s.blocoCorpo}`}>{item.texto}</p>
+            <p className={`${s.display} ${s.blocoCorpo}`}>{item.texto}</p>
           )}
         </div>
       ))}

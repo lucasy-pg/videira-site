@@ -354,7 +354,7 @@ export function Galeria() {
                 data-abertura-linha
                 className={`${css.aberturaInterno} ${css.aberturaUm}`}
               >
-                Não dá para explicar.
+                Isso é Radicais Livres.
               </span>
             </span>
             <span className={css.aberturaLinha}>
@@ -362,7 +362,7 @@ export function Galeria() {
                 data-abertura-linha
                 className={`${css.aberturaInterno} ${css.aberturaDois}`}
               >
-                Dá para mostrar.
+                Entre na experiência.
               </span>
             </span>
           </h2>

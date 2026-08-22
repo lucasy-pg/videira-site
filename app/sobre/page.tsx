@@ -99,11 +99,12 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  * Duas manchas de cor no mesmo título fariam o olho parar na tinta em vez de
  * na palavra, que é o oposto do que o destaque existe para fazer.
  *
- * TIPOGRAFIA. Aqui a página SAI do padrão do site: as manchetes são Poppins,
- * não Newsreader (o token troca no <div> raiz, ver `.manchetes-poppins` no
- * globals.css). O texto segue em Instrument Sans. Sem itálico em lugar nenhum
- * — o itálico é o gesto da Newsreader, e a geométrica não tem o que fazer com
- * ele.
+ * TIPOGRAFIA. Padrão do site, sem exceção nenhuma: manchete e corpo saem dos
+ * tokens `--font-display` e `--font-body` do `globals.css`, que valem Manrope
+ * nos dois. Esta página já foi a única do site a trocar de fonte no <div>
+ * raiz (Poppins, pela classe `manchetes-poppins`); a classe saiu em 22/08/2026,
+ * quando a Manrope virou a família única. Sem itálico em lugar nenhum — a
+ * Manrope é só romana, e o destaque desta página sempre foi de cor.
  *
  * E POR ISSO AS MANCHETES NÃO USAM `clamp(...vw...)` COMO O RESTO DO SITE.
  * O `container` do Tailwind não cresce liso: ele TRAVA numa largura fixa e só
@@ -115,9 +116,12 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  *
  * Os tamanhos daqui pulam nos MESMOS breakpoints do container, então a razão
  * corpo/medida nunca desanda no meio de um degrau. Foram medidos no navegador,
- * um por um: com a Poppins, toda manchete de seção fecha em duas linhas de
- * 1024 a 1600px, o h1 fecha em três, e nenhuma termina com palavra sozinha.
- * Mexer num tamanho aqui é mexer numa quebra — vale remedir.
+ * um por um: toda manchete de seção fecha em duas linhas de 1024 a 1600px, o
+ * h1 fecha em três, e nenhuma termina com palavra sozinha. As medidas foram
+ * fechadas na Poppins e sobreviveram à Manrope, que é mais ESTREITA no mesmo
+ * corpo — o risco da troca era manchete estourando, e ela ganhou folga. O
+ * `text-wrap: balance` do `.font-display` é a rede de segurança. Mexer num
+ * tamanho aqui é mexer numa quebra — vale remedir.
  *
  * FOTOGRAFIA. Nove fotos, todas reais e da própria Videira, todas pela
  * `<MolduraFoto>` (que desenha o espaço com o caminho do arquivo se ele
@@ -129,10 +133,7 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  */
 export default function Sobre() {
   return (
-    /* `manchetes-poppins` (globals.css) troca o token `--font-display` só nesta
-       subárvore: as manchetes da página saem da Newsreader e vão para a
-       Poppins. É a única página do site assim. */
-    <div className="manchetes-poppins bg-bone text-foreground">
+    <div className="bg-bone text-foreground">
       {/* ═══ 01 · HERO ══════════════════════════════════════════════════════
           UMA COMPOSIÇÃO SÓ, NÃO TRÊS BLOCOS. A capa anterior abria em duas
           colunas (manchete à esquerda, três parágrafos e dois botões à
@@ -171,7 +172,7 @@ export default function Sobre() {
               formulário. */}
           <Reveal>
             <div className="flex items-baseline justify-between gap-6">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                 {HERO.eyebrow}
               </span>
               <span className="hidden items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground sm:flex">
@@ -282,7 +283,7 @@ export default function Sobre() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
             <Reveal variant="left">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                 {HISTORIA.eyebrow}
               </span>
               <h2 className="font-display mt-5 max-w-lg text-[2rem] sm:text-[2.5rem] lg:text-[2.6rem] xl:text-[3.2rem] font-medium leading-[1.05] text-foreground">
@@ -339,7 +340,7 @@ export default function Sobre() {
                       sizes="(min-width: 1024px) 26vw, 44vw"
                       className="aspect-[16/9] w-full rounded-[1.1rem] ring-[6px] ring-sand lg:rounded-[1.25rem] lg:ring-[8px]"
                     />
-                    <figcaption className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+                    <figcaption className="mt-3 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
                       {HISTORIA.legendaArena}
                     </figcaption>
                   </figure>
@@ -461,11 +462,20 @@ export default function Sobre() {
           dela. Explicar em três colunas o que a citação acabou de dizer é
           repetir a seção inteira em corpo menor — e cobrava da seção mais
           vazia da página justamente o vazio que a faz funcionar. O que a
-          página perde em texto, ganha em silêncio em volta da frase. */}
+          página perde em texto, ganha em silêncio em volta da frase.
+
+          ⚠️ ESTA COMPOSIÇÃO TEM UMA CÓPIA: a seção 07 da Home (`app/page.tsx`)
+          mostra a mesma citação, com o mesmo desenho, desde que a versão
+          alinhada à esquerda que ela tinha foi trocada por esta. Mexeu aqui,
+          mexa lá. O TEXTO não é cópia — é o `ENCARGO` deste arquivo mesmo,
+          que a Home importa via `lib/home.ts`. A única divergência de
+          propósito é a entrelinha: a Home usa `leading-[1.55]` em vez do
+          `leading-[64px]` fixo daqui, que no celular abre 64px de entrelinha
+          para uma fonte de 22px. */}
       <section className="bg-bone py-24 sm:py-28 lg:py-36">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <span className="block text-center text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+            <span className="block text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
               {VISAO.eyebrow}
             </span>
           </Reveal>
@@ -517,7 +527,10 @@ export default function Sobre() {
               <h2 className="font-display text-pretty py-8 text-center text-[1.4rem] font-medium leading-[64px] sm:text-[1.9rem] lg:text-[2.3rem] xl:text-[2.6rem] text-foreground sm:py-10">
                 {ENCARGO.map((pedaco, i) =>
                   pedaco.forte ? (
-                    <em key={i} className="text-grape">
+                    /* `not-italic` obrigatório: o `<em>` fica pela semântica,
+                       mas a Manrope é uma família só romana e a inclinação
+                       viria do navegador, não da fonte. O destaque é a cor. */
+                    <em key={i} className="not-italic text-grape">
                       {pedaco.texto}
                     </em>
                   ) : (
@@ -554,7 +567,7 @@ export default function Sobre() {
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
             <Reveal variant="left">
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                 {CELULAS.eyebrow}
               </span>
               <h2 className="font-display mt-5 max-w-md text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.2rem] font-medium leading-[1.05] text-foreground">
@@ -624,7 +637,7 @@ export default function Sobre() {
       <section className="bg-bone py-20 sm:py-24 lg:py-32">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <Reveal>
-            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
               {VALORES.eyebrow}
             </span>
             <h2 className="font-display mt-5 max-w-2xl text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.2rem] font-medium leading-[1.05] text-foreground">
@@ -680,7 +693,7 @@ export default function Sobre() {
           <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
             <Reveal variant="left">
               <div className="lg:sticky lg:top-28">
-                <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                   {CREMOS.eyebrow}
                 </span>
                 {/* Sem `max-w` e um degrau abaixo das outras manchetes de
@@ -717,7 +730,7 @@ export default function Sobre() {
                   <span className="font-display mt-7 block text-[clamp(3rem,4.5vw,4rem)] font-medium leading-[0.9] text-foreground">
                     {String(CREMOS.itens.length).padStart(2, "0")}
                   </span>
-                  <span className="mt-3 block text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+                  <span className="mt-3 block text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                     Fundamentos da nossa fé
                   </span>
                 </div>
@@ -768,7 +781,7 @@ export default function Sobre() {
             </Reveal>
 
             <Reveal variant="right" delay={120}>
-              <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-grape">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-grape">
                 {LIDERANCA.eyebrow}
               </span>
               {/* Mesma história da seção anterior: são DUAS frases inteiras
@@ -792,7 +805,7 @@ export default function Sobre() {
                     <dt className="font-display text-[1.25rem] font-medium leading-tight text-foreground">
                       {pastor.nome}
                     </dt>
-                    <dd className="mt-2 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                    <dd className="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                       {pastor.cargo}
                     </dd>
                   </div>
@@ -885,7 +898,7 @@ export default function Sobre() {
                   </MagneticButton>
                   <Link
                     href="/celulas"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
                   >
                     Encontre uma célula
                   </Link>

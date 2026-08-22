@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -113,44 +112,85 @@ export function CapaRadicais() {
             <span className={s.nomeVirado}>Livres</span>
           </h1>
 
-          {/* A definição do próprio movimento, e é o que a página abaixo
-              destrincha. A antiga dizia "vivendo a fé sem medo e sem religião"
-              — bonito e vazio. */}
+          {/* A DEFINIÇÃO DO PRÓPRIO MOVIMENTO, e é o que a página abaixo
+              destrincha — "contramão do mundo" volta como manchete inteira na
+              seção 04. A frase que estava aqui antes desta dizia "vivendo a fé
+              sem medo e sem religião": bonito e vazio.
+
+              ⚠️ ELA ENCOLHEU NO REDESENHO DE 21/08/2026. Eram duas frases; é
+              uma. A primeira ("A rede de jovens da Igreja Videira em
+              Indaiatuba") dizia o que a etiqueta logo acima e o título da aba
+              já dizem, e o briefing pede aqui "uma frase de apoio curta" —
+              curta sendo o ponto. O que a capa precisa entregar é a promessa,
+              não a ficha técnica. */}
           <p className={s.descricao}>
-            A rede de jovens da Igreja Videira em Indaiatuba. Uma geração que
-            decidiu andar na contramão do mundo.
+            Uma geração que decidiu andar na contramão do mundo.
           </p>
 
-          {/* Três botões, e a hierarquia é deliberada: um sólido (a ação), dois
-              de contorno (os desvios). Três CTAs do mesmo peso não são três
-              caminhos, são nenhum.
+          {/* ⚠️ NENHUM DOS DOIS LEVA À /contato, E ISSO É A DECISÃO DESTE
+              BLOCO. O botão daqui já foi "Quero participar" apontando para lá,
+              e o pedido do Lucas em 22/08/2026 foi direto ao ponto: "não faz
+              sentido mandar para o contato logo de primeira".
 
-              "Ver a galeria" é âncora interna — daí ser um `<a>` cru e não um
-              `<Link>`: o Link do Next existe para trocar de rota, e para um
-              pulo dentro da mesma página ele só acrescentaria trabalho de
-              roteador. */}
+              Ele está certo sobre a narrativa da página. A /contato é onde
+              alguém fala com a igreja — é o passo em que a pessoa se
+              identifica, e pedir isso na primeira dobra é cobrar compromisso de
+              quem ainda não sabe do que se trata. A página inteira foi
+              construída para levar até lá: o convite final (seção 13) é que
+              aponta para a /contato, depois de nove seções explicando quem são
+              os Radicais. Aqui, o pedido certo é menor.
+
+              OS DOIS DESTINOS SÃO OS DOIS JEITOS DE COMEÇAR, e nenhum deles
+              pede nada em troca — nem sequer uma troca de página. Os dois são
+              ÂNCORAS INTERNAS, e é isso que faz a capa parar de ser uma
+              bifurcação e virar um convite a descer:
+
+                · QUEM SOMOS leva à seção 02, logo abaixo. O rótulo do botão é
+                  a etiqueta da seção de destino, palavra por palavra — quem
+                  clica sabe onde chegou porque a primeira coisa que lê ali é o
+                  que estava escrito no botão.
+                · VER A GALERIA é a saída para quem quer VER antes de ler. Numa
+                  página com mais de cem fotografias essa é uma vontade
+                  legítima; o botão existia na capa anterior, saiu no redesenho
+                  e voltou a pedido.
+
+              ⚠️ A /celulas ESTEVE AQUI E SAIU, em 22/08/2026, pelo mesmo
+              raciocínio que tirou a /contato: mandar alguém para outra página
+              antes de a capa ter dito o que é isto é interromper a narrativa no
+              primeiro parágrafo. As células continuam a um clique — na seção
+              06, que existe para vendê-las, e no Header, que está na tela o
+              tempo todo.
+
+              A HIERARQUIA CONTINUA SENDO UMA SÓ: um sólido e um de contorno.
+              Dois botões do mesmo peso não são dois caminhos, são nenhum — e
+              foi por isso que os TRÊS da versão antiga viraram dois, e não
+              três de novo.
+
+              OS DOIS SÃO `<a>` CRUS E NÃO `<Link>`: o Link do Next existe para
+              trocar de rota, e para um pulo dentro da mesma página ele só
+              acrescentaria trabalho de roteador. Os dois destinos têm
+              `scroll-mt` e o `html` da casa tem `scroll-behavior: smooth`,
+              então o pulo é suave sem uma linha de script.
+
+              ⚠️ MEXEU NA CONTAGEM DE BOTÕES, MEXEU NO `--assenta`. No celular
+              eles empilham, então cada botão a mais ou a menos desloca o centro
+              da coluna — a conta está no `capa-radicais.module.css`. */}
           <div className={s.botoes}>
             <MagneticButton>
-              <Link
-                href="/contato"
+              <a
+                href="#quem-somos"
                 className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95 sm:w-auto"
               >
-                Quero participar
+                Quem somos
                 <ArrowRight
                   size={17}
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
-              </Link>
+              </a>
             </MagneticButton>
-            <Link
-              href="/celulas"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
-            >
-              Ver as células
-            </Link>
             <a
               href="#galeria"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95 sm:w-auto"
             >
               Ver a galeria
             </a>

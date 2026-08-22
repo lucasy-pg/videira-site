@@ -30,7 +30,7 @@ Dentro dos dois, as mesmas pastas, com os mesmos nomes:
 
 | Pasta               | No ar (`public/`) | Cru (`material/`) | O que é |
 | ------------------- | ----------------: | ----------------: | ------- |
-| `celulas/`          |          21 |        26 | células reunidas em casas     |
+| `celulas/`          |          23 |        28 | células reunidas em casas     |
 | `igreja/`           |          11 |         5 | fachada, cultos, institucional |
 | `lideres/`          |           2 |         0 | pastores e liderança          |
 | `sobre/`            |           — |         9 | o cru da página /sobre (ver abaixo) |
@@ -131,9 +131,12 @@ arquivo lá:
   [`lib/galeria.ts`](../lib/galeria.ts) anuncia no `srcset`; as duas menores não
   têm e não devem ganhar. `celula-vitor.jpg` ESTAVA aqui, servido inteiro numa
   `<img>` crua da Home antiga, e foi reencodado mais leve por causa disso; com o
-  redesenho da Home ele passou para o regime de baixo e hoje as duas páginas que
-  o usam (a Home e a `/celulas`) o servem pelo `next/image`. O arquivo leve
-  ficou, e não faz mal: o Next redimensiona a partir dele igual.
+  redesenho da Home ele passou para o regime de baixo e hoje é servido pelo
+  `next/image`. O arquivo leve ficou, e não faz mal: o Next redimensiona a
+  partir dele igual. Ele era da Home E da `/celulas`; hoje é só da Home — na
+  linha do tempo da `/celulas` o momento "Palavra" passou a mostrar a
+  `celula-kingdom.jpg`, justamente para as duas páginas não repetirem a mesma
+  foto (ver o comentário do momento 03 em [`lib/celulas.ts`](../lib/celulas.ts)).
 - **Regime do `next/image`.** Todas as outras, que existem para a `/celulas` e
   para a `/sobre` e entram pela [`MolduraFoto`](../components/MolduraFoto.tsx).
   Essas **não** levam variante `-800`: o Next gera as larguras sozinho, e um

@@ -60,7 +60,7 @@ export function Footer() {
                   className="w-7 h-7 object-contain"
                 />
               </div>
-              <span className="font-display text-xl font-medium text-white">
+              <span className="font-display text-xl font-semibold text-white">
                 Igreja Videira
               </span>
             </div>
@@ -92,7 +92,7 @@ export function Footer() {
           </Reveal>
 
           <Reveal delay={80}>
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-grape-light mb-5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.26em] text-grape-light mb-5">
               Navegue
             </h3>
             <ul className="space-y-3">
@@ -113,7 +113,7 @@ export function Footer() {
           </Reveal>
 
           <Reveal delay={160}>
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.26em] text-grape-light mb-5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.26em] text-grape-light mb-5">
               Visite
             </h3>
             <ul className="space-y-3 text-white/60">
