@@ -654,6 +654,42 @@
        estado intermediário. */
     animation-fill-mode: both;
     animation-timing-function: linear;
+
+    /* ⚠️ ISTO É O CONSERTO DO TREMOR, e ele só existe no palco do celular.
+       O relato (23/08/2026): "o Radicais Livres está tremendo no mobile,
+       quando chega perto de trocar ele fica tremendo".
+
+       POR QUE JUSTAMENTE PERTO DA TROCA, e não no resto do curso. Olhe os
+       dois `@keyframes` lá em cima: de 0% a 38% e de 62% a 100% eles não
+       mexem em nada — os dois atos ficam PARADOS. Toda a travessia acontece
+       naquela fatia de 24% do meio, onde 26vh de deslocamento e a opacidade
+       inteira são gastos de uma vez. Fora dali, um solavanco no progresso da
+       linha do tempo é invisível porque não há nada em movimento para
+       delatá-lo; dentro dali, o mesmo solavanco vira a peça inteira pulando.
+       O tremor não NASCE na troca — ele só é visível nela.
+
+       O QUE ESTAVA SOLAVANCANDO. Cada quadro da travessia repintava a palavra
+       do tamanho da tela, e no ato 1 ela é a mais cara que a página tem: uma
+       fotografia com `background-clip: text` recortada por oito letras de
+       serifa. Sem uma camada própria, o navegador re-rasteriza esse recorte a
+       cada `translateY` novo, em vez de deslizar uma textura pronta — e num
+       aparelho de celular a conta não fecha em 16ms. O `will-change` promove
+       os dois atos a camadas de composição: a palavra é desenhada UMA vez e
+       depois só transladada e esmaecida, que são as duas coisas que o
+       compositor faz sem tocar em layout nem em pintura.
+
+       DE QUEBRA, isto tira a travessia da briga com o `position: sticky` do
+       trilho. O pin é recalculado a cada quadro enquanto o palco está preso;
+       com a animação já no compositor, os dois andam no mesmo relógio em vez
+       de discordarem por um quadro — e discordar por um quadro, no meio de um
+       movimento de 26vh, é exatamente a cara de um tremor.
+
+       O DESKTOP NÃO PRECISA e por isso não tem: lá a palavra e as seis fotos
+       têm derivas próprias que correm o curso INTEIRO (`palavraDeriva`,
+       `fotoDeriva`), então o palco nunca está parado e o navegador já mantém
+       essas camadas de pé sozinho. Quem devolver derivas contínuas ao celular
+       pode reavaliar esta linha. */
+    will-change: transform, opacity;
   }
 
   .atoUm {
