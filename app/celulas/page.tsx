@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import { IconeWhatsApp } from "@/components/IconeWhatsApp";
 import { Reveal } from "@/components/Reveal";
 import { MagneticButton } from "@/components/MagneticButton";
 import { MolduraFoto } from "@/components/MolduraFoto";
@@ -37,10 +38,16 @@ export const metadata: Metadata = {
  *
  * A página não é sobre O SISTEMA DE CÉLULAS. É sobre alguém encontrar um lugar
  * onde já esperam por ela. Toda decisão daqui responde a isso, e a mais
- * importante é a que não se vê: NÃO HÁ UM ÍCONE NA PÁGINA INTEIRA. Onde um
- * layout de produto poria um pictograma de "comunidade", aqui há uma
- * fotografia de gente da Videira ou espaço vazio. Treze fotos, todas reais,
- * todas de células desta cidade.
+ * importante é a que não se vê: NÃO HÁ UM PICTOGRAMA NA PÁGINA INTEIRA. Onde
+ * um layout de produto poria um ícone de "comunidade", aqui há uma fotografia
+ * de gente da Videira ou espaço vazio. Treze fotos, todas reais, todas de
+ * células desta cidade.
+ *
+ * Os únicos desenhos são FUNCIONAIS e se contam nos dedos: a seta de rolagem
+ * da capa, a seta dos links e o glifo do WhatsApp nos dois botões de CTA —
+ * este último não é enfeite, é o aviso de que o toque sai do site e cai num
+ * aplicativo. Um pictograma novo que apenas ilustre um assunto quebra a
+ * regra.
  *
  * A JORNADA, que precisa ser legível só rolando, sem ler:
  *
@@ -277,8 +284,7 @@ export default function Celulas() {
           `capa-afasta` — a imagem entra 6% maior e recua para o tamanho dela
           em 1,4s, uma vez, ao carregar. Ele é de graça para o LCP porque
           anima TRANSFORM e não opacidade: o primeiro quadro já mostra a foto
-          inteira e opaca, só um pouco mais perto. Some com
-          `prefers-reduced-motion`. */}
+          inteira e opaca, só um pouco mais perto. */}
       <section className="bg-bone">
         <div className="relative h-[42svh] min-h-[15rem] w-full sm:h-[52svh] lg:h-[62svh]">
           {/* `capa-afasta` (globals.css) mora no MESMO elemento que recorta a
@@ -314,7 +320,7 @@ export default function Celulas() {
               pé desta foto é claro em algumas telas. Sem a sombra ela some.
 
               `animate-seta-flutua` já existe no globals.css (nasceu na capa da
-              /sobre) e para sozinha com `prefers-reduced-motion`. */}
+              /sobre). */}
           <span
             aria-hidden
             className="animate-seta-flutua absolute inset-x-0 bottom-5 flex justify-center text-white drop-shadow-[0_2px_8px_rgba(24,9,41,0.65)] sm:bottom-7"
@@ -359,13 +365,10 @@ export default function Celulas() {
                     href={ACAO_ENCONTRAR_CELULA}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group inline-flex w-full items-center justify-center gap-2 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95 sm:w-auto ${FOCO}`}
+                    className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95 sm:w-auto ${FOCO}`}
                   >
+                    <IconeWhatsApp className="h-[17px] w-[17px] shrink-0" />
                     {HERO.acao}
-                    <ArrowRight
-                      size={17}
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    />
                   </a>
                 </MagneticButton>
 
@@ -740,25 +743,54 @@ export default function Celulas() {
                 cinco públicos. O ponto entre elas é `aria-hidden`, senão a
                 lista sai como "Crianças, ponto, Jovens, ponto".
 
-                O ponto vem ANTES do nome (menos no primeiro) em vez de depois,
-                pelo mesmo motivo do mural de bairros: assim a última palavra da
-                última linha não termina num separador solto quando a faixa
-                quebra no celular. */}
-            <ul className="flex flex-wrap items-baseline gap-x-5 gap-y-3 border-t border-border pt-8 sm:gap-x-7">
-              {PARA_QUEM.categorias.map((categoria, i) => (
-                <li key={categoria} className="flex items-baseline gap-5 sm:gap-7">
-                  {i > 0 && (
-                    <span
-                      aria-hidden
-                      className="h-[5px] w-[5px] shrink-0 -translate-y-[0.35em] rounded-full bg-grape/55"
-                    />
-                  )}
-                  <span className="font-display text-[clamp(1.05rem,2.2vw,1.5rem)] font-medium leading-[1.1] text-foreground">
-                    {categoria}
-                  </span>
-                </li>
-              ))}
-            </ul>
+                ⚠️ O PONTO SÓ EXISTE ONDE OS CINCO CABEM NUMA LINHA (`md` para
+                cima), e essa é a correção de um defeito que nenhuma das duas
+                versões anteriores resolvia. Um separador entre palavras não
+                sobrevive à quebra de linha: com o ponto DEPOIS do nome, a
+                primeira linha terminava em "Adultos ·", pendurado na borda;
+                com o ponto ANTES — que foi a tentativa seguinte — a segunda
+                linha COMEÇAVA com um ponto solto na margem esquerda, que é o
+                que se via no celular. Não há terceiro lado: enquanto a faixa
+                quebrar, um dos dois órfãos aparece.
+
+                Então onde ela quebra o separador simplesmente não entra, e
+                quem separa as palavras é o espaço — que é separador legítimo e
+                não deixa resto em ponta de linha. A regra do "a página tem UM
+                separador" continua de pé: ele não foi trocado por outro
+                desenho, ele só não é usado onde não funciona.
+
+                A FAIXA É CENTRALIZADA em todas as larguras, e não só no
+                celular. Em linha única ela ocupava uns dois terços do
+                container e deixava o resto vazio à direita, o que a fazia ler
+                como uma frase interrompida em vez do fecho da seção.
+
+                O `max-w-[19rem]` é a medida que força a quebra depois da
+                terceira palavra — "Crianças · Jovens · Adultos" em cima,
+                "Casais · Famílias" embaixo. Sem ele a quebra cai onde a
+                largura do aparelho mandar, e num celular grande sobra uma
+                palavra sozinha na segunda linha. Ele sai no `md`, junto com a
+                volta dos pontos. */}
+            {/* O FILETE FICA NUM EMBRULHO DE LARGURA CHEIA, e não na `<ul>`:
+                a lista agora tem medida curta no celular, e um `border-t` nela
+                encolheria a régua junto — o fio que descola a faixa dos
+                parágrafos precisa atravessar a seção inteira. */}
+            <div className="border-t border-border pt-8">
+              <ul className="mx-auto flex max-w-[19rem] flex-wrap items-baseline justify-center gap-x-7 gap-y-3 md:max-w-none">
+                {PARA_QUEM.categorias.map((categoria, i) => (
+                  <li key={categoria} className="flex items-baseline gap-7">
+                    {i > 0 && (
+                      <span
+                        aria-hidden
+                        className="hidden h-[5px] w-[5px] shrink-0 -translate-y-[0.35em] rounded-full bg-grape/55 md:block"
+                      />
+                    )}
+                    <span className="font-display text-[clamp(1.05rem,2.2vw,1.5rem)] font-medium leading-[1.1] text-foreground">
+                      {categoria}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -1066,13 +1098,10 @@ export default function Celulas() {
                   href={ACAO_ENCONTRAR_CELULA}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`group inline-flex items-center justify-center gap-2 rounded-full bg-bone px-9 py-4 text-base font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95 ${FOCO_ESCURO}`}
+                  className={`inline-flex items-center justify-center gap-2 rounded-full bg-bone px-9 py-4 text-base font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95 ${FOCO_ESCURO}`}
                 >
+                  <IconeWhatsApp className="h-[18px] w-[18px] shrink-0" />
                   {FECHO.acao}
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
                 </a>
               </MagneticButton>
             </Reveal>

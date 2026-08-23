@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { copy, fotoConvite } from "@/lib/radicais";
+import { ACAO_PARTICIPAR, copy, fotoConvite } from "@/lib/radicais";
+import { IconeWhatsApp } from "@/components/IconeWhatsApp";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Reveal } from "@/components/Reveal";
 import { FotoAcervo } from "./FotoAcervo";
@@ -37,9 +36,27 @@ import s from "./radicais.module.css";
  * sobre a foto: o Lucas tira esse tipo de etiqueta sempre que aparece. Aqui ela
  * é texto assinado embaixo de um filete, que é como se assina um cartaz.
  *
- * O CTA VAI PARA A `/contato`, que é o mesmo destino do botão principal da
- * capa. É o único botão da seção — a página inteira construiu um caminho, e
- * oferecer dois destinos no último passo é desfazer o caminho.
+ * O CTA ABRE UMA CONVERSA NO WHATSAPP, com a primeira mensagem já escrita — o
+ * endereço e o texto estão no `lib/radicais.ts`. Ele ia para a `/contato` até
+ * 23/08/2026, e a troca é a mesma que a /celulas já tinha feito: quem chega ao
+ * fim desta página não está pesquisando a igreja, está decidindo entrar. Um
+ * formulário nesse ponto é um protocolo no lugar de uma conversa.
+ *
+ * ⚠️ POR ISSO O ÍCONE É O DO WHATSAPP E NÃO A SETA que estava aqui. A seta
+ * promete outra página do site; o destino é um aplicativo, e quem toca sem
+ * saber disso leva um susto. É o mesmo par de decisões (canal + glifo) que o
+ * `lib/social.ts` explica no desenho do balão.
+ *
+ * ELE CONTINUA SENDO O ÚNICO BOTÃO DA SEÇÃO — a página inteira construiu um
+ * caminho, e oferecer dois destinos no último passo é desfazer o caminho.
+ *
+ * NO CELULAR ELE OCUPA A LARGURA TODA, e nas outras telas volta a ter o
+ * tamanho do próprio rótulo. É o formato que a capa da /celulas já usa: num
+ * palmo de tela, um botão de largura natural sobre uma fotografia vira um
+ * comprimido perdido no canto esquerdo, e o alvo de toque encolhe junto. Quem
+ * carrega a largura é o `MagneticButton`, que é o filho direto do bloco —
+ * declarar `w-full` só no `<a>` não faria nada, porque o vão dele é a caixa
+ * `inline-block` do ímã, que já encolheu até o rótulo.
  */
 export function ConviteFinal() {
   return (
@@ -65,17 +82,20 @@ export function ConviteFinal() {
           </h2>
 
           <div className="mt-10">
-            <MagneticButton>
-              <Link
-                href="/contato"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-bone px-9 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_20px_45px_-18px_rgba(0,0,0,0.7)] active:scale-95"
+            <MagneticButton className="w-full sm:w-auto">
+              {/* `<a>` e não `<Link>`: o destino é o WhatsApp, fora do site.
+                  `noopener` é obrigatório com `target="_blank"` — sem ele a
+                  página aberta ganha uma referência à nossa. É a mesma dupla
+                  de atributos dos botões da /celulas. */}
+              <a
+                href={ACAO_PARTICIPAR}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-bone px-14 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_20px_45px_-18px_rgba(0,0,0,0.7)] active:scale-95 sm:w-auto"
               >
+                <IconeWhatsApp className="h-[17px] w-[17px] shrink-0" />
                 {copy.convite.cta}
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </Link>
+              </a>
             </MagneticButton>
           </div>
 

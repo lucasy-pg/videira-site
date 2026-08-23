@@ -71,6 +71,7 @@ export const cells: Cell[] = [
   { neighborhood: "Jd. Regina", audience: ["Adultos", "Kids"] },
   { neighborhood: "Jd. Renata", audience: ["Adultos", "Kids"] },
   { neighborhood: "Jd. Renata", audience: ["Adultos", "Kids"] },
+  { neighborhood: "Jd. Regente", audience: ["Adultos", "Kids"] },
   { neighborhood: "Monte Verde", audience: ["Adultos", "Kids"] },
   { neighborhood: "Parque das Nações", audience: ["Adultos", "Kids"] },
   { neighborhood: "Parque Res. Indaiá", audience: ["Adultos", "Kids"] },

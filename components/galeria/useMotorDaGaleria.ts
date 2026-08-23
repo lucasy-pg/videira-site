@@ -108,15 +108,22 @@ export function useMotorDaGaleria(alvos: {
     const contexto = gsap.context(() => {
       const mm = gsap.matchMedia();
 
-      /* QUEM PEDIU MENOS MOVIMENTO NÃO RECEBE MOTOR NENHUM. Não é uma versão
-         reduzida da coreografia: é a galeria sem coreografia, que o CSS já
-         desenha como parede (ver o `prefers-reduced-motion` no módulo). Montar
-         a linha do tempo e depois pará-la deixaria as fotos empilhadas em
-         `position: absolute` umas sobre as outras. */
+      /* AS DUAS FAIXAS SÃO A MESMA COREOGRAFIA EM DUAS GEOMETRIAS — quem lê o
+         `desktop` lá embaixo é `montarAtoII`, que muda percursos e escalas.
+         Não há terceira faixa: toda largura cai numa das duas, e o motor monta
+         sempre.
+
+         ⚠️ As duas consultas já traziam `and (prefers-reduced-motion:
+         no-preference)`, e quem tinha a preferência ligada no sistema não
+         recebia motor nenhum — a galeria vinha como parede estática, desenhada
+         por um bloco do módulo CSS. As duas coisas saíram juntas com a decisão
+         registrada no topo de `app/globals.css` (23/08/2026). Não devolver só
+         uma: sem o bloco do CSS, uma faixa que não casa deixa as fotos
+         empilhadas em `position: absolute` umas sobre as outras. */
       mm.add(
         {
-          desktop: "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
-          celular: "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+          desktop: "(min-width: 768px)",
+          celular: "(max-width: 767px)",
         },
         (faixa) => {
           const { desktop } = faixa.conditions as { desktop: boolean };
@@ -358,7 +365,23 @@ function montarAtoII(
      Uma por cena, atravessando a tela de `xPercent: 8` a `-8` durante a
      própria faixa, com fusão nas pontas. As fusões ocupam 18% da faixa de cada
      lado — o bastante para nunca haver duas legíveis ao mesmo tempo, que é a
-     única regra que importa aqui. */
+     única regra que importa aqui.
+
+     ⚠️ A TINTA DELAS NÃO É A MESMA NAS DUAS FAIXAS, e a diferença conserta um
+     defeito de leitura, não um gosto. O que faz a palavra existir na tela é
+     MASSA — área de tinta —, e massa é tamanho vezes opacidade. No desktop ela
+     bate o teto do `clamp` do módulo (340px); num celular de 390px os 18vw dão
+     70 e ela cai no PISO de 90px, pouco mais de um quarto da altura. Na mesma
+     opacidade de 7% o que sobrava era um vulto que quase não se via.
+
+     18% no celular devolve à palavra a presença que ela tem no desktop sem
+     mudar o papel dela: sobre o fundo da galeria isso ainda é textura de
+     fundo, não é texto para ler — quem carrega o significado continua sendo a
+     legenda, que é texto de verdade. Subir muito além disto faz a palavra
+     competir com as fotos que passam por cima dela, que é o contrário do que
+     ela existe para fazer. */
+  const tintaDaPalavra = desktop ? 0.07 : 0.18;
+
   for (const palavra of buscar<HTMLElement>("[data-palavra]")) {
     const cena = cenas.find((c) => c.id === palavra.dataset.palavra);
     if (!cena) continue;
@@ -368,7 +391,11 @@ function montarAtoII(
 
     gsap.set(palavra, { xPercent: 8, opacity: 0 });
     linha
-      .to(palavra, { opacity: 0.07, duration: fusao, ease: "none" }, inicio)
+      .to(
+        palavra,
+        { opacity: tintaDaPalavra, duration: fusao, ease: "none" },
+        inicio
+      )
       .to(
         palavra,
         { xPercent: -8, duration: duracao, ease: "none" },

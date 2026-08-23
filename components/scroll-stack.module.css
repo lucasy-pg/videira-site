@@ -46,8 +46,8 @@
 
    SÓ VALE COM `data-empilha`, que o componente põe na raiz quando o
    `enabledQuery` casa. Fora dele nada gruda e os painéis são blocos comuns —
-   é assim que o celular e quem pediu menos movimento saem do efeito sem que a
-   media query precise ser repetida no CSS de quem usa. */
+   é assim que o celular sai do efeito sem que a media query precise ser
+   repetida no CSS de quem usa. */
 .raiz[data-empilha] .card {
   position: sticky;
   top: calc(

@@ -1,3 +1,5 @@
+import { linkWhatsApp } from "@/lib/social";
+
 /**
  * O ACERVO E A COPY DAS SEÇÕES NOVAS DO /radicais-livres.
  *
@@ -45,9 +47,9 @@
  *                 rapazes-na-pista-a-noite
  *   05 propósito  rostos-amontoados · roda-na-grama
  *   06 células    turma-luz-roxa · roda-de-amigas
- *   07 culto      culto-maos-erguidas · assistindo-ao-culto
+ *   07 culto      culto-lotado · assistindo-ao-culto
  *   08 liderança  lideranca/casal
- *   09 limiar     lanternas-na-noite
+ *   09 limiar     bandeirao-radicais
  *   13 convite    adoracao-camiseta-branca
  *
  * Nenhuma se repete em seções adjacentes, e nenhuma repete as três da abertura.
@@ -106,7 +108,14 @@ export function origens(foto: Foto, incluirGrande = false): string {
    RADICAIS é noturno e sério — três rapazes sem sorrir, dois ajoelhados no
    escuro. O ato LIVRES é claro e aberto — água, braços erguidos, céu. A
    passagem de um para o outro é o que a seção conta, e ela acontece na
-   fotografia antes de acontecer no texto. */
+   fotografia antes de acontecer no texto.
+
+   ⚠️ `doisC` (a roda vista de baixo) SÓ APARECE NO DESKTOP. Ela é a exceção
+   noturna da trinca clara, e só funciona lá porque mora solta acima da
+   palavra, como peça de colagem; enfileirada com as outras duas no celular ela
+   desmentia a virada que a seção conta naquele momento. O `display: none` e o
+   porquê inteiro estão no `radicais.module.css`. Trocá-la por uma foto clara
+   devolve as três ao celular — a regra é a temperatura, não a contagem. */
 export const fotosRadicais = {
   /** Revelada DENTRO das letras de RADICAIS (`background-clip: text`). */
   noTexto: {
@@ -331,11 +340,19 @@ export const fotosCelulas = {
    de luz de palco sobre escuro. Sobre osso elas ficam cinzentas; sobre
    `plum-deep` elas acendem.
 
-   `culto-maos-erguidas` TEM MESTRE DE 2400px (`-grande`), e é por isso que ela
-   pode ocupar a largura toda: é uma das duas únicas fotos do acervo com esse
-   tamanho (a outra é a `adoracao-camiseta-branca`, que fecha a página). Toda
-   foto de `public/radicais/` tem ~1600px no lado maior e vem do WhatsApp — num
-   vão de largura cheia em tela retina, 1600 fica no limite. Estas duas não.
+   A LARGA PRECISA DE MESTRE DE 2400px (`-grande`) para ocupar a largura toda.
+   Toda foto de `public/radicais/` tem ~1600px no lado maior e vem do WhatsApp —
+   num vão de largura cheia em tela retina, 1600 fica no limite. As que servem
+   este vão não podem ser dessas.
+
+   ⚠️ POR ISSO A TROCA DE 23/08/2026 VEIO COM ARQUIVO NOVO. O Lucas pediu a
+   `culto-lotado` no lugar da `culto-maos-erguidas`, e a `culto-lotado` estava
+   na pasta só em 1600px (mais a `-800` da galeria): ela nasceu para a parede,
+   onde 1600 basta. O mestre dela foi gerado do original de câmera que está em
+   `material/radicais/DSC_1119.JPG` (3008×2008), nos mesmos 2400×1602 e na
+   mesma qualidade 86 da `culto-maos-erguidas-grande`. Trocar esta foto de novo
+   é ter de conferir isto primeiro: sem o `-grande`, a de largura cheia amolece
+   no desktop e ninguém percebe olhando o código.
 
    ── AS DUAS FOTOS DIZEM COISAS DIFERENTES, E É POR ISSO QUE SÃO DUAS ──────
 
@@ -367,11 +384,13 @@ export const fotosCelulas = {
    proporção passa a cortar. */
 export const fotosCulto = {
   larga: {
-    src: "/radicais/culto-maos-erguidas.jpg",
-    grande: "/radicais/culto-maos-erguidas-grande.jpg",
+    src: "/radicais/culto-lotado.jpg",
+    grande: "/radicais/culto-lotado-grande.jpg",
     w: 1600,
     h: 1068,
-    alt: "Congregação de pé durante o culto, com dezenas de mãos erguidas e palmas, e um caixote de flores num canto",
+    /* Copiado do `lib/galeria.ts`, palavra por palavra: a foto está na parede
+       da galeria e as duas descrições da mesma imagem não podem divergir. */
+    alt: "Salão lotado visto de trás, com dezenas de jovens de pé e de mãos erguidas",
   },
   alta: {
     src: "/radicais/assistindo-ao-culto.jpg",
@@ -455,21 +474,40 @@ export const lideranca = {
 };
 
 /* ═══ 09 — O LIMIAR ════════════════════════════════════════════════════════
-   A foto que atravessa a passagem do claro para o escuro. `lanternas-na-noite`
-   é a única do acervo em que a própria cena é uma travessia — uma fila de
-   jovens de lanterna na cabeça andando por um gramado escuro. A seção escurece
-   em volta dela enquanto ela cresce, e a foto já é noturna: não há um quadro em
-   que a imagem brigue com o fundo.
+   O BANDEIRÃO DA REDE, pendurado no ginásio sob refletores azuis. A seção
+   escurece em volta dele enquanto ele cresce, e a foto já é escura e roxa-azul:
+   não existe um quadro em que a imagem brigue com o fundo que está apagando a
+   luz. Ela também é a única do acervo em que a rede aparece pelo NOME — "RL
+   Indaiatuba SP", escrito no pano —, o que faz dela a assinatura certa para o
+   último quadro antes de a página virar experiência.
 
-   ELA É 1170×1154 (praticamente quadrada) e o teto do vão é `min(62vw, 760px)`
-   pelo mesmo motivo da foto das células — 760 em CSS são 1520 físicos, e o
-   arquivo tem 1170. Fica macia em retina e a cena escura esconde isso, que é
-   exatamente a licença que o `docs/imagens.md` dá à `oracao-a-dois`. */
+   ⚠️ O ARQUIVO É QUADRADO E O ORIGINAL NÃO ERA. O cru é um retrato de
+   1174×2090 — proporção de story —, e ele não cabia nesta seção: uma tira
+   estreita e comprida no meio de uma faixa larga não fecha com nada, e um
+   terço da altura era fileira de cadeira de plástico. O corte de 1174×1174
+   (recorte a partir de y=226 do cru) é o enquadramento MAIS LARGO que ainda
+   cabe o pano inteiro, porque o bandeirão em si é quadrado: 1050 por 1060,
+   ocupando a largura toda da foto.
+
+   O CORTE ESTÁ GRAVADO NO ARQUIVO, não no CSS, e é a diferença que importa:
+   fosse `object-fit` recortando um arquivo de story, o visitante baixaria 40%
+   de pixels que nunca aparecem. O `.limiarFoto` só declara `1/1` porque o
+   arquivo é `1/1`.
+
+   E O CORTE É COMPOSIÇÃO, não economia: o que ele joga fora é o teto branco do
+   ginásio em cima e as cadeiras cinzas embaixo — as duas únicas áreas CLARAS e
+   frias da foto. O que sobra é azul-escuro de ponta a ponta, que é a família de
+   tinta do degradê desta seção. A foto deixa de ser um retângulo aceso no meio
+   do roxo e passa a se dissolver nele, que é o assunto do capítulo.
+
+   A CONTA DA NITIDEZ: o vão fecha em 560 CSS, 1120 físicos numa tela retina, e
+   o mestre tem 1174. Passa raspando e de propósito — o cru tem 1174 de largura
+   e não há de onde tirar mais. Se o vão crescer, a foto começa a amaciar. */
 export const fotoLimiar: Foto = {
-  src: "/radicais/lanternas-na-noite.jpg",
-  w: 1170,
-  h: 1154,
-  alt: "Fila de jovens de lanterna na cabeça atravessando um gramado escuro à noite",
+  src: "/radicais/bandeirao-radicais.jpg",
+  w: 1174,
+  h: 1174,
+  alt: "Bandeirão dos Radicais Livres de Indaiatuba pendurado no ginásio, iluminado por refletores azuis",
 };
 
 /* ═══ 13 — O CONVITE FINAL ═════════════════════════════════════════════════
@@ -500,6 +538,26 @@ export const fotoConvite: Foto = {
  * marcação dentro — trocar o texto não deve exigir conferir onde a marcação
  * começa.
  */
+/* ── A AÇÃO DO CONVITE FINAL ───────────────────────────────────────────────
+   O último botão da página abre uma conversa no WhatsApp da igreja, e não a
+   `/contato`. É o mesmo canal que a /celulas e o /contato usam, pelo mesmo
+   motivo: é o único do site em que há gente do outro lado respondendo. Mandar
+   para um formulário quem acabou de ler "você não nasceu para viver uma vida
+   morna" é trocar uma conversa por um protocolo.
+
+   ⚠️ O NÚMERO NÃO SE ESCREVE AQUI. Ele mora no `lib/social.ts` e é o mesmo do
+   rodapé de todas as páginas — o dia em que a igreja trocar de número, quem
+   tiver copiado a URL para cá publica um telefone morto.
+
+   A MENSAGEM VAI NA PRIMEIRA PESSOA e diz DE ONDE a pessoa veio, que é o que
+   as outras duas do site também fazem. Aqui ela nomeia a rede e não a igreja:
+   do lado de lá, "queria participar" sozinho não diz de quê, e quem atende
+   precisa saber que quem escreveu é um jovem que veio da página dos Radicais
+   Livres — não alguém procurando célula ou horário de culto. */
+export const ACAO_PARTICIPAR = linkWhatsApp(
+  "Olá! Vi a página dos Radicais Livres no site da Videira e queria participar.",
+);
+
 export const copy = {
   contramao: {
     etiqueta: "Posicionamento",

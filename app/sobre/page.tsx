@@ -214,7 +214,8 @@ export default function Sobre() {
                   fotografia entra 6% maior e recua para o tamanho dela em pouco
                   mais de um segundo. Quem se move é a IMAGEM dentro da moldura,
                   não a moldura — o quadro fica parado e o conteúdo se afasta.
-                  Some com `prefers-reduced-motion`. */}
+                  Toca em todo aparelho: o site não consulta mais
+                  `prefers-reduced-motion` (ver o topo do globals.css). */}
               <MolduraFoto
                 foto={HERO.foto}
                 eager
@@ -562,7 +563,8 @@ export default function Sobre() {
           casa em casa" — uma célula na varanda de uma casa e uma família num
           culto — e por isso a da célula é a maior das duas: a seção é sobre
           ela. A menor desce um degrau (`mt-10`) para o par não virar dois
-          retângulos alinhados. */}
+          retângulos alinhados, e no celular sobe pela quina da maior — ver o
+          comentário do par. */}
       <section className="overflow-hidden bg-sand py-20 sm:py-24 lg:py-32">
         <div className="container mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
@@ -603,21 +605,38 @@ export default function Sobre() {
               {/* O PAR NÃO ATRAVESSA O CELULAR LADO A LADO. Em 390px duas
                   colunas dariam ~165px cada, e a foto da célula — que é uma
                   varanda com vinte pessoas — vira um borrão de rostos de 4mm.
-                  Lá elas empilham: a da célula em largura cheia e deitada, a do
-                  culto embaixo a 60% e encostada à direita, que mantém a
-                  assimetria do par sem espremer nenhuma das duas. */}
-              <div className="grid gap-4 sm:grid-cols-[1.15fr_0.85fr] sm:gap-5">
+
+                  ⚠️ NO CELULAR ELAS VIRAM UMA COLAGEM, e não duas fotos
+                  empilhadas. Empilhadas, a do culto ficava sozinha embaixo,
+                  encostada à direita e com um vão inteiro de fundo à esquerda:
+                  lia como sobra de layout, não como a segunda metade de um par.
+                  Aqui ela sobe pela QUINA DE BAIXO À DIREITA da foto da célula
+                  — a mesma manobra da seção da liderança, logo abaixo — e as
+                  duas voltam a ler como uma composição só.
+
+                  A montagem é a de lá, item por item: `absolute` sobre um
+                  embrulho `relative`, e o `pb-[24%]` é o que RESERVA o pedaço
+                  que a foto menor invade para baixo. Sem ele a quina dela cai
+                  por cima da seção seguinte. O anel na cor da faixa
+                  (`ring-sand`) é o que separa uma foto da outra — as duas são
+                  cenas escuras e sem ele as bordas se dissolvem. Ele some do
+                  `sm` para cima (`sm:ring-0`), onde não há sobreposição.
+
+                  Do `sm` em diante o par volta a ser duas colunas de grade, com
+                  a do culto um degrau abaixo (`sm:mt-10`) — é lá que a
+                  assimetria já funcionava. */}
+              <div className="relative pb-[24%] sm:grid sm:grid-cols-[1.15fr_0.85fr] sm:gap-5 sm:pb-0">
                 <MolduraFoto
                   foto={CELULAS.fotoCelula}
                   sizes="(min-width: 1024px) 32vw, (min-width: 640px) 50vw, 92vw"
                   className="aspect-[4/3] w-full rounded-[1.25rem] sm:aspect-[4/5] lg:rounded-[1.5rem]"
                 />
-                <div className="ml-auto w-[60%] sm:ml-0 sm:mt-10 sm:w-full lg:mt-16">
+                <div className="absolute right-0 bottom-0 w-[42%] sm:static sm:mt-10 sm:w-full lg:mt-16">
                   <MolduraFoto
                     foto={CELULAS.fotoCelebracao}
-                    sizes="(min-width: 1024px) 24vw, (min-width: 640px) 38vw, 56vw"
+                    sizes="(min-width: 1024px) 24vw, (min-width: 640px) 38vw, 40vw"
                     posicao="50% 35%"
-                    className="aspect-[3/4] w-full rounded-[1.25rem] lg:rounded-[1.5rem]"
+                    className="aspect-[3/4] w-full rounded-[1.25rem] ring-[6px] ring-sand sm:ring-0 lg:rounded-[1.5rem]"
                   />
                 </div>
               </div>
@@ -883,11 +902,18 @@ export default function Sobre() {
                 </p>
               </Reveal>
               <Reveal delay={240}>
+                {/* OS DOIS BOTÕES SÃO `w-full` NO CELULAR e voltam à largura
+                    natural do `sm` em diante. Não é enfeite: empilhados, o
+                    `stretch` da coluna flex esticava o embrulho do
+                    `<MagneticButton>` até a margem, mas o `<Link>` de dentro é
+                    `inline-flex` e continuava do tamanho do texto. O par saía
+                    com larguras diferentes e o de cima encostado à esquerda de
+                    uma faixa vazia. É o mesmo par do hero da /celulas. */}
                 <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <MagneticButton>
                     <Link
                       href="/contato"
-                      className="group inline-flex items-center justify-center gap-2 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95"
+                      className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95 sm:w-auto"
                     >
                       Planeje sua visita
                       <ArrowRight
@@ -898,7 +924,7 @@ export default function Sobre() {
                   </MagneticButton>
                   <Link
                     href="/celulas"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95 sm:w-auto"
                   >
                     Encontre uma célula
                   </Link>

@@ -83,18 +83,21 @@
    `onLoad` no `ImageWithFallback` acendendo uma classe na seção — e aí a seção
    deixa de ser só CSS, que é a decisão a pesar.
 
-   ── A DEGRADAÇÃO É O PADRÃO, NÃO A EXCEÇÃO ────────────────────────────────
+   ── O ESTADO FINAL É O PADRÃO, NÃO O INICIAL ──────────────────────────────
 
-   ⚠️ Repare que o efeito inteiro mora DENTRO de um
-   `@media (prefers-reduced-motion: no-preference)`, e que fora dele este
-   arquivo descreve a capa cheia, parada, com todo o conteúdo visível.
+   ⚠️ Repare que este arquivo descreve, nas regras soltas, a capa CHEIA: parada,
+   aberta, com todo o conteúdo visível. O efeito é o que se soma a isso, e cada
+   peça dele só existe como `animation` numa regra à parte.
 
-   A ordem é essa de propósito. Escrito ao contrário — efeito por padrão, um
-   bloco de desfazer — qualquer peça nova acrescentada aqui em cima teria de ser
-   lembrada na lista de anulação. Esquecer não dá erro nenhum: dá uma capa presa
-   fechada, com os botões invisíveis, justamente para quem pediu menos
-   movimento. Com o estado final como padrão, peça esquecida aparece — que é o
-   lado certo do erro.
+   Isso vinha de um `@media (prefers-reduced-motion: no-preference)` que
+   embrulhava o efeito inteiro, e que saiu com a decisão registrada no topo de
+   `app/globals.css` (23/08/2026) — o site parou de consultar a preferência. A
+   ARQUITETURA FICA, porque o motivo dela nunca foi a preferência: escrito ao
+   contrário — efeito por padrão, um bloco de desfazer — qualquer peça nova
+   acrescentada aqui teria de ser lembrada na lista de anulação, e esquecer não
+   dá erro nenhum: dá uma capa presa fechada, com os botões invisíveis. Com o
+   estado final como padrão, peça esquecida aparece — que é o lado certo do
+   erro, e continua sendo a rede se o CSS de animação falhar em carregar.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* OS TEMPOS DA ABERTURA MORAM AQUI, num lugar só, e descem por herança para as
@@ -197,9 +200,8 @@
    janela fechada, como sempre foi.
 
    O ESTADO PADRÃO É O ABERTO — as quatro já nascem fora da tela e as quinas
-   apagadas. É a mesma regra do resto do arquivo: quem não recebe o efeito
-   (menos movimento) fica com a capa cheia, e uma cortina esquecida aparece em
-   vez de trancar a capa fechada.
+   apagadas. É a mesma regra do resto do arquivo: sem o efeito a capa fica
+   cheia, e uma cortina esquecida aparece em vez de trancar a capa fechada.
 
    `pointer-events: none` porque elas passam por cima da colagem inteira: sem
    isso, a área do hero deixaria de responder a qualquer coisa. */
@@ -477,8 +479,8 @@
 }
 
 /* A seta diz que a página continua embaixo, e isso é verdade em todo estado
-   desta capa — inclusive para quem pediu menos movimento, que recebe a capa já
-   aberta. Por isso ela nasce visível aqui, e o bloco do efeito só cuida de
+   desta capa — inclusive antes de a abertura terminar. Por isso ela nasce
+   visível aqui, e o bloco do efeito só cuida de
    ACENDÊ-LA no fim da abertura: enquanto a janela ainda se abre, uma seta
    apontando para baixo compete com o que está acontecendo na tela.
 
@@ -497,96 +499,94 @@
 
 /* ═══════════════════════════════════════════════════════════════════════════
    O EFEITO
-   Toca sozinho no carregamento. Só não entra para quem pediu menos movimento.
+   Toca sozinho no carregamento, em todo aparelho e sem consulta de mídia.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-@media (prefers-reduced-motion: no-preference) {
-  /* `both` EM TODAS, e é o que segura a peça fechada durante a `--espera`: o
-     preenchimento para trás aplica o quadro inicial já na primeira pintura, e
-     sem ele a capa apareceria aberta por um instante antes de saltar para o
-     estado fechado — o pior quadro possível, e justo o primeiro.
+/* `both` EM TODAS, e é o que segura a peça fechada durante a `--espera`: o
+   preenchimento para trás aplica o quadro inicial já na primeira pintura, e
+   sem ele a capa apareceria aberta por um instante antes de saltar para o
+   estado fechado — o pior quadro possível, e justo o primeiro.
 
-     AS QUATRO CORTINAS E AS QUATRO QUINAS ANDAM NA MESMA CURVA E NO MESMO
-     COMPASSO. Não é preguiça de escalonar: as quinas viajam coladas nas quinas
-     do vão, e basta uma curva diferente para o arco descolar do canto no meio
-     do caminho — que é o tipo de defeito que ninguém sabe nomear mas todo mundo
-     vê. */
-  .cortina,
-  .quina {
-    animation-duration: var(--abre);
-    animation-timing-function: var(--curva);
-    animation-delay: var(--espera);
-    animation-fill-mode: both;
-  }
+   AS QUATRO CORTINAS E AS QUATRO QUINAS ANDAM NA MESMA CURVA E NO MESMO
+   COMPASSO. Não é preguiça de escalonar: as quinas viajam coladas nas quinas
+   do vão, e basta uma curva diferente para o arco descolar do canto no meio
+   do caminho — que é o tipo de defeito que ninguém sabe nomear mas todo mundo
+   vê. */
+.cortina,
+.quina {
+  animation-duration: var(--abre);
+  animation-timing-function: var(--curva);
+  animation-delay: var(--espera);
+  animation-fill-mode: both;
+}
 
-  .cortinaTopo {
-    animation-name: abreTopo;
-  }
-  .cortinaBase {
-    animation-name: abreBase;
-  }
-  .cortinaEsq {
-    animation-name: abreEsq;
-  }
-  .cortinaDir {
-    animation-name: abreDir;
-  }
-  .quinaNO {
-    animation-name: abreQuinaNO;
-  }
-  .quinaNE {
-    animation-name: abreQuinaNE;
-  }
-  .quinaSO {
-    animation-name: abreQuinaSO;
-  }
-  .quinaSE {
-    animation-name: abreQuinaSE;
-  }
+.cortinaTopo {
+  animation-name: abreTopo;
+}
+.cortinaBase {
+  animation-name: abreBase;
+}
+.cortinaEsq {
+  animation-name: abreEsq;
+}
+.cortinaDir {
+  animation-name: abreDir;
+}
+.quinaNO {
+  animation-name: abreQuinaNO;
+}
+.quinaNE {
+  animation-name: abreQuinaNE;
+}
+.quinaSO {
+  animation-name: abreQuinaSO;
+}
+.quinaSE {
+  animation-name: abreQuinaSE;
+}
 
-  .etiqueta,
-  .descricao,
-  .botoes {
-    /* DUAS ANIMAÇÕES, E A SEGUNDA EXISTE POR CAUSA DO COMPOSITOR. A primeira só
-       mexe em `opacity` e `translate` e por isso roda fora da main thread; a
-       segunda faz o degrau de `pointer-events` (ver o `liberaCliques`). Juntas
-       num `@keyframes` só — que é como isto nasceu — a citação de
-       `pointer-events` derrubava a chegada inteira para a main thread, junto com
-       a hidratação. */
-    animation:
-      chegaConteudo var(--entra) var(--curva) 1.15s both,
-      liberaCliques var(--entra) linear 1.15s both;
-  }
+.etiqueta,
+.descricao,
+.botoes {
+  /* DUAS ANIMAÇÕES, E A SEGUNDA EXISTE POR CAUSA DO COMPOSITOR. A primeira só
+     mexe em `opacity` e `translate` e por isso roda fora da main thread; a
+     segunda faz o degrau de `pointer-events` (ver o `liberaCliques`). Juntas
+     num `@keyframes` só — que é como isto nasceu — a citação de
+     `pointer-events` derrubava a chegada inteira para a main thread, junto com
+     a hidratação. */
+  animation:
+    chegaConteudo var(--entra) var(--curva) 1.15s both,
+    liberaCliques var(--entra) linear 1.15s both;
+}
 
-  .descricao {
-    animation-delay: 1.3s;
-  }
+.descricao {
+  animation-delay: 1.3s;
+}
 
-  /* Os botões fecham a escada, e ganham um tico a mais de duração porque são a
-     peça mais pesada da coluna — três pastilhas que sobem juntas. */
-  .botoes {
-    animation-duration: 0.7s;
-    animation-delay: 1.5s;
-  }
+/* Os botões fecham a escada, e ganham um tico a mais de duração porque são a
+   peça mais pesada da coluna — três pastilhas que sobem juntas. */
+.botoes {
+  animation-duration: 0.7s;
+  animation-delay: 1.5s;
+}
 
-  /* A COLUNA DESCE UM POUCO ENQUANTO A CAPA ABRE, e é um ajuste de centro,
-     não um enfeite. Com etiqueta, texto e botões ocupando espaço desde o
-     primeiro quadro (eles só estão transparentes, nunca `display: none` —
-     ver o porquê logo abaixo), o centro da coluna fica ABAIXO do nome. Na
-     janela fechada, em que só o nome se vê, isso o deixa flutuando acima do
-     meio da moldura. O empurrão devolve o nome ao centro do vão enquanto ele
-     é a única coisa na tela, e se desfaz conforme o resto chega — no mesmo
-     compasso da moldura, que é o que faz as duas coisas parecerem uma só. Os
-     dois valores, e o porquê de eles serem em PIXEL, estão no `--assenta`. */
-  .palcoTexto {
-    animation: assentaColuna var(--abre) var(--curva) var(--espera) both;
-  }
+/* A COLUNA DESCE UM POUCO ENQUANTO A CAPA ABRE, e é um ajuste de centro,
+   não um enfeite. Com etiqueta, texto e botões ocupando espaço desde o
+   primeiro quadro (eles só estão transparentes, nunca `display: none` —
+   ver o porquê logo abaixo), o centro da coluna fica ABAIXO do nome. Na
+   janela fechada, em que só o nome se vê, isso o deixa flutuando acima do
+   meio da moldura. O empurrão devolve o nome ao centro do vão enquanto ele
+   é a única coisa na tela, e se desfaz conforme o resto chega — no mesmo
+   compasso da moldura, que é o que faz as duas coisas parecerem uma só. Os
+   dois valores, e o porquê de eles serem em PIXEL, estão no `--assenta`. */
+.palcoTexto {
+  animation: assentaColuna var(--abre) var(--curva) var(--espera) both;
+}
 
-  /* Por último, depois de os botões assentarem: antes disso ela estaria
-     chamando para baixo enquanto a capa ainda não terminou de se apresentar. */
-  .seta {
-    animation: acendeSeta 0.5s ease-out 2.2s both;
-  }
+/* Por último, depois de os botões assentarem: antes disso ela estaria
+   chamando para baixo enquanto a capa ainda não terminou de se apresentar. */
+.seta {
+  animation: acendeSeta 0.5s ease-out 2.2s both;
 }
 
 /* AS QUATRO CORTINAS. Cada uma sai pelo próprio lado, e `-100%` aqui é 100% do

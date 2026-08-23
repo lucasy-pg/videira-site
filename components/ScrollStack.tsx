@@ -57,8 +57,15 @@ import css from "./scroll-stack.module.css";
  * O que foi ACRESCENTADO é o `enabledQuery`. Fora dele o componente não escuta
  * nada, não escreve `transform` e não põe o `data-empilha` que liga o `sticky`
  * no CSS — os painéis viram uma sequência vertical de blocos comuns. É por aí
- * que o celular e quem pediu menos movimento no sistema saem do efeito, sem que
- * a media query precise ser repetida no CSS de quem usa o componente.
+ * que o celular sai do efeito, sem que a media query precise ser repetida no
+ * CSS de quem usa o componente.
+ *
+ * A consulta já foi `(min-width: 1024px) and (prefers-reduced-motion:
+ * no-preference)`. A segunda metade saiu com a decisão registrada no topo de
+ * `app/globals.css` (23/08/2026) — o site parou de consultar a preferência. O
+ * `min-width` FICA: ele não é trava de movimento, é layout. Abaixo de 1024px
+ * não há folga lateral para uma pilha que encolhe e desliza, e o desenho de
+ * celular é a sequência vertical de propósito.
  */
 
 export function ScrollStackItem({
@@ -136,7 +143,7 @@ export function ScrollStack({
   baseScale = 0.85,
   rotationAmount = 0,
   blurAmount = 0,
-  enabledQuery = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+  enabledQuery = "(min-width: 1024px)",
   onStackComplete,
 }: ScrollStackProps) {
   const raizRef = useRef<HTMLDivElement>(null);

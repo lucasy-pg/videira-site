@@ -51,10 +51,34 @@ export function MuralDeBairros() {
     <ul className="flex flex-wrap items-baseline justify-center gap-x-4 gap-y-2 sm:gap-x-6 sm:gap-y-3">
       {neighborhoodGroups.map((bairro, i) => (
         <li key={bairro.name} className="flex items-baseline gap-4 sm:gap-6">
-          {/* O ponto vem ANTES do nome (menos no primeiro) em vez de depois:
-              assim o último item da última linha não termina num separador
-              solto, que é o defeito clássico deste tipo de faixa quando ela
-              quebra em número ímpar.
+          <span
+            className={`font-display font-medium uppercase leading-[1.1] tracking-[0.01em] text-foreground ${CORPO}`}
+          >
+            {nomeExtenso(bairro.name)}
+          </span>
+          {/* ⚠️ O PONTO SEGUE O NOME (menos o do último) E ISSO É O CONSERTO
+              DE UM DEFEITO, não uma preferência. Ele já esteve ANTES do nome,
+              com a justificativa de que assim a faixa não terminava num
+              separador solto — mas isso se resolve não desenhando o último
+              ponto, que é o que esta versão faz. O que o "antes" causava era
+              pior e permanente: um mural de dezoito nomes SEMPRE quebra em
+              várias linhas, e com o ponto na frente TODA linha depois da
+              primeira começava com uma bolinha. Uma bolinha no começo da linha
+              não é lida como separador — é lida como marcador de lista, e o
+              mural inteiro passava a parecer a lista empilhada e mal indentada
+              que este componente existe justamente para não ser.
+
+              Colado no nome que vem antes, o ponto não pode iniciar linha: ele
+              só pode terminá-la, e ali ele lê como "continua embaixo", que é o
+              comportamento normal de um separador de linha corrida.
+
+              A faixa de categorias da seção 06 resolve o mesmo problema pelo
+              caminho oposto — lá o ponto simplesmente não entra onde a faixa
+              quebra. Não é incoerência, é o conteúdo: lá são palavras únicas
+              ("Casais", "Famílias") e o espaço já separa; aqui os nomes são
+              compostos, e sem ponto "ALTO DA COLINA CAMPO BONITO" vira um
+              nome só. Onde o separador é obrigatório ele muda de lado; onde é
+              dispensável ele sai.
 
               E É UM PONTO DESENHADO, não o glifo "•". Como bullet de texto ele
               herdava o corpo da `<li>` (16px, e não o do nome ao lado): num
@@ -63,17 +87,12 @@ export function MuralDeBairros() {
               mesmo ponto da linha do tempo da seção "Como funciona" — a página
               passa a ter um separador só. O `translate-y` o levanta da linha de
               base até o meio das maiúsculas. */}
-          {i > 0 && (
+          {i < neighborhoodGroups.length - 1 && (
             <span
               aria-hidden
               className="h-[5px] w-[5px] shrink-0 -translate-y-[0.35em] rounded-full bg-grape/55"
             />
           )}
-          <span
-            className={`font-display font-medium uppercase leading-[1.1] tracking-[0.01em] text-foreground ${CORPO}`}
-          >
-            {nomeExtenso(bairro.name)}
-          </span>
         </li>
       ))}
     </ul>

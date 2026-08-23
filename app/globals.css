@@ -155,6 +155,38 @@
   --radius-xl: 2rem;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   O SITE NÃO CONSULTA MAIS `prefers-reduced-motion`. DECISÃO DO LUCAS,
+   23/08/2026: "em alguns dispositivos as animações e efeitos na página não
+   aparecem… se tiver qualquer configuração que trava isso, remova para todos".
+
+   O QUE ERA. Havia oito pontos de consulta espalhados — quatro blocos neste
+   arquivo, um em `radicais.module.css`, um em `quem-somos.module.css`, dois em
+   `galeria.module.css` — mais três portões em JS (`ScrollStack`, `Galeria` e
+   `useMotorDaGaleria`). Juntos eles desarmavam praticamente tudo: os
+   `.reveal` das sete rotas, o afastamento das capas, a seta, a colagem que
+   vagueia, a parede da /celulas, a coreografia do "Quem somos" e o motor
+   inteiro da galeria imersiva.
+
+   POR QUE ISSO APARECIA COMO "SÓ EM ALGUNS APARELHOS". A consulta não é uma
+   escolha feita no site, é uma preferência do SISTEMA — o "Reduzir movimento"
+   do iOS, o "Remover animações" do Android — e o modo de economia de bateria
+   do Chrome no Android também a liga sozinho. Quem visitava com qualquer uma
+   dessas ligadas via o site parado, sem nada de errado à vista que explicasse
+   a diferença.
+
+   ⚠️ O QUE SE PERDE, dito por escrito porque não é detalhe: essa preferência
+   existe para quem sente enjoo, tontura ou dor de cabeça com movimento na
+   tela (desordem vestibular). Quem a ligar no aparelho agora recebe o site com
+   todo o movimento assim mesmo. Foi pedido sabendo disso; fica registrado aqui
+   para não ser reintroduzido por engano como se fosse esquecimento.
+
+   SE UM DIA VOLTAR, o caminho não é ressuscitar os oito pontos: é um só, e ele
+   já existe de graça — o `.reveal` é a maior fonte de movimento do site (são
+   dezenas por página) e desarmá-lo sozinho tira a maior parte do balanço sem
+   derrubar a galeria nem a parede. O histórico do git tem os blocos originais.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 html {
   scroll-behavior: smooth;
 
@@ -174,8 +206,40 @@ html {
      E fica no `html`, não no `body`: enquanto o `html` está `visible`, o
      `overflow` do `body` é PROPAGADO para o viewport e o próprio body passa a
      se comportar como `visible` — no body a regra não recorta nada. Foi
-     tentado primeiro, medido, e não funcionou. */
+     tentado primeiro, medido, e não funcionou.
+
+     ⚠️ ESTA LINHA SOZINHA NÃO RESOLVE, e a `.recorte-lateral` mais abaixo é
+     que resolve. Ela impede a BARRA de rolagem (`scrollLeft` fica preso em 0),
+     mas não impede a consequência que se vê no aparelho: quando o `overflow`
+     do `html` é propagado para o viewport, quem recorta é o VIEWPORT, e o
+     conteúdo largo continua contando para a largura do viewport de LAYOUT. No
+     Chrome em emulação de celular, /celulas media `clientWidth` 390 e
+     `innerWidth` 410 — layout de 410 dentro de uma janela visual de 390. O
+     resultado é a página abrindo deslocada e arrastável de lado, com uma faixa
+     de fundo sobrando na borda: é exatamente o print que o Lucas mandou
+     (23/08/2026). Recortar num elemento comum, dentro do documento, tira os
+     20px da conta antes que eles cheguem ao viewport. */
   overflow-x: clip;
+}
+
+/* O RECORTE QUE DE FATO SEGURA A SOBRA LATERAL. Vai no `<main>` (ver
+   `components/Main.tsx`), que é um elemento comum: o `overflow` dele não é
+   propagado para lugar nenhum, então ele recorta onde está e a sobra dos
+   `.reveal--left/--right` morre ali dentro — o documento volta a medir a
+   largura da tela e o viewport de layout para de crescer.
+
+   `overflow-y: visible` é OBRIGATÓRIO na dupla e não é redundância: sem ele o
+   par `clip`/`visible` não se sustenta e o eixo Y viraria `auto`, criando um
+   contêiner de rolagem. Isso quebraria de uma vez o `position: sticky` da
+   pilha de células, o da parede da /celulas e o `scroll-behavior: smooth` —
+   que é o mesmo motivo de o `clip` ter sido escolhido lá em cima em vez de
+   `hidden`. Com `clip` + `visible` nada disso é contêiner de rolagem: o
+   recorte é só um recorte.
+
+   O `<header>` fixo é IRMÃO do `<main>`, não filho, então continua inteiro. */
+.recorte-lateral {
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 body {
@@ -288,9 +352,7 @@ body {
    duas capas: as fotos são o LCP das rotas, e um fade de entrada atrasaria a
    medida. Aqui o primeiro quadro já mostra a foto inteira e opaca.
 
-   Herdou o lugar do antigo `heroZoom`, que tinha sobrado sem uso no arquivo.
-
-   Quem pediu menos movimento não recebe nenhum. */
+   Herdou o lugar do antigo `heroZoom`, que tinha sobrado sem uso no arquivo. */
 @keyframes capaAfasta {
   from { transform: scale(1.06); }
   to { transform: scale(1); }
@@ -299,12 +361,6 @@ body {
 .capa-afasta img {
   transform-origin: 50% 100%;
   animation: capaAfasta 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .capa-afasta img {
-    animation: none;
-  }
 }
 
 /* Seta de scroll da capa — flutua de leve pra chamar o olho pra baixo */
@@ -459,27 +515,6 @@ body {
    que nenhum quadro podia mencionar `font-variation-settings` sem matar o
    hover. É o tipo de coisa que custa uma tarde para redescobrir. */
 
-/* Quem pediu menos movimento no sistema fica com o estado de repouso: a seta
-   parada (mas visível) e a câmera da colagem sem percorrer. A parede aparece
-   pronta, pelo mesmo motivo acima.
-
-   A seção "Quem somos" tem a própria régua de menos-movimento, e ela mora no
-   `components/quem-somos/quem-somos.module.css` — junto da coreografia que ela
-   desarma, que é onde dá para conferir se sobrou alguma peça escondida. */
-@media (prefers-reduced-motion: reduce) {
-  .animate-seta-flutua,
-  .capa-vagueia {
-    animation: none;
-  }
-}
-
-/* A `.capa-vagueia` sem animação fica no `transform` de repouso, que é zero —
-   ou seja, a quina superior esquerda da colagem. É de propósito e não precisa
-   de regra: é o MESMO quadro em que a capa abre para todo mundo. Antes daqui
-   havia um `transform` parando ela no meio, e isso deixou de fazer sentido
-   quando o trajeto passou a nascer na quina — quem pediu menos movimento veria
-   um enquadramento que mais ninguém vê. */
-
 /* Scroll reveal (usado pelo componente <Reveal />) — várias variantes de entrada,
    todas revertem ao sair da viewport (retrigger na volta do scroll também) */
 .reveal {
@@ -505,29 +540,14 @@ body {
 .reveal--blur { transform: translateY(16px); filter: blur(10px); }
 .reveal--fade { transform: none; }
 
-/* QUEM PEDIU MENOS MOVIMENTO NÃO RECEBE NENHUM REVEAL.
-   Sem esta regra o `.reveal` continuava deslizando 28px e desfocando 10px em
-   TODAS as sete páginas para quem tem "reduzir movimento" ligado no sistema —
-   e são dezenas de elementos por página, o que faz dele, de longe, a maior
-   fonte de movimento do site. As outras animações (a seta da capa, a colagem
-   que vagueia, o afastamento da foto da /sobre) já paravam; esta faltava.
-
-   O estado imposto é o de CHEGADA, não o de partida: opacidade cheia, sem
-   deslocamento e sem desfoque. É importante que seja assim e não
-   `animation: none` — o `.reveal` nasce com `opacity: 0` no CSS, então
-   desligar só a transição deixaria a página inteira invisível para exatamente
-   as pessoas que pediram menos efeito.
-
-   `transition: none` junto: sem ele o elemento ainda percorreria a mudança de
-   opacidade quando o IntersectionObserver marcasse `.is-visible`. */
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
-}
+/* ⚠️ O `.reveal` NASCE COM `opacity: 0`, e agora não há mais nenhuma regra de
+   mídia que o devolva ao estado de chegada — quem acende cada elemento é o
+   IntersectionObserver do `components/Reveal.tsx`, e só ele. É a peça mais
+   frágil do site depois desta mudança: se o JS não rodar, a página fica em
+   branco em vez de ficar parada. Antes o bloco de menos-movimento servia de
+   rede sem querer, mas só para quem tinha a preferência ligada — para todo o
+   resto o risco já era este. Não pôr um `opacity` de partida diferente de 0
+   sem ler o comentário do observador. */
 
 /* Grade que troca de conteúdo: fade+rise na entrada */
 @keyframes gridIn {
@@ -642,13 +662,5 @@ body {
 @media (max-width: 639px) {
   .janela-parede {
     animation-duration: 26s;
-  }
-}
-
-/* Quem pediu menos movimento recebe a parede parada — e ela continua inteira,
-   porque o repouso é o primeiro quadro: o topo da colagem no topo da janela. */
-@media (prefers-reduced-motion: reduce) {
-  .janela-parede {
-    animation: none;
   }
 }

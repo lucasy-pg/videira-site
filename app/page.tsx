@@ -133,8 +133,8 @@ function Chave({ t, escuro = false }: { t: Manchete; escuro?: boolean }) {
  * MOVIMENTO. Só `<Reveal>` (fade e deslocamento curto na entrada), o hover dos
  * CTAs e a seta que flutua no fim da capa. Nada de GSAP, nada de parallax,
  * nada preso à rolagem: o briefing pede que nenhuma animação chame mais
- * atenção que o conteúdo, e quem tem "reduzir movimento" ligado no sistema não
- * recebe nenhuma delas (as réguas estão no globals.css).
+ * atenção que o conteúdo. Todas tocam em todo aparelho — o site deixou de
+ * consultar "reduzir movimento" do sistema (ver o topo do globals.css).
  */
 export default function Home() {
   return (
@@ -229,7 +229,7 @@ export default function Home() {
             direita justamente porque o texto está à esquerda: no centro ele
             cairia sobre o botão no celular, e embaixo do botão viraria um
             segundo CTA. `animate-seta-flutua` (globals.css) é a mesma seta que
-            a /sobre usa, e ela para para quem pediu menos movimento.
+            a /sobre usa.
 
             É SÓ A SETA, sem rótulo. Chegou a ter um "Role" em caixa alta por
             cima dela e saiu: uma seta que flutua para baixo na beira da

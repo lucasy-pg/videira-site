@@ -586,9 +586,11 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ═══ MOVIMENTO 3 — FRASE DE IMPACTO ═══════════════════════════════════════
-   Muito ar em cima e embaixo, e a frase deslocada para o centro-direita — nunca
-   centralizada de forma simétrica. O deslocamento é `margin-left` em `vw` e
-   colapsa sozinho no celular, sem media query: `clamp` com piso zero.
+   Muito ar em cima e embaixo, e a frase ALINHADA À DIREITA — nunca centralizada
+   de forma simétrica, e desde 23/08/2026 nunca mais só empurrada para lá (o
+   porquê da troca está no `.impactoBloco`). O único ajuste por largura é o
+   recuo que desvia da foto solta, e ele é uma media query de 1024px porque a
+   foto também é.
 
    ⚠️ O RESPIRO DE CIMA ENCOLHEU EM 21/08/2026 — era o mesmo do de baixo
    (120–200px) e passou a ser um terço disso. A razão é o que está ACIMA da
@@ -610,15 +612,54 @@
    fecho lá embaixo se estica até essa mesma borda (ver `.impactoFecho`). O
    título já se comportava assim visualmente — as duas linhas são quebras
    explícitas, então nunca usaram a largura toda —, mas a caixa usava. Agora a
-   caixa vale o desenho, e as duas peças fecham na mesma vertical dos dois lados.
+   caixa vale o desenho, e as duas peças fecham na mesma vertical à direita.
 
    `max-width: 100%` é o que impede o bloco de estourar o container quando a
    frase não couber (telas estreitas): ali o `fit-content` para de encolher e
-   passa a caber, e as linhas do título voltam a quebrar sozinhas. */
+   passa a caber, e as linhas do título voltam a quebrar sozinhas.
+
+   ⚠️ O BLOCO PASSOU A FECHAR À DIREITA EM 23/08/2026, e o `text-align` é a
+   parte importante da troca — não o `margin`. Antes ele era um empurrão de
+   `margin-left: clamp(0px, 20vw, 320px)` com o texto alinhado à esquerda: um
+   bloco solto no meio do nada, com as bordas ragged dos dois lados e sem borda
+   nenhuma para se apoiar. O Lucas olhou a seção pronta e leu como desalinho, e
+   ele estava certo — deslocar não é alinhar.
+
+   Agora as linhas fecham numa vertical só, e essa vertical é a única aresta
+   forte que sobrou do lado direito da faixa. As duas bordas do bloco trocam de
+   papel: a direita vira régua, a esquerda vira o degrau desenhado pelas
+   quebras explícitas da frase.
+
+   ISTO NÃO CONTRARIA a pauta e a régua logo abaixo, que continuam correndo da
+   esquerda para a direita: elas ENTRAM pela esquerda e vão indentando até
+   perto desta mesma borda. O título é o ponto de chegada delas, não uma quarta
+   margem. */
 .impactoBloco {
-  margin-left: clamp(0px, 20vw, 320px);
+  margin-left: auto;
   width: fit-content;
   max-width: 100%;
+  text-align: right;
+}
+
+/* ⚠️ ESTE RECUO EXISTE PARA DESVIAR DA FOTO SOLTA, e a foto não mora neste
+   arquivo: é a `.propAlta` do `components/radicais/radicais.module.css`, que a
+   seção 05 pendura no canto superior direito (`right: 2vw`, largura
+   `clamp(150px, 13vw, 220px)`) e que só existe a partir de 1024px — por isso o
+   recuo aparece no mesmo ponto e some junto embaixo dele.
+
+   Sem ele, a frase fecharia na borda do container e as linhas passariam POR
+   BAIXO da foto: o `z-index: 2` do container mantém o texto legível, mas
+   manchete preta em cima de fotografia é sujeira, não composição. Entre 1024px
+   e ~1900px a foto invade de 120 a 185px da coluna de texto; os três números do
+   `clamp` cobrem essa faixa com folga e param de crescer quando a foto sai
+   sozinha para a margem externa, nas telas mais largas.
+
+   Se a `.propAlta` mudar de lado, de largura ou de altura, é AQUI que se
+   conserta — o acoplamento entre os dois arquivos é este parágrafo. */
+@media (min-width: 1024px) {
+  .impactoBloco {
+    margin-right: clamp(140px, 14vw, 240px);
+  }
 }
 
 /* `-0.02em` e não o `-0.012em` da serifa que rodava aqui: é o valor do
@@ -672,6 +713,11 @@
    desalinho) — é subir o corpo do fecho, que encurta a medida sem mexer na
    borda.
 
+   COM O BLOCO FECHANDO À DIREITA, essa vertical compartilhada é a borda
+   DIREITA das duas peças, e o `text-align: right` do pai é quem alinha as
+   linhas nela — o `width: 0` + `min-width: 100%` continua fazendo só o que
+   sempre fez, que é decidir de quem é a largura da caixa.
+
    O `max-width: none` de celular que morava aqui embaixo SUMIU junto, e sem
    perda: naquela largura o `fit-content` já bate no `max-width: 100%` do pai,
    então o parágrafo ocupa a coluna inteira exatamente como ocupava antes. */
@@ -689,9 +735,11 @@
    lado. A régua de três em caixas iguais é o formato que faz uma identidade ler
    como formulário, e foi justamente o que a versão anterior desta seção fazia.
 
-   A INDENTAÇÃO É `margin-left` EM `vw` com piso zero no `clamp`, pelo mesmo
-   motivo do movimento 3: no celular ela some sozinha, sem media query e sem
-   segunda regra para manter em sincronia. */
+   A INDENTAÇÃO É `margin-left` EM `vw` com piso zero no `clamp`: no celular ela
+   some sozinha, sem media query e sem segunda regra para manter em sincronia.
+   (Este parágrafo já mandava "ver o movimento 3", que usava a mesma técnica
+   para se deslocar. Não usa mais — a frase de impacto hoje se ALINHA à direita
+   em vez de se deslocar para lá.) */
 .identidade {
   /* O fim da faixa é lido duas vezes — aqui, como respiro, e no `::before`, que
      desconta metade dele para centrar a mão nos TRÊS BLOCOS e não na caixa
@@ -1013,50 +1061,5 @@
   .bloco2,
   .bloco3 {
     animation: none;
-  }
-}
-
-/* Quem pediu menos movimento fica com a seção inteira em pé e legível, e com as
-   entradas reduzidas a um fade curto: sem parallax, sem passeio horizontal de
-   LIVRES, sem máscara de cursor, sem recorte.
-
-   O `clip-path: none` explícito é o que importa aqui — deixar o recorte no
-   estado inicial e só cortar a transição prenderia a palavra invisível para
-   sempre, que é o pior resultado possível para quem já está pedindo menos. */
-@media (prefers-reduced-motion: reduce) {
-
-  .carta1,
-  .carta2,
-  .carta3,
-  .forma,
-  .bloco1,
-  .bloco2,
-  .bloco3 {
-    animation: none;
-  }
-
-  [data-cena="armada"] .impactoLinha,
-  [data-cena="armada"] .impactoFecho {
-    clip-path: none;
-    transform: none;
-    scale: 1;
-    opacity: 0;
-  }
-
-  [data-cena="ativa"] .impactoLinha,
-  [data-cena="ativa"] .impactoLinha2,
-  [data-cena="ativa"] .impactoFecho {
-    clip-path: none;
-    transform: none;
-    scale: 1;
-    /* Um fade de 200ms e nada mais: sem recorte, sem deslocamento, sem escada
-       de atrasos. O conteúdo chega inteiro e legível — que é o pedido. */
-    transition: opacity 200ms linear;
-    transition-delay: 0ms;
-  }
-
-  [data-cena="ativa"] .impactoLinha,
-  [data-cena="ativa"] .impactoFecho {
-    opacity: 1;
   }
 }

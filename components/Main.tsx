@@ -10,7 +10,7 @@ export function Main({ children }: { children: React.ReactNode }) {
   const overlay = isOverlayRoute(usePathname());
 
   return (
-    <main className={`flex-1 ${overlay ? "" : "pt-16 sm:pt-20"}`}>
+    <main className={`recorte-lateral flex-1 ${overlay ? "" : "pt-16 sm:pt-20"}`}>
       {children}
     </main>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useRef, useSyncExternalStore } from "react";
+import { memo, useEffect, useRef } from "react";
 import gsap from "gsap";
 
 import {
@@ -71,25 +71,6 @@ import css from "./galeria.module.css";
  * entrando e saindo pela janela, com a cena seguinte precarregada por
  * `precarregarVizinhas`.
  */
-
-/* A consulta de "menos movimento" lida como fonte externa, e não como estado
-   ajustado num efeito. A diferença é real: com `useState` mais `useEffect`, a
-   primeira pintura no cliente sai sempre com o valor errado e o efeito a
-   corrige logo depois — uma renderização em cascata a cada visita. Com
-   `useSyncExternalStore`, o React lê o valor certo já na hidratação.
-
-   As duas funções ficam no escopo do módulo porque precisam ser estáveis entre
-   renderizações; definidas dentro do componente, cada renderização criaria
-   funções novas e o React reassinaria a consulta. */
-function assinarMenosMovimento(avisar: () => void) {
-  const consulta = window.matchMedia("(prefers-reduced-motion: reduce)");
-  consulta.addEventListener("change", avisar);
-  return () => consulta.removeEventListener("change", avisar);
-}
-
-function lerMenosMovimento() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 /** A legenda com uma palavra em roxo claro. O realce vem dos dados, não da
  *  marcação — trocar qual palavra brilha não deveria pedir para abrir um
@@ -288,20 +269,16 @@ export function Galeria() {
     };
   }, []);
 
-  /* QUEM PEDIU MENOS MOVIMENTO RECEBE TODAS AS IMAGENS DE UMA VEZ, e isto
-     conserta um defeito de verdade: sem coreografia não há troca de cena, a
-     janela de montagem fica parada na cena 0 para sempre, e a parede que o CSS
-     desenha para esse caso apareceria com vinte e poucas molduras vazias e uma
-     dúzia de fotos. O windowing existe para não decodificar trinta imagens
-     durante uma animação; sem animação, ele não tem nada a economizar. */
-  const semMovimento = useSyncExternalStore(
-    assinarMenosMovimento,
-    lerMenosMovimento,
-    () => false // no servidor não há consulta de mídia: parte-se do padrão
-  );
+  /* A JANELA DE MONTAGEM: só existem as `<img>` da cena anterior, da atual e da
+     seguinte. É o que evita decodificar trinta imagens durante a coreografia.
 
+     Havia aqui um escape — `if (semMovimento) return true`, que montava as
+     trinta de uma vez para quem pedia menos movimento, porque nesse caso a
+     coreografia não montava, a cena ficava parada na 0 para sempre e a parede
+     estática do CSS apareceria com molduras vazias. Saiu junto com o resto da
+     consulta (ver o topo de `app/globals.css`, 23/08/2026): o motor agora monta
+     em todo aparelho, a cena troca, e a janela volta a ser só uma economia. */
   const naJanela = (id: string) => {
-    if (semMovimento) return true;
     const [entra, sai] = janelaDaFoto[id] ?? [0, 0];
     return cenaAtual >= entra - 1 && cenaAtual <= sai + 1;
   };
@@ -328,7 +305,6 @@ export function Galeria() {
      entrar são promovidas DURANTE a parada, que é justamente o momento em que
      a máquina não tem nada para fazer. */
   const emMovimento = (id: string) => {
-    if (semMovimento) return false;
     return (
       (emMovimentoNaCena[cenaAtual]?.has(id) ?? false) ||
       (emMovimentoNaCena[cenaAtual + 1]?.has(id) ?? false)
@@ -394,11 +370,14 @@ export function Galeria() {
             data-camada="palavras"
             className={`${css.camada} ${css.camadaPalavras}`}
           >
-            {/* As palavras gigantes ficam fora da árvore de acessibilidade: a
-                7% de opacidade elas são textura, e um leitor de tela lendo
-                "comunhão, célula, propósito" solto entre as fotos anunciaria
-                uma estrutura que não existe. O que elas dizem já está dito
-                pelas legendas, que são texto de verdade. */}
+            {/* As palavras gigantes ficam fora da árvore de acessibilidade:
+                entre 7% e 18% de opacidade elas são textura, e um leitor de
+                tela lendo "comunhão, célula, propósito" solto entre as fotos
+                anunciaria uma estrutura que não existe. O que elas dizem já
+                está dito pelas legendas, que são texto de verdade.
+
+                Os dois valores de opacidade e o porquê de serem dois estão no
+                `useMotorDaGaleria.ts`, junto do bloco que os aplica. */}
             {cenas
               .filter((c) => c.palavra)
               .map((c) => (

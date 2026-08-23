@@ -36,29 +36,44 @@
    sem medir nada.
 
    É por isso que a altura de `.duas` é a única coisa que regula a duração da
-   cena: 320svh de bloco menos 100svh de tela dão 220svh de curso pinado.
+   cena: 320svh de bloco menos 100svh de tela dão 220svh de curso pinado no
+   desktop, e 270svh menos 100svh dão 170svh no celular.
 
    ── E O QUE ACONTECE ONDE NADA DISSO EXISTE ───────────────────────────────
 
-   Duas degradações, e as duas estão escritas no fim do arquivo:
+   UMA degradação, e ela está escrita no fim do arquivo:
 
      · SEM `animation-timeline` — o navegador não tem linha do tempo de
        rolagem. Toda animação sai de cena e as peças ficam no estado de
        REPOUSO, que é sempre o estado legível. Nenhuma peça deste arquivo
        depende de um keyframe para estar onde deve, e nenhuma nasce invisível.
-     · `prefers-reduced-motion: reduce` — mesma coisa, mais o pin da seção 03,
-       que se desfaz: o palco volta a ser fluxo normal e os dois atos ficam um
-       embaixo do outro. Quem pede menos movimento recebe a composição inteira
-       de pé, não meia composição.
+
+   Eram duas. A outra era `prefers-reduced-motion: reduce`, que desmontava o
+   pin da seção 03 junto com as animações; ela saiu com a decisão registrada no
+   topo de `app/globals.css` (23/08/2026) — o site inteiro deixou de consultar
+   a preferência. O bloco que ficava aqui está no histórico do git.
 
    ── O CELULAR NÃO É A MESMA COISA ENCOLHIDA ───────────────────────────────
 
    O briefing é explícito: "no mobile, não simplesmente empilhar tudo;
    reinterpretar as composições". Então a BASE deste arquivo é o celular — os
-   dois atos empilhados, as fotos numa fileira embaixo de cada palavra, sem pin
-   e sem sobreposição — e o palco pinado com fotografia atravessando as letras
-   só entra a partir de 768px. Não é "desktop com media query de conserto"; são
-   dois desenhos, e o menor é o padrão.
+   dois atos empilhados, as fotos numa fileira embaixo de cada palavra, sem as
+   fotografias soltas atravessando a composição —, e o palco largo, com as
+   fotos nas beiradas e o texto em duas colunas, entra a partir de 1024px. Não
+   é "desktop com media query de conserto"; são dois desenhos, e o menor é o
+   padrão.
+
+   ⚠️ O QUE NÃO É DESENHO ATRAVESSA OS DOIS: o pin da seção 03. Ele já foi
+   exclusivo do desktop e deixou de ser — a COMPOSIÇÃO do celular continua
+   empilhada, mas os dois atos param de ser dois blocos rolados em sequência e
+   viram um quadro só em que RADICAIS sai e LIVRES entra. Enquanto eram dois
+   blocos, as duas palavras cabiam na mesma rolagem e a seção lia como um
+   letreiro com duas palavras, que é justamente o que ela existe para não ser.
+   Reinterpretar a composição nunca quis dizer abrir mão do argumento dela.
+
+   O pin do celular tem um recorte que o do desktop não tem, e é por ALTURA:
+   abaixo de 600px de janela o ato não cabe numa tela e a seção volta a rolar
+   empilhada. Ver o bloco `@media (max-width: 1023px) and (min-height: 600px)`.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ═══ AS PEÇAS COMPARTILHADAS ══════════════════════════════════════════════ */
@@ -415,6 +430,7 @@
 .atoFotos {
   margin-top: clamp(32px, 5vh, 56px);
   display: flex;
+  align-items: flex-start;
   gap: 10px;
 }
 
@@ -427,10 +443,226 @@
   border-radius: 0.75rem;
 }
 
+/* ── O PAR DO ATO 2 TEM DUAS FORMAS, e as duas saem do arquivo ─────────────
+   UMA DEITADA E UMA EM PÉ. A `.doisA` (cachoeira) é 1280×960 e a `.doisB`
+   (batismo) é 1068×1600 — proporções opostas. Numa altura comum, que é o que
+   o resto da fileira usa, a segunda perdia perto de metade da imagem no corte:
+   o rapaz de braços erguidos entrava num quadro deitado, e o que se via era o
+   tronco sem os braços, que são o assunto da foto.
+
+   Então aqui a moldura obedece ao arquivo em vez do contrário — e é o mesmo
+   que o desktop já fazia, onde cada foto tem só `width` e a altura vem da
+   proporção da imagem. O `align-items: flex-start` da fileira é o que permite
+   as duas terem alturas diferentes: sem ele o `stretch` do flex as igualaria
+   de novo e o ganho evaporava.
+
+   AS PROPORÇÕES SÃO DECLARADAS, não herdadas, e por um motivo: dentro do
+   palco pinado a altura da fileira entra num orçamento de uma tela, e uma
+   altura que só o arquivo conhece não pode ser contada. 4/3 não corta nada da
+   cachoeira; 3/4 tira ~11% da altura do batismo, o que mantém os braços
+   inteiros e ainda lê como retângulo em pé.
+
+   ⚠️ O ATO 1 NÃO ENTRA NESTA REGRA, e não é esquecimento. As duas fotos dele
+   são 1200×1600 — a MESMA proporção —, e dar a proporção do arquivo às duas
+   devolveria duas colunas idênticas lado a lado. Lá a altura comum é o que faz
+   a dupla ler como uma faixa; aqui, com um arquivo deitado e um em pé, é a
+   diferença que faz ler como colagem. */
+.doisA {
+  aspect-ratio: 4 / 3;
+  height: auto;
+}
+
+.doisB {
+  aspect-ratio: 3 / 4;
+  height: auto;
+}
+
+/* ⚠️ A TERCEIRA FOTO DO ATO 2 NÃO EXISTE NO CELULAR, e o corte é de conteúdo
+   antes de ser de espaço. A trinca do LIVRES foi escolhida por TEMPERATURA —
+   "água, braços erguidos, céu", diz o `lib/radicais.ts` —, e a roda vista de
+   baixo é a única noturna e fechada das três: ela pertence à paleta do ato
+   RADICAIS, e só se sustenta no desktop porque lá ela mora ACIMA da palavra,
+   solta, lida como peça de colagem e não como parte da fileira.
+
+   Enfileirada com as outras duas, que é o que o celular faz, ela vira o
+   terceiro item de uma tira de contato e desmente a virada que a seção está
+   contando naquele exato momento. Duas fotos claras dizem "livres" melhor do
+   que três fotos em que uma puxa para trás.
+
+   E há o troco de espaço, que veio de graça: com duas em vez de três, cada uma
+   ganha metade da fileira em vez de um terço — `flex: 1 1 0` redistribui
+   sozinho, sem um número novo em lugar nenhum.
+
+   Ela volta no `@media (min-width: 1024px)`, onde tem lugar próprio. */
+.doisC {
+  display: none;
+}
+
 .atoTexto {
   margin-top: clamp(28px, 4vh, 44px);
   display: grid;
   gap: clamp(24px, 3.5vh, 40px);
+}
+
+/* ── A COREOGRAFIA DA TRAVESSIA, em cima do palco ──────────────────────────
+   OS DOIS ATOS SE CRUZAM ENTRE 38% E 62% DO CURSO, e o vão de 24% é o que
+   impede a leitura dupla: em nenhum quadro existem RADICAIS e LIVRES os dois
+   legíveis ao mesmo tempo. Quando um está em 50% de opacidade, o outro já
+   está a caminho da saída.
+
+   ANIMA SÓ `opacity` E `transform`, que é o orçamento que o briefing pede — as
+   duas propriedades que o compositor resolve sem layout e sem repintura.
+
+   ⚠️ OS DOIS QUADROS-CHAVE MORAM AQUI FORA, no topo do arquivo, e não dentro
+   de uma media query. São dois palcos que os consultam — o do celular e o do
+   desktop, logo abaixo — e a travessia é a MESMA nos dois; foi para isso que
+   eles subiram. Um `@keyframes` declarado dentro de um `@media` só existe
+   enquanto aquela media casa, então copiá-lo para os dois blocos criaria duas
+   versões do mesmo movimento, livres para divergir na primeira vez que alguém
+   ajustar uma delas.
+
+   As distâncias são em `vh` de propósito: o gesto é uma fração da tela, então
+   ele vale igual num celular e num monitor sem precisar de dois números. */
+@keyframes atoUmSai {
+  0%,
+  38% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  62%,
+  100% {
+    opacity: 0;
+    transform: translateY(-12vh);
+  }
+}
+
+@keyframes atoDoisChega {
+  0%,
+  38% {
+    opacity: 0;
+    transform: translateY(14vh);
+  }
+  62%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══ 03 no celular — o mesmo palco, na composição empilhada ═══════════════
+
+   ⚠️ O PIN DEIXOU DE SER SÓ DO DESKTOP, e o que atravessou não foi o desenho:
+   foi a TRAVESSIA. O celular continua com a composição empilhada — palavra,
+   anotações, prosa e a fileira de fotos, uma coisa embaixo da outra — porque
+   é ela que cabe em 390px. O que ele ganhou é o palco: os dois atos param de
+   ser dois blocos que se rolam em sequência e passam a ser um só quadro em
+   que RADICAIS sai e LIVRES entra, que é o argumento inteiro desta seção.
+
+   Empilhados, as duas palavras apareciam juntas na mesma rolagem e a seção
+   virava um letreiro com duas palavras — exatamente o que o cabeçalho deste
+   bloco diz que ela não é. Metade das visitas via só isso.
+
+   ⚠️ E POR QUE O RECORTE É POR ALTURA, e não só por largura. O palco pinado
+   obriga o ato inteiro a caber em UMA tela; num celular deitado (ou num
+   aparelho antigo em pé) não cabe, e o que sobra é cortado pelo `overflow:
+   clip` do trilho — o visitante perderia a prosa sem nunca saber que ela
+   existiu. Abaixo de 600px de altura, então, a seção volta a ser os dois
+   blocos empilhados, que é o estado de repouso desta composição e é legível
+   em qualquer tela.
+
+   O TETO DE 1023px É O DE SEMPRE: daí para cima manda o palco do desktop, que
+   vem logo abaixo e vence por ser o último a falar sobre as mesmas
+   propriedades.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1023px) and (min-height: 600px) {
+  .duas {
+    /* 270svh de bloco menos os 100svh da tela = 170svh de curso pinado —
+       menos que os 220svh do desktop, e de propósito: no celular a rolagem é
+       curta e por gesto, e o curso do desktop faria a pessoa arrastar o dedo
+       três vezes no mesmo quadro. */
+    height: 270svh;
+    view-timeline-name: --duas;
+    view-timeline-axis: block;
+  }
+
+  .duasTrilho {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    padding: 0;
+    display: block;
+    /* Sem o recorte, o ato que sobe e o que desce apareceriam por cima das
+       seções vizinhas durante a travessia. */
+    overflow: clip;
+  }
+
+  .ato {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ── O ORÇAMENTO DE ALTURA ───────────────────────────────────────────────
+     Rolando, o ato podia ter a altura que quisesse. Pinado, ele tem UMA tela,
+     e a soma das partes de RADICAIS (palavra + três anotações + quatro linhas
+     de prosa + a fileira de fotos) passava de uma tela de iPhone SE.
+
+     Quem cede é a foto, e é a escolha certa: aqui ela é acompanhamento, e a
+     palavra e a prosa são o conteúdo. A altura passa a ser contada em `vh` em
+     vez de `vw` justamente por isso — o que aperta neste palco é a altura da
+     tela, não a largura dela, e em `vw` a foto ignorava o problema. Os
+     `margin-top` seguem o mesmo caminho. */
+  .atoTexto {
+    margin-top: clamp(18px, 2.6vh, 34px);
+    gap: clamp(14px, 2.2vh, 30px);
+  }
+
+  .atoFotos {
+    margin-top: clamp(20px, 3.4vh, 44px);
+  }
+
+  .atoFoto {
+    height: clamp(96px, 17vh, 190px);
+  }
+
+  /* O par do ato 2 tem proporção própria (ver a base) e precisa dizer isso de
+     novo AQUI: `.atoFoto` e `.doisA` têm a mesma especificidade, então quem
+     decide é a ordem, e esta regra vem depois. */
+  .doisA,
+  .doisB {
+    height: auto;
+  }
+
+  /* O TETO DA FOTO EM PÉ, e ele é o preço de ela ser em pé dentro de um palco
+     de uma tela só. Em `vh`, então ele se ajusta sozinho: num aparelho alto os
+     26vh passam da altura natural e a proporção 3/4 fica intacta; num aparelho
+     curto ele morde e a foto fica mais quadrada — que é feio, e é muito menos
+     feio do que o pé da fileira ser cortado pelo `overflow: clip` do trilho. */
+  .doisB {
+    max-height: 26vh;
+  }
+
+  .atoUm,
+  .atoDois {
+    animation-timeline: --duas;
+    animation-range: contain 0% contain 100%;
+    /* `both` para o preenchimento valer nas duas pontas: antes do início da
+       linha do tempo o ato 1 está inteiro e o ato 2 invisível, e não num
+       estado intermediário. */
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+  }
+
+  .atoUm {
+    animation-name: atoUmSai;
+  }
+
+  .atoDois {
+    animation-name: atoDoisChega;
+  }
 }
 
 /* ═══ 03 no desktop — o palco pinado ══════════════════════════════════════
@@ -492,17 +724,11 @@
   }
 
   /* ── A TRAVESSIA ────────────────────────────────────────────────────────
-     Os dois atos se cruzam entre 38% e 62% do curso, e o vão de 24% é o que
-     impede a leitura dupla: em nenhum quadro existem RADICAIS e LIVRES os dois
-     legíveis ao mesmo tempo. Quando um está em 50% de opacidade, o outro já
-     está a caminho da saída.
-
-     ANIMA SÓ `opacity` E `transform`, que é o orçamento que o briefing pede —
-     as duas propriedades que o compositor resolve sem layout e sem repintura.
-
-     `both` para o preenchimento valer nas duas pontas: antes do início da
-     linha do tempo o ato 1 está no primeiro quadro (inteiro) e o ato 2 no
-     dele (invisível), e não num estado intermediário. */
+     A MESMA do palco do celular, quadro por quadro: os dois `@keyframes`
+     moram no topo do arquivo e os dois palcos os consultam. O que muda entre
+     um e outro NÃO é o movimento, é o curso em que ele acontece — 220svh aqui
+     contra 170svh lá. Ver o comentário de lá, que é onde a travessia está
+     explicada por inteiro. */
   .atoUm,
   .atoDois {
     animation-timeline: --duas;
@@ -517,32 +743,6 @@
 
   .atoDois {
     animation-name: atoDoisChega;
-  }
-
-  @keyframes atoUmSai {
-    0%,
-    38% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    62%,
-    100% {
-      opacity: 0;
-      transform: translateY(-12vh);
-    }
-  }
-
-  @keyframes atoDoisChega {
-    0%,
-    38% {
-      opacity: 0;
-      transform: translateY(14vh);
-    }
-    62%,
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   /* A palavra também DERIVA durante o próprio ato, num curso pequeno e numa
@@ -644,6 +844,9 @@
      reconhecível e mudou de mão, que é o que faz a passagem parecer uma virada
      e não um corte. */
   .doisA {
+    /* A proporção volta a ser a do arquivo: aqui a foto tem só `width`, e a
+       altura sai da imagem — as declaradas na base são do palco do celular. */
+    aspect-ratio: auto;
     left: 2%;
     top: 8%;
     width: clamp(150px, 15vw, 260px);
@@ -653,6 +856,7 @@
   }
 
   .doisB {
+    aspect-ratio: auto;
     right: 1.5%;
     top: 32%;
     width: clamp(125px, 12.5vw, 205px);
@@ -665,6 +869,7 @@
      alto, acima da palavra, onde não há texto nenhum para atrapalhar. É a peça
      que quebra a simetria de "uma de cada lado". */
   .doisC {
+    display: block;
     right: 26%;
     top: 1%;
     width: clamp(105px, 9vw, 150px);
@@ -1128,27 +1333,57 @@
   border-color: var(--color-plum-deep);
 }
 
+/* ⚠️ A COLAGEM VALE NO CELULAR TAMBÉM, e isto substitui um desenho que
+   quebrava a segunda foto. O inset virava uma FAIXA de largura cheia embaixo
+   da grande, em 16:9 fixo — e 16:9 é o pior quadro possível para o retrato do
+   culto, que é 1066×1600: sobrava uma tira do meio do rosto e sumia o resto.
+   A foto existe para mostrar alguém PRESTANDO ATENÇÃO, de mão no queixo; sem
+   o queixo e sem o boné ela não mostra nada.
+
+   O motivo escrito para a faixa era que a 42% de uma tela de 390px o inset
+   cobriria parte de quem está no canto da foto grande. Ele cobre mesmo — e
+   esse é o preço da colagem, que é o que a seção é. Cobrir um pedaço da foto
+   de trás é o comportamento normal de um inset; destruir a foto da frente
+   não é. A mesma composição é a que a /sobre usa na seção de células.
+
+   O QUE MUDA NO CELULAR É SÓ O SANGRAMENTO LATERAL: o inset encosta na quina
+   da grande (`0`) em vez de vazar 1,5rem para fora dela. Naquela largura o
+   respiro do container é de 20px, e as duas beiradas juntas punham a moldura
+   do inset fora da tela — o `overflow-x: clip` da seção salvava a rolagem,
+   mas cortava a borda. Todo o resto (proporção, largura, moldura, sombra) vem
+   das regras de cima, que já são a colagem. */
 @media (max-width: 640px) {
-  /* No celular o inset sai de cima da foto e vira uma faixa embaixo dela: a
-     42% de uma tela de 390px ele cobriria um terço do rosto de quem está no
-     canto da foto grande. */
   .encontroInset {
-    position: static;
-    width: 100%;
-    max-width: none;
-    margin-top: 12px;
-    border: 0;
-    box-shadow: none;
-    aspect-ratio: 16 / 9;
+    right: 0;
   }
 
-  /* Precisa repetir a proporção porque `.encontroInsetEsquerda` a declara e
-     vem antes desta regra no arquivo: sem isto, o retrato 2:3 do culto
-     sobreviveria no celular e a segunda foto ficaria mais alta que a primeira. */
   .encontroInsetEsquerda {
-    left: auto;
-    max-width: none;
-    aspect-ratio: 16 / 9;
+    right: auto;
+    left: 0;
+  }
+
+  /* ⚠️ O RECORTE DA LARGA DO CULTO FOGE DO INSET, e é conta, não gosto.
+
+     A `culto-lotado` é 3:2 (1600×1068) e o quadro é 4:3, então o `cover` corta
+     11% da LARGURA — 88px de cada lado no centro. Nessa posição a quina do
+     inset caía exatamente sobre o menino erguido nos ombros, que é o assunto
+     da foto: sobrava metade dele à direita da moldura.
+
+     `left center` gasta os 11% todos de um lado só. O conteúdo anda 88px de
+     origem para a direita (~6% do quadro), o menino inteiro sai de trás do
+     inset — corpo, braço que o levanta e os tênis vermelhos — e o que se perde
+     é a borda direita da foto, que é fila de gente e não tem assunto.
+
+     ⚠️ NÃO SUBIR ISTO PARA A `.encontroFoto`. As duas seções compartilham essa
+     classe e o inset delas cai em quinas OPOSTAS: aqui ele é o de baixo à
+     esquerda, na de células é o de baixo à direita. A mesma correção lá
+     empurraria a foto PARA CIMA do inset em vez de para longe dele.
+
+     E não vale do `sm` para cima: lá o inset tem no máximo 210px num vão de
+     52vw — não chega perto do menino, e o recorte central é o melhor
+     enquadramento da foto quando nada a cobre. */
+  .encontroFotoCulto {
+    object-position: left center;
   }
 }
 
@@ -1222,20 +1457,39 @@
   );
 }
 
+/* ⚠️ O VÃO É QUADRADO, e o número vem do assunto da foto: o bandeirão é um pano
+   quadrado ocupando a largura inteira do quadro. Aqui já morou um vão deitado
+   de `3/2` (com uma foto quase quadrada, que ele recortava sem que fizesse
+   falta) e, por algumas horas, um vão em pé de `4/5` — o `4/5` é que estava
+   errado, e o Lucas viu na página: uma tira comprida no meio de uma faixa larga
+   não fecha com o resto da seção, por mais que a foto caiba nela.
+
+   O TETO É 560 e não os 760 do vão deitado antigo. Um quadrado de 760 tem 760
+   de altura e empurra para fora da dobra a frase gigante, que é quem manda no
+   capítulo; em 560 a foto ocupa quase a mesma ÁREA que ocupava deitada em
+   760×507. E 560 é também o limite da nitidez: o arquivo tem 1174, que são
+   exatamente os 1120 físicos que uma tela retina pede aqui.
+
+   Os `62vw` do celular não mudaram: lá a foto não compete com nada. */
 .limiarFigura {
   margin: clamp(56px, 9vh, 110px) auto 0;
-  width: min(62vw, 760px);
+  width: min(62vw, 560px);
   display: block;
   border-radius: 1.25rem;
   overflow: hidden;
   box-shadow: 0 60px 120px -60px rgba(0, 0, 0, 0.8);
 }
 
+/* O `1/1` aqui NÃO RECORTA NADA: o arquivo já é 1174×1174, cortado na conversão
+   (o porquê está no `lib/radicais.ts`). Ele fica declarado assim mesmo, por
+   duas razões — reserva a caixa antes de a imagem chegar, que é o que evita o
+   pulo de layout, e faz o vão gritar em vez de sussurrar no dia em que alguém
+   apontar uma foto de outra proporção para cá. */
 .limiarFoto {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
 }
 
@@ -1372,9 +1626,18 @@
 
   /* Sem linha do tempo não há pin útil: o palco ficaria grudado mostrando o ato
      1 e o ato 2 por cima dele, os dois inteiros e sobrepostos. Aqui a seção
-     volta ao desenho do celular — dois blocos, um embaixo do outro —, que é o
-     estado de repouso desta composição e é legível em qualquer largura. */
-  @media (min-width: 1024px) {
+     volta ao desenho empilhado — dois blocos, um embaixo do outro —, que é o
+     estado de repouso desta composição e é legível em qualquer largura.
+
+     ⚠️ SÃO DOIS BLOCOS PORQUE HÁ DOIS PALCOS. Enquanto o pin era só do
+     desktop, uma media query de 1024px bastava; agora o celular também prende
+     o palco, e desfazer só o de cima deixaria o de baixo grudado exibindo os
+     dois atos sobrepostos — que é exatamente o defeito que esta degradação
+     existe para não deixar acontecer. Os dois blocos desfazem o mesmo pin nas
+     duas faixas, e cada um devolve as medidas do SEU desenho: o celular tinha
+     encolhido a foto para caber numa tela, e fora do palco ela não precisa
+     mais disso. */
+  @media (max-width: 1023px) {
     .duas {
       height: auto;
     }
@@ -1391,40 +1654,32 @@
     .ato {
       position: relative;
       inset: auto;
+      display: block;
       opacity: 1;
+    }
+
+    .atoTexto {
+      margin-top: clamp(28px, 4vh, 44px);
+      gap: clamp(24px, 3.5vh, 40px);
     }
 
     .atoFotos {
       margin-top: clamp(32px, 5vh, 56px);
-      display: flex;
     }
 
     .atoFoto {
-      position: static;
-      flex: 1 1 0;
-      min-width: 0;
-      width: auto;
-      height: clamp(150px, 22vw, 260px);
-      rotate: none;
+      height: clamp(150px, 30vw, 230px);
+    }
+
+    /* Mesma exceção da fileira pinada, pelo mesmo motivo de ordem: o par do
+       ato 2 mantém a proporção do arquivo. Sem palco não há orçamento de uma
+       tela, então aqui a foto em pé também não tem teto. */
+    .doisA,
+    .doisB {
+      height: auto;
     }
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .atoUm,
-  .atoDois,
-  .palavraCaixa,
-  .atoFoto,
-  .contramaoTexto,
-  .faixaPista,
-  .propFoto,
-  .limiarFigura {
-    animation: none;
-  }
-
-  /* Mesma desmontagem do bloco acima, e pelo mesmo motivo: sem a travessia, o
-     pin mostraria os dois atos empilhados um sobre o outro. Quem pede menos
-     movimento tem de receber a composição inteira de pé, não meia composição. */
   @media (min-width: 1024px) {
     .duas {
       height: auto;

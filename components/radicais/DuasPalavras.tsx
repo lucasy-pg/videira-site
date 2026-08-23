@@ -71,12 +71,12 @@ export function DuasPalavras() {
           <div className={s.atoFotos}>
             <FotoAcervo
               foto={fotosRadicais.umA}
-              sizes="(min-width: 1600px) 250px, (min-width: 768px) 15vw, 45vw"
+              sizes="(min-width: 1600px) 250px, (min-width: 1024px) 15vw, 45vw"
               className={`${s.atoFoto} ${s.umA}`}
             />
             <FotoAcervo
               foto={fotosRadicais.umB}
-              sizes="(min-width: 1600px) 215px, (min-width: 768px) 13vw, 45vw"
+              sizes="(min-width: 1600px) 215px, (min-width: 1024px) 13vw, 45vw"
               className={`${s.atoFoto} ${s.umB}`}
             />
           </div>
@@ -99,20 +99,32 @@ export function DuasPalavras() {
             <p className={s.prosa}>{atos.livres.texto}</p>
           </div>
 
+          {/* ⚠️ A TERCEIRA FOTO SÓ APARECE NO DESKTOP, e some por `display:
+              none` no módulo — não por uma condição aqui. O DOM é o mesmo nas
+              duas composições, que é a regra desta seção inteira: quem lê com
+              leitor de tela, quem imprime e quem está sem linha do tempo de
+              rolagem recebe a mesma sequência em qualquer largura. O porquê de
+              ela sair da fileira do celular está no módulo, junto do
+              `display: none`.
+
+              O `sizes` dela termina em `1px` de propósito: é a convenção da
+              casa para foto escondida no celular (a mesma da `propositoFotos`
+              na seção 05), e é o que impede o navegador de baixar uma imagem
+              que ninguém vai ver. */}
           <div className={s.atoFotos}>
             <FotoAcervo
               foto={fotosLivres.doisA}
-              sizes="(min-width: 1700px) 270px, (min-width: 768px) 16vw, 34vw"
+              sizes="(min-width: 1700px) 270px, (min-width: 1024px) 16vw, 47vw"
               className={`${s.atoFoto} ${s.doisA}`}
             />
             <FotoAcervo
               foto={fotosLivres.doisB}
-              sizes="(min-width: 1650px) 205px, (min-width: 768px) 12.5vw, 34vw"
+              sizes="(min-width: 1650px) 205px, (min-width: 1024px) 12.5vw, 47vw"
               className={`${s.atoFoto} ${s.doisB}`}
             />
             <FotoAcervo
               foto={fotosLivres.doisC}
-              sizes="(min-width: 1650px) 165px, (min-width: 768px) 10vw, 34vw"
+              sizes="(min-width: 1650px) 165px, (min-width: 1024px) 10vw, 1px"
               className={`${s.atoFoto} ${s.doisC}`}
             />
           </div>

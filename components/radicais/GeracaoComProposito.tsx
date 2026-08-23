@@ -32,8 +32,8 @@ import s from "./radicais.module.css";
  *
  * ⚠️ OS DOIS COMPONENTES IMPORTADOS SÃO OS DA SEÇÃO 02 E NÃO FORAM TOCADOS. O
  * `FraseImpacto` e o `MissaoVisaoProposito` continuam morando em
- * `components/quem-somos/` com o CSS deles, o gatilho de entrada deles e a
- * régua de menos-movimento deles. Eles MUDARAM DE LUGAR na página, não de
+ * `components/quem-somos/` com o CSS deles e o gatilho de entrada deles. Eles
+ * MUDARAM DE LUGAR na página, não de
  * implementação — antes eram os movimentos 3 e 4 do "Quem somos", que o
  * redesenho desmembrou.
  *

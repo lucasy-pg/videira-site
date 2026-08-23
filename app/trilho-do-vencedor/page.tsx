@@ -186,7 +186,7 @@ export default function TrilhoDoVencedor() {
                   <MagneticButton>
                     <Link
                       href="/contato"
-                      className="group inline-flex items-center justify-center gap-2 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95"
+                      className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-plum-deep px-8 py-4 text-sm font-semibold text-bone transition-all duration-300 hover:-translate-y-0.5 hover:bg-plum active:scale-95 sm:w-auto"
                     >
                       Comece sua jornada
                       <ArrowRight
@@ -200,7 +200,7 @@ export default function TrilhoDoVencedor() {
                       que impede o header fixo de cobrir o título ao chegar. */}
                   <Link
                     href="#primeiros-passos"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-foreground/15 px-8 py-4 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/30 hover:bg-foreground/[0.04] active:scale-95"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-foreground/15 px-8 py-4 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/30 hover:bg-foreground/[0.04] active:scale-95 sm:w-auto"
                   >
                     Conheça o Trilho
                   </Link>

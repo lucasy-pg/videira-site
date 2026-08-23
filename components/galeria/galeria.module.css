@@ -917,13 +917,22 @@
   }
 }
 
-/* QUEM PEDIU MENOS MOVIMENTO recebe a galeria inteira, parada e legível: as
-   fotos em grade, o texto todo visível, nenhum pin e nenhuma interpolação. O
-   motor não chega a montar a linha do tempo (ver o `prefers-reduced-motion` no
-   hook) — este bloco é o que desfaz a geometria que ela pressupõe.
+/* ⚠️ A GALERIA NÃO TEM MAIS PAREDE DE RESERVA, e isso é consequência da
+   decisão registrada no topo de `app/globals.css` (23/08/2026): o site parou
+   de consultar `prefers-reduced-motion`.
 
-   NÃO é uma versão empobrecida: é a mesma quarentena de fotos com os mesmos
-   textos, numa parede. Quem desliga animação não quer perder conteúdo. */
+   O que ficava aqui era uma seção inteira de CSS — 105 linhas — que desmontava
+   a geometria pinada e redesenhava a galeria como uma grade estática, para o
+   caso em que o motor não montava a linha do tempo. Com o portão fora do
+   `useMotorDaGaleria`, o motor monta SEMPRE e aquele estado deixou de ser
+   alcançável.
+
+   O QUE ISSO CUSTA, para quem for mexer aqui: a geometria desta galeria agora
+   depende inteiramente do GSAP montar. Se o motor falhar — erro de script,
+   `ScrollTrigger` que não carrega —, as fotos ficam em `position: absolute`
+   umas sobre as outras dentro de um palco de altura fixa, e não há mais nada
+   no CSS que as devolva ao fluxo. O bloco antigo está no histórico do git e é
+   o ponto de partida se um dia alguém quiser uma degradação de verdade. */
 /* ═══ ATO IV — O MURAL ══════════════════════════════════════════════════
 
    A parede com as 111 fotos, rolando para o lado. O componente é o
@@ -1136,125 +1145,4 @@
   transform-origin: left center;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .envoltorio {
-    height: auto;
-  }
 
-  .palco {
-    height: auto;
-    min-height: 0;
-    overflow: visible;
-    padding: 4rem 1.25rem;
-  }
-
-  .camada {
-    position: static;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .camadaPalavras,
-  .camadaLegendas {
-    display: block;
-  }
-
-  .foto {
-    position: static;
-    width: 100%;
-    /* O TETO DE LARGURA NÃO É ENFEITE. `.camadaPalavras` continua sendo um
-       bloco aqui (ela guarda as palavras gigantes, que não vão para a grade),
-       e a foto da camada `fundo` mora dentro dela — sem o teto, essa foto
-       sozinha esticava para os 1440px do palco e ocupava uma tela inteira, no
-       meio de uma parede de miniaturas. */
-    max-width: 340px;
-    opacity: 1 !important;
-    transform: none !important;
-    margin-bottom: 0.75rem;
-  }
-
-  .fotoInterna {
-    transform: none !important;
-    filter: none !important;
-  }
-
-  .fotoLonge {
-    opacity: 0.85;
-  }
-
-  .fotoLonge img {
-    filter: contrast(1.02) saturate(0.9);
-  }
-
-  .legenda,
-  .saidaFrase,
-  .saidaAssinatura,
-  .aberturaInterno {
-    position: static;
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: none !important;
-  }
-
-  /* AS PALAVRAS GIGANTES E A ETIQUETA DE CAPÍTULO SOMEM AQUI, e sumir é o
-     tratamento certo — não é economia.
-
-     As duas são decoração de uma experiência que deixou de existir: a palavra
-     a 7% de opacidade só funciona ATRAVESSANDO a tela por trás das fotos, e o
-     trilho é um indicador de onde se está dentro de um trecho pinado. Sem pin,
-     elas viram outra coisa: as palavras empilhadas em corpo 340px formam uma
-     parede de texto ilegível ocupando três telas, e o trilho vira uma lista de
-     quatro palavras soltas, com barras que nunca se enchem porque não há
-     progresso a medir — a página inteira já está aberta.
-
-     O que elas diziam continua dito: as legendas narrativas ("aqui a gente
-     ri", "aqui a gente aprende") são texto de verdade e ficam. */
-  .palavra,
-  .etapas {
-    display: none;
-  }
-
-  .legenda {
-    max-width: none;
-    margin: 2rem 0;
-  }
-
-  .saidaFoto {
-    position: static;
-    width: 40vw;
-    max-width: 260px;
-    margin: 2rem 0;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .saidaFraseDois {
-    margin-top: 4rem;
-  }
-
-  .saidaAssinatura {
-    margin-top: 5rem;
-  }
-
-  .dica {
-    display: none;
-  }
-}
-
-/* ═══ O MURAL COM MENOS MOVIMENTO ═══════════════════════════════════════
-
-   A parede CONTINUA rolando para o lado, e isso é de propósito: rolagem é
-   navegação, não animação — tirá-la aqui não devolveria movimento nenhum ao
-   usuário, tiraria dele o acesso a 111 fotos. O que sai é o que é decoração:
-   o pulo da foto no hover. */
-@media (prefers-reduced-motion: reduce) {
-  .muralFoto {
-    transition: none;
-  }
-
-  .muralFoto:hover,
-  .muralFoto:focus-visible {
-    transform: none;
-  }
-}

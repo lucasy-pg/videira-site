@@ -23,8 +23,8 @@ import s from "./quem-somos.module.css";
  *   4  IDENTIDADE        fecha a mesma seção 05
  *
  * OS COMPONENTES 3 E 4 NÃO FORAM TOCADOS. Continuam morando nesta pasta, com o
- * CSS deles, o gatilho de entrada deles e a régua de menos-movimento deles —
- * mudaram de lugar na página, não de implementação. Quem for editá-los edita
+ * CSS deles e o gatilho de entrada deles — mudaram de lugar na página, não de
+ * implementação. Quem for editá-los edita
  * aqui; quem for entender por que eles estão onde estão lê o
  * `components/radicais/GeracaoComProposito.tsx`.
  *

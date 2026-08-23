@@ -25,8 +25,13 @@ import { useEmCena } from "./useEmCena";
  * composição de cima e levava um itálico em "Radicais" por causa disso; sem a
  * palavra para ecoar, o itálico saiu junto. Ver `lib/quem-somos.ts`.
  *
- * DESLOCADA PARA O CENTRO-DIREITA, nunca centralizada de forma simétrica — o
- * `margin-left` em `vw` colapsa sozinho no celular pelo piso zero do `clamp`.
+ * ALINHADA À DIREITA, nunca centralizada de forma simétrica. As linhas fecham
+ * todas na mesma vertical, e o parágrafo de fecho fecha nela também — é a borda
+ * direita que segura o bloco, e a esquerda fica livre para o degrau que as
+ * quebras de linha desenham. Até 22/08/2026 o bloco era só EMPURRADO para a
+ * direita com o texto alinhado à esquerda, e ficava boiando; o CSS conta a
+ * história inteira em `.impactoBloco`, inclusive o recuo que desvia da foto
+ * solta da seção 05.
  *
  * É componente de cliente por uma linha: o gatilho de entrada. As duas linhas
  * são reveladas por recorte, uma 150ms depois da outra, e isso precisa de um

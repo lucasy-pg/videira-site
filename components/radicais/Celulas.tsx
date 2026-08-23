@@ -60,10 +60,15 @@ export function Celulas() {
             {/* A margem de baixo reserva o espaço em que o inset sangra para
                 fora da moldura (`bottom: -2rem`). Sem ela, a segunda foto
                 encostaria na borda da seção nas telas em que a coluna termina
-                perto do fim do respiro. No celular o inset vira uma faixa
-                embaixo da foto e a reserva deixa de ser necessária — daí o
-                `sm:`. */}
-            <div className="relative sm:mb-10 sm:mr-6">
+                perto do fim do respiro.
+
+                ⚠️ ELA VALE NO CELULAR TAMBÉM, e antes não valia: o inset virava
+                uma faixa de largura cheia embaixo da foto e não sangrava nada,
+                então a reserva era desnecessária. A faixa saiu (ver o
+                `radicais.module.css`) e a colagem passou a valer em toda
+                largura — sem o `mb-10` aqui, a quina do inset cairia por cima
+                do que vem depois. */}
+            <div className="relative mb-10 sm:mr-6">
               <figure className={s.encontroMoldura}>
                 <FotoAcervo
                   foto={fotosCelulas.principal}
@@ -73,7 +78,7 @@ export function Celulas() {
               </figure>
               <FotoAcervo
                 foto={fotosCelulas.inset}
-                sizes="(min-width: 1024px) 240px, 92vw"
+                sizes="(min-width: 640px) 240px, 40vw"
                 className={s.encontroInset}
               />
             </div>

@@ -90,19 +90,31 @@ export function Culto() {
 
                 A ALTA SANGRA PARA FORA DA LARGA pela quina de baixo à esquerda,
                 com moldura da própria tinta da seção — sem a borda, duas
-                fotografias encostadas leem como uma só, recortada. */}
+                fotografias encostadas leem como uma só, recortada.
+
+                ⚠️ A ALTA É UM RETRATO 2:3 EM QUALQUER LARGURA, inclusive no
+                celular, e isso é requisito e não estilo: o arquivo é 1066×1600
+                e o assunto dele é alguém de mão no queixo prestando atenção.
+                Num quadro deitado — que é o que esta composição já teve no
+                celular — sobrava uma tira do meio da cara e a foto deixava de
+                dizer o que veio dizer. Ver o `radicais.module.css`.
+
+                O `mb-12` deste embrulho é a reserva do que ela sangra para
+                baixo (`bottom: -3rem` = 48px, exatamente o `mb-12`). Mexer num
+                sem mexer no outro põe a quina do retrato por cima da seção
+                seguinte. */}
             <div className="relative mb-12 sm:mb-16 sm:ml-8">
               <figure className={s.encontroMoldura}>
                 <FotoAcervo
                   foto={fotosCulto.larga}
                   grande
                   sizes="(min-width: 1440px) 720px, (min-width: 1024px) 52vw, 92vw"
-                  className={s.encontroFoto}
+                  className={`${s.encontroFoto} ${s.encontroFotoCulto}`}
                 />
               </figure>
               <FotoAcervo
                 foto={fotosCulto.alta}
-                sizes="(min-width: 1024px) 210px, 92vw"
+                sizes="(min-width: 640px) 210px, 40vw"
                 className={`${s.encontroInset} ${s.encontroInsetEsquerda}`}
               />
             </div>

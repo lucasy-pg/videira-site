@@ -19,10 +19,16 @@ import s from "./radicais.module.css";
  * porque a partir daqui a página deixa de nomear as coisas. Uma foto, uma
  * frase, o escuro.
  *
- * A FOTO É A DA TRAVESSIA. `lanternas-na-noite` é a única do acervo em que a
- * própria cena é uma travessia: uma fila de jovens de lanterna na cabeça
- * atravessando um gramado escuro. Ela também já é noturna, então não existe um
- * quadro em que a imagem brigue com o fundo que está escurecendo.
+ * A FOTO É O BANDEIRÃO DA REDE, pendurado no ginásio sob refletores azuis. Ela
+ * já é escura e da mesma família de tinta do degradê, então não existe um
+ * quadro em que a imagem brigue com o fundo que está escurecendo — e é a única
+ * do acervo em que a rede aparece pelo NOME, escrito no pano, o que faz dela a
+ * assinatura do último quadro antes de a página virar experiência.
+ *
+ * ⚠️ O VÃO É QUADRADO PORQUE O BANDEIRÃO É QUADRADO, e o arquivo já chega
+ * cortado assim — o cru é um retrato de story, comprido demais para uma faixa
+ * larga como esta. A conta do corte, do formato e do `sizes` está toda no
+ * `lib/radicais.ts`; quem trocar a foto mexe nos dois arquivos.
  *
  * ── O QUE ESTA SEÇÃO NÃO DIZ, DE PROPÓSITO ────────────────────────────────
  *
@@ -60,7 +66,7 @@ export function Limiar() {
         <figure className={s.limiarFigura}>
           <FotoAcervo
             foto={fotoLimiar}
-            sizes="(min-width: 1230px) 760px, 62vw"
+            sizes="(min-width: 910px) 560px, 62vw"
             className={s.limiarFoto}
           />
         </figure>
