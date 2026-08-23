@@ -114,22 +114,41 @@ export default function RadicaisKids() {
               </Reveal>
 
               <Reveal delay={220}>
+                {/* ⚠️ O BOTÃO SÓLIDO NÃO SAI MAIS DA PÁGINA, e isso é a mesma
+                    decisão que a capa da /radicais-livres já tinha tomado: ele
+                    era "Planeje sua visita" apontando para a /contato, e mandar
+                    alguém falar com a igreja na primeira dobra é cobrar
+                    compromisso de quem ainda não sabe do que se trata. A
+                    /contato continua sendo o destino do convite final (seção
+                    08), depois de a página inteira ter explicado o ministério.
+
+                    O DESTINO É A SEÇÃO 03, e o rótulo do botão é a etiqueta
+                    dela palavra por palavra: quem clica em "Quem somos" chega
+                    num bloco cuja primeira linha é "Quem somos". A faixa dos
+                    números (02) passa voando no caminho — ela é o alcance da
+                    rede, não a apresentação, e quem quiser lê na volta.
+
+                    `<a>` CRU E NÃO `<Link>`: o Link do Next existe para trocar
+                    de rota, e num pulo dentro da mesma página ele só
+                    acrescentaria trabalho de roteador. O destino tem
+                    `scroll-mt` e o `html` da casa tem `scroll-behavior: smooth`,
+                    então o pulo é suave sem uma linha de script. */}
                 <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <MagneticButton>
-                    <Link
-                      href="/contato"
-                      className="group inline-flex items-center justify-center gap-2 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95"
+                    <a
+                      href="#quem-somos"
+                      className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-bone px-8 py-4 text-sm font-semibold text-plum-deep transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95 sm:w-auto"
                     >
-                      Planeje sua visita
+                      Quem somos
                       <ArrowRight
                         size={17}
                         className="transition-transform duration-300 group-hover:translate-x-1"
                       />
-                    </Link>
+                    </a>
                   </MagneticButton>
                   <Link
                     href="/celulas"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95 sm:w-auto"
                   >
                     Ver as células
                   </Link>
@@ -240,11 +259,25 @@ export default function RadicaisKids() {
           `html` impede a rolagem lateral, mas o documento continua medindo
           410px numa tela de 390 — foi o que se mediu aqui. Conter na seção é o
           mesmo remédio que a Home já usa, e deixa esta página em 390 exatos. */}
-      <section className="overflow-hidden bg-sand py-20 sm:py-24 lg:py-28">
+      {/* `id` E `scroll-mt`: o botão sólido do hero aponta para cá. Diferente
+          da /radicais-livres, onde a mesma âncora existe só por respiro, AQUI O
+          `scroll-mt` É CORREÇÃO: esta rota está na `OVERLAY_ROUTES` mas NÃO na
+          `ROTAS_HEADER_ESTATICO`, então a barra do topo é fixa e cobriria os
+          primeiros 4rem do destino. Os valores acompanham a altura dela
+          (`h-16` / `sm:h-20`); quem mexer numa mexe na outra. */}
+      <section
+        id="quem-somos"
+        className="overflow-hidden bg-sand py-20 scroll-mt-16 sm:py-24 sm:scroll-mt-20 lg:py-28"
+      >
         <div className="container mx-auto grid items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:px-12">
           <Reveal variant="left">
+            {/* ⚠️ A ETIQUETA DIZIA "Radicais Kids" e virou "Quem somos" quando o
+                botão do hero passou a apontar para cá. São dois ganhos no mesmo
+                gesto: o rótulo do botão e a primeira linha do destino viram a
+                mesma palavra — que é o que faz quem clicou saber que chegou —, e
+                a faixa para de repetir o nome que o logo do hero já deu. */}
             <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-              Radicais Kids
+              Quem somos
             </span>
             <h2 className="font-display mt-5 text-[clamp(2rem,4.6vw,3.4rem)] font-medium leading-[1.05] text-foreground">
               Nossa visão
@@ -571,8 +604,15 @@ export default function RadicaisKids() {
       </section>
 
       {/* ═══ 10 · FECHO ═════════════════════════════════════════════════════
-          A página termina numa ação, e as duas são as únicas que este site tem
-          para oferecer hoje: falar com a igreja e ver as células.
+          A página termina numa ação SÓ: falar com a igreja.
+
+          ⚠️ HAVIA UM "Ver as células" DE CONTORNO AO LADO, e ele saiu a pedido
+          do Lucas. Dois botões no fecho não são dois caminhos, são nenhum — e
+          aqui o de contorno era pior que empate: mandava para OUTRA página
+          justamente no ponto em que a pessoa acabou de ler tudo e está pronta
+          para falar com alguém. A /celulas continua a um clique de quem a quer,
+          no bloco "Células Kids" da seção 04 (o `href` vem do `lib/kids.ts`) e
+          no Header, que está na tela o tempo todo.
 
           ⚠️ SEM HORÁRIO AQUI, e o motivo não é falta de dado. O horário dos
           cultos ESTÁ no projeto — `components/Footer.tsx` publica "Domingo · 9h
@@ -605,7 +645,7 @@ export default function RadicaisKids() {
             </p>
           </Reveal>
           <Reveal delay={260}>
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <div className="mt-10 flex justify-center">
               <MagneticButton>
                 <Link
                   href="/contato"
@@ -618,12 +658,6 @@ export default function RadicaisKids() {
                   />
                 </Link>
               </MagneticButton>
-              <Link
-                href="/celulas"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 active:scale-95"
-              >
-                Ver as células
-              </Link>
             </div>
           </Reveal>
         </div>

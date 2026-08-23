@@ -11,7 +11,10 @@ import { isOverlayRoute, temHeaderEstatico } from "@/lib/overlay-routes";
    esquerda já leva à Home e o botão "Planeje sua visita" à direita já leva ao
    /contato, então os dois ocupavam espaço para repetir um destino que a mesma
    barra oferece. O espaço que sobrou é para o "Trilho do Vencedor", que é a
-   página que faltava. Passar de seis itens quebra a linha no laptop. */
+   página que faltava. Passar de seis itens quebra a linha no laptop.
+
+   ⚠️ O "Início" VOLTOU, MAS SÓ NA GAVETA DO CELULAR — ver `itensMobile`, logo
+   abaixo. Esta lista aqui continua sendo a da barra do desktop. */
 const navItems = [
   { path: "/sobre", label: "Sobre" },
   { path: "/celulas", label: "Células" },
@@ -19,6 +22,21 @@ const navItems = [
   { path: "/radicais-kids", label: "Radicais Kids" },
   { path: "/trilho-do-vencedor", label: "Trilho do Vencedor" },
 ];
+
+/* A GAVETA DO CELULAR TEM UM ITEM A MAIS, e a lista é outra por isso.
+   O argumento que tirou o "Início" da barra é o logo à esquerda, que leva à
+   Home — mas na gaveta aberta o logo fica LÁ EM CIMA, fora da lista, ao lado do
+   X de fechar: a pessoa está lendo uma coluna de destinos e o caminho de volta
+   não é um deles. No desktop os cinco links e o logo dividem a mesma linha e a
+   vizinhança resolve; aqui não.
+
+   ⚠️ E NÃO CABE UM SEXTO NA BARRA DE CIMA: a medida está no comentário da
+   navegação desktop, logo abaixo. É por isso que este item existe só aqui, e
+   não voltando ao `navItems`.
+
+   PRIMEIRO DA LISTA porque é o começo do mapa, não uma opção a mais no fim — e
+   é o único item que aponta para fora da hierarquia das páginas internas. */
+const itensMobile = [{ path: "/", label: "Início" }, ...navItems];
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -199,7 +217,7 @@ export function Header() {
         >
           <div className="overflow-hidden">
             <div className="pb-7 pt-3">
-              {navItems.map((item, i) => (
+              {itensMobile.map((item, i) => (
                 <Link
                   key={item.path}
                   href={item.path}
@@ -218,7 +236,7 @@ export function Header() {
                 className={`mt-5 px-2 transition-all duration-300 ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"}`}
                 style={{
                   transitionDelay: isMenuOpen
-                    ? `${navItems.length * 45}ms`
+                    ? `${itensMobile.length * 45}ms`
                     : "0ms",
                 }}
               >
