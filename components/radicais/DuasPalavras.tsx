@@ -1,5 +1,6 @@
 import { atos, fotosLivres, fotosRadicais } from "@/lib/radicais";
 import { FotoAcervo } from "./FotoAcervo";
+import { PalcoDasPalavras } from "./PalcoDasPalavras";
 import s from "./radicais.module.css";
 
 /**
@@ -18,10 +19,13 @@ import s from "./radicais.module.css";
  * (que é a base, não um conserto) e as duas degradações. Aqui fica só a
  * marcação e o acervo.
  *
- * NÃO HÁ UMA LINHA DE JAVASCRIPT NESTA SEÇÃO. Ela é componente de servidor
- * inteiro: o pin é `position: sticky` e o progresso é `view-timeline`, os dois
- * nativos. É a diferença desta peça para a galeria, que é a exceção nomeada do
- * GSAP no site — ver o cabeçalho do `galeria.module.css`.
+ * O JAVASCRIPT DESTA SEÇÃO É UM GATILHO SÓ, no `PalcoDasPalavras.tsx`: ele diz
+ * em que ato o palco está, e o CSS faz o resto. O pin continua sendo `position:
+ * sticky`, as derivas continuam em `view-timeline`, e o conteúdo daqui continua
+ * sendo componente de servidor. A troca já foi ligada à rolagem sem script
+ * nenhum, e tremia — ver a coreografia no `radicais.module.css`. Nada disto é
+ * GSAP: a galeria segue sendo a exceção nomeada (cabeçalho do
+ * `galeria.module.css`).
  *
  * ⚠️ AS DUAS PALAVRAS SÃO `<h2>` SEPARADOS, e não um heading só com um `<span>`
  * dentro. Entre elas há fotografia, prosa e uma travessia inteira; um heading
@@ -35,7 +39,7 @@ import s from "./radicais.module.css";
  */
 export function DuasPalavras() {
   return (
-    <section className={s.duas} aria-label="Radicais e livres">
+    <PalcoDasPalavras>
       <div className={s.duasTrilho}>
         {/* ═══ ATO 1 — RADICAIS ═══ */}
         <div className={`${s.ato} ${s.atoUm}`}>
@@ -130,6 +134,6 @@ export function DuasPalavras() {
           </div>
         </div>
       </div>
-    </section>
+    </PalcoDasPalavras>
   );
 }

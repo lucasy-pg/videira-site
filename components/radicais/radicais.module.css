@@ -35,6 +35,11 @@
    exatamente a janela em que o `sticky` está grudado. Progresso 0 a 1 do pin,
    sem medir nada.
 
+   ⚠️ A EXCEÇÃO É A TROCA DE ATO (14/09/2026): ela deixou de ser ligada à
+   rolagem porque tremia, e virou um gatilho de poucas linhas no
+   `PalcoDasPalavras.tsx`. O pin e as derivas continuam sem script. Ver a
+   coreografia da seção 03.
+
    É por isso que a altura de `.duas` é a única coisa que regula a duração da
    cena: 320svh de bloco menos 100svh de tela dão 220svh de curso pinado no
    desktop, e 270svh menos 100svh dão 170svh no celular.
@@ -505,47 +510,78 @@
 }
 
 /* ── A COREOGRAFIA DA TRAVESSIA, em cima do palco ──────────────────────────
-   OS DOIS ATOS SE CRUZAM ENTRE 38% E 62% DO CURSO, e o vão de 24% é o que
-   impede a leitura dupla: em nenhum quadro existem RADICAIS e LIVRES os dois
-   legíveis ao mesmo tempo. Quando um está em 50% de opacidade, o outro já
-   está a caminho da saída.
+   ⚠️ A TROCA É UM GATILHO, NÃO UM ARRASTO, desde 14/09/2026. Até ali os dois
+   atos eram animados PELA ROLAGEM (`animation-timeline: --duas`, cruzando
+   entre 38% e 62% do curso), e isso tremia — primeiro no celular, depois o
+   Lucas viu no desktop também: "quando vai chegando perto ela começa a querer
+   trocar e fica tremendo".
 
-   ANIMA SÓ `opacity` E `transform`, que é o orçamento que o briefing pede — as
-   duas propriedades que o compositor resolve sem layout e sem repintura.
+   POR QUE TREMIA, e por que o `will-change` de 23/08 não resolveu. O palco é
+   `position: sticky`, e o navegador move o sticky no MESMO fio da rolagem (no
+   iPhone, num processo à parte). A animação ligada à rolagem, não: ela é
+   recalculada depois, e chega um quadro atrasada em relação ao palco que a
+   carrega. Um quadro de atraso é invisível onde nada anda — e os atos ficavam
+   parados de 0% a 38% e de 62% a 100% —, mas no meio eles gastavam 26vh de
+   deslocamento numa fatia curta do curso, e cada pixel rolado virava meio
+   pixel de deslize fora de fase. Medido: o progresso no fio principal era
+   liso, quadro a quadro, sem vai-e-volta. O defeito era só a dessincronia, e
+   ela não se conserta pintando mais barato.
 
-   ⚠️ OS DOIS QUADROS-CHAVE MORAM AQUI FORA, no topo do arquivo, e não dentro
-   de uma media query. São dois palcos que os consultam — o do celular e o do
-   desktop, logo abaixo — e a travessia é a MESMA nos dois; foi para isso que
-   eles subiram. Um `@keyframes` declarado dentro de um `@media` só existe
-   enquanto aquela media casa, então copiá-lo para os dois blocos criaria duas
-   versões do mesmo movimento, livres para divergir na primeira vez que alguém
-   ajustar uma delas.
+   O QUE ENTROU NO LUGAR. O `PalcoDasPalavras.tsx` mede em que ponto do curso a
+   rolagem está e escreve `data-ato="2"` na seção ao passar da metade (e volta
+   a `1` ao voltar dela, com uma folga de 3% para cada lado, para a troca não
+   piscar em quem para exatamente no limiar). O deslize e o esmaecimento são
+   uma `transition` no relógio do próprio navegador — não há rolagem nenhuma
+   com que discordar, e o compositor anima `opacity` e `transform` sozinho.
+
+   O que se perdeu: a troca não é mais "segurada" pelo dedo, ela acontece de
+   uma vez quando o curso passa da metade. O que ficou igual: RADICAIS sai por
+   cima, LIVRES sobe por baixo, e em nenhum quadro as duas estão legíveis ao
+   mesmo tempo — quem sai apaga em 320ms, quem chega só começa aos 180ms.
+
+   ⚠️ AS REGRAS SÓ VALEM ONDE HÁ PALCO: com linha do tempo de rolagem (sem ela
+   a seção degrada para os dois blocos empilhados, ver o fim do arquivo) E
+   numa das duas faixas que prendem o palco. Fora dali o `data-ato` continua
+   sendo escrito, mas não esconde nada — os dois atos estão um embaixo do
+   outro e os dois precisam aparecer.
 
    As distâncias são em `vh` de propósito: o gesto é uma fração da tela, então
    ele vale igual num celular e num monitor sem precisar de dois números. */
-@keyframes atoUmSai {
-  0%,
-  38% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  62%,
-  100% {
-    opacity: 0;
-    transform: translateY(-12vh);
-  }
-}
+@supports (animation-timeline: view()) {
+  @media (max-width: 1023px) and (min-height: 600px), (min-width: 1024px) {
+    .atoUm,
+    .atoDois {
+      transition:
+        opacity 320ms ease,
+        transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+      /* As duas camadas ficam de pé desde o início: a palavra de RADICAIS é
+         uma foto recortada por oito letras do tamanho da tela, e sem isto o
+         navegador a rasterizaria no primeiro quadro da troca — um soluço
+         justamente no instante em que o olho está nela. */
+      will-change: transform, opacity;
+    }
 
-@keyframes atoDoisChega {
-  0%,
-  38% {
-    opacity: 0;
-    transform: translateY(14vh);
-  }
-  62%,
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+    .atoDois {
+      opacity: 0;
+      transform: translateY(14vh);
+    }
+
+    .duas[data-ato="2"] .atoUm {
+      opacity: 0;
+      transform: translateY(-12vh);
+    }
+
+    .duas[data-ato="2"] .atoDois {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Quem chega espera quem sai apagar — nas duas direções, porque o atraso
+       vale para o ato que está ENTRANDO naquele momento. */
+    .duas[data-ato="2"] .atoDois,
+    .duas:not([data-ato="2"]) .atoUm {
+      transition-delay: 180ms;
+    }
   }
 }
 
@@ -645,60 +681,9 @@
     max-height: 26vh;
   }
 
-  .atoUm,
-  .atoDois {
-    animation-timeline: --duas;
-    animation-range: contain 0% contain 100%;
-    /* `both` para o preenchimento valer nas duas pontas: antes do início da
-       linha do tempo o ato 1 está inteiro e o ato 2 invisível, e não num
-       estado intermediário. */
-    animation-fill-mode: both;
-    animation-timing-function: linear;
-
-    /* ⚠️ ISTO É O CONSERTO DO TREMOR, e ele só existe no palco do celular.
-       O relato (23/08/2026): "o Radicais Livres está tremendo no mobile,
-       quando chega perto de trocar ele fica tremendo".
-
-       POR QUE JUSTAMENTE PERTO DA TROCA, e não no resto do curso. Olhe os
-       dois `@keyframes` lá em cima: de 0% a 38% e de 62% a 100% eles não
-       mexem em nada — os dois atos ficam PARADOS. Toda a travessia acontece
-       naquela fatia de 24% do meio, onde 26vh de deslocamento e a opacidade
-       inteira são gastos de uma vez. Fora dali, um solavanco no progresso da
-       linha do tempo é invisível porque não há nada em movimento para
-       delatá-lo; dentro dali, o mesmo solavanco vira a peça inteira pulando.
-       O tremor não NASCE na troca — ele só é visível nela.
-
-       O QUE ESTAVA SOLAVANCANDO. Cada quadro da travessia repintava a palavra
-       do tamanho da tela, e no ato 1 ela é a mais cara que a página tem: uma
-       fotografia com `background-clip: text` recortada por oito letras de
-       serifa. Sem uma camada própria, o navegador re-rasteriza esse recorte a
-       cada `translateY` novo, em vez de deslizar uma textura pronta — e num
-       aparelho de celular a conta não fecha em 16ms. O `will-change` promove
-       os dois atos a camadas de composição: a palavra é desenhada UMA vez e
-       depois só transladada e esmaecida, que são as duas coisas que o
-       compositor faz sem tocar em layout nem em pintura.
-
-       DE QUEBRA, isto tira a travessia da briga com o `position: sticky` do
-       trilho. O pin é recalculado a cada quadro enquanto o palco está preso;
-       com a animação já no compositor, os dois andam no mesmo relógio em vez
-       de discordarem por um quadro — e discordar por um quadro, no meio de um
-       movimento de 26vh, é exatamente a cara de um tremor.
-
-       O DESKTOP NÃO PRECISA e por isso não tem: lá a palavra e as seis fotos
-       têm derivas próprias que correm o curso INTEIRO (`palavraDeriva`,
-       `fotoDeriva`), então o palco nunca está parado e o navegador já mantém
-       essas camadas de pé sozinho. Quem devolver derivas contínuas ao celular
-       pode reavaliar esta linha. */
-    will-change: transform, opacity;
-  }
-
-  .atoUm {
-    animation-name: atoUmSai;
-  }
-
-  .atoDois {
-    animation-name: atoDoisChega;
-  }
+  /* A travessia dos dois atos NÃO mora aqui: ela é um gatilho com
+     `transition`, e as regras estão logo acima, na coreografia — as mesmas
+     para os dois palcos. */
 }
 
 /* ═══ 03 no desktop — o palco pinado ══════════════════════════════════════
@@ -760,30 +745,15 @@
   }
 
   /* ── A TRAVESSIA ────────────────────────────────────────────────────────
-     A MESMA do palco do celular, quadro por quadro: os dois `@keyframes`
-     moram no topo do arquivo e os dois palcos os consultam. O que muda entre
-     um e outro NÃO é o movimento, é o curso em que ele acontece — 220svh aqui
-     contra 170svh lá. Ver o comentário de lá, que é onde a travessia está
-     explicada por inteiro. */
-  .atoUm,
-  .atoDois {
-    animation-timeline: --duas;
-    animation-range: contain 0% contain 100%;
-    animation-fill-mode: both;
-    animation-timing-function: linear;
-  }
+     A MESMA do palco do celular: é um gatilho no meio do curso, e as regras
+     moram na coreografia, antes dos dois palcos. O que muda entre um e outro
+     é só o curso — 220svh aqui contra 170svh lá.
 
-  .atoUm {
-    animation-name: atoUmSai;
-  }
-
-  .atoDois {
-    animation-name: atoDoisChega;
-  }
-
-  /* A palavra também DERIVA durante o próprio ato, num curso pequeno e numa
+     A palavra também DERIVA durante o próprio ato, num curso pequeno e numa
      velocidade diferente da das fotos. É daí que sai a profundidade: se tudo
-     andasse junto, o palco seria um slide trocando de imagem. */
+     andasse junto, o palco seria um slide trocando de imagem. As derivas
+     continuam ligadas à rolagem, e podem: são 6vh espalhados por 220svh, e um
+     quadro de atraso nessa escala não chega a um pixel. */
   .palavraCaixa {
     animation: palavraDeriva linear both;
     animation-timeline: --duas;
@@ -1604,8 +1574,6 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @supports not (animation-timeline: view()) {
-  .atoUm,
-  .atoDois,
   .palavraCaixa,
   .atoFoto,
   .contramaoTexto,
