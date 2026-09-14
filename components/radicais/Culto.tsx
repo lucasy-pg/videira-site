@@ -80,43 +80,19 @@ export function Culto() {
           </Reveal>
 
           <Reveal variant="left" delay={100}>
-            {/* DUAS FOTOS E NÃO UMA, e a composição é a informação: a larga
-                mostra a congregação inteira de mãos erguidas — o culto de
-                longe, como volume —, e a alta mostra um rosto no meio da
-                plateia, de mão no queixo, prestando atenção: o culto de perto,
-                como atenção. O texto ao lado fala em "celebrar, louvar e ouvir
-                a Palavra juntos", e o "ouvir" não está na foto de braços
-                erguidos. Uma foto só teria de escolher entre as duas.
-
-                A ALTA SANGRA PARA FORA DA LARGA pela quina de baixo à esquerda,
-                com moldura da própria tinta da seção — sem a borda, duas
-                fotografias encostadas leem como uma só, recortada.
-
-                ⚠️ A ALTA É UM RETRATO 2:3 EM QUALQUER LARGURA, inclusive no
-                celular, e isso é requisito e não estilo: o arquivo é 1066×1600
-                e o assunto dele é alguém de mão no queixo prestando atenção.
-                Num quadro deitado — que é o que esta composição já teve no
-                celular — sobrava uma tira do meio da cara e a foto deixava de
-                dizer o que veio dizer. Ver o `radicais.module.css`.
-
-                O `mb-12` deste embrulho é a reserva do que ela sangra para
-                baixo (`bottom: -3rem` = 48px, exatamente o `mb-12`). Mexer num
-                sem mexer no outro põe a quina do retrato por cima da seção
-                seguinte. */}
-            <div className="relative mb-12 sm:mb-16 sm:ml-8">
+            {/* UMA FOTO SÓ desde 14/09/2026: o retrato `assistindo-ao-culto`,
+                que sangrava pela quina de baixo à esquerda, saiu a pedido do
+                Lucas. A seção não tem mais inset — por isso não há reserva de
+                margem embaixo nem recorte deslocado no celular. */}
+            <div className="sm:ml-8">
               <figure className={s.encontroMoldura}>
                 <FotoAcervo
                   foto={fotosCulto.larga}
                   grande
                   sizes="(min-width: 1440px) 720px, (min-width: 1024px) 52vw, 92vw"
-                  className={`${s.encontroFoto} ${s.encontroFotoCulto}`}
+                  className={s.encontroFoto}
                 />
               </figure>
-              <FotoAcervo
-                foto={fotosCulto.alta}
-                sizes="(min-width: 640px) 210px, 40vw"
-                className={`${s.encontroInset} ${s.encontroInsetEsquerda}`}
-              />
             </div>
           </Reveal>
         </div>

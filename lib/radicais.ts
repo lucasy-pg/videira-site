@@ -47,7 +47,7 @@ import { linkWhatsApp } from "@/lib/social";
  *                 rapazes-na-pista-a-noite
  *   05 propósito  rostos-amontoados · roda-na-grama
  *   06 células    turma-luz-roxa · roda-de-amigas
- *   07 culto      culto-lotado · assistindo-ao-culto
+ *   07 culto      culto-lotado
  *   08 liderança  lideranca/casal
  *   09 limiar     bandeirao-radicais
  *   13 convite    adoracao-camiseta-branca
@@ -354,34 +354,11 @@ export const fotosCelulas = {
    é ter de conferir isto primeiro: sem o `-grande`, a de largura cheia amolece
    no desktop e ninguém percebe olhando o código.
 
-   ── AS DUAS FOTOS DIZEM COISAS DIFERENTES, E É POR ISSO QUE SÃO DUAS ──────
-
-   A larga mostra a congregação INTEIRA de pé, de mãos erguidas: o culto visto
-   de longe, como volume. A alta mostra UM rosto no meio da plateia, de boné e
-   mão no queixo, prestando atenção: o culto visto de perto, como atenção. Uma
-   foto só teria de escolher entre as duas, e a seção precisa das duas — o
-   texto ao lado fala em "celebrar, louvar e ouvir a Palavra juntos", e o
-   "ouvir" não está na foto de braços erguidos.
-
-   ⚠️ A ALTA MUDOU EM 22/08/2026, a pedido do Lucas: era a `microfone-luz-quente`
-   (um jovem cantando ao microfone). A troca não foi de qualidade da foto, foi
-   de assunto — a antiga mostrava quem está NO PALCO, e ao lado de uma foto que
-   já mostra a congregação a seção acabava sendo duas vezes o mesmo ponto de
-   vista de quem conduz. A nova mostra quem está na PLATEIA, que é para onde o
-   convite da página aponta. A `microfone-luz-quente` continua no acervo e
-   continua na galeria; ela só não é mais desta seção.
-
-   ⚠️ E A `assistindo-ao-culto` É O CASO RARO DE FOTO QUE NÃO ESTÁ NA GALERIA —
-   entrou direto por esta seção, vinda de `material/radicais/`. Então o `alt`
-   dela foi ESCRITO AQUI e não copiado do `lib/galeria.ts`, que é de onde vêm
-   todos os outros deste arquivo. Se um dia ela entrar na parede da galeria, a
-   descrição de lá tem de nascer igual a esta, palavra por palavra.
-
-   O ORIGINAL É UM PNG DE 5,6MB e 2071×3109; o que está no ar é o JPEG de
-   1600px no lado maior (mais a variante `-800`), na qualidade 86 do
-   `preparar-galeria.py`. A proporção do arquivo é 2:3 CRAVADO, que é exatamente
-   a do quadro do inset no CSS — corte zero. Trocar por uma foto de outra
-   proporção passa a cortar. */
+   ⚠️ A SEÇÃO TEVE DUAS FOTOS até 14/09/2026: além da larga, um retrato 2:3
+   (`assistindo-ao-culto`, um jovem de boné e mão no queixo na plateia) que
+   sangrava pela quina de baixo à esquerda. Saiu a pedido do Lucas, e os
+   arquivos saíram do `public/` — ela não estava na galeria, então não sobrou
+   uso nenhum. O original continua em `material/radicais/`. */
 export const fotosCulto = {
   larga: {
     src: "/radicais/culto-lotado.jpg",
@@ -391,12 +368,6 @@ export const fotosCulto = {
     /* Copiado do `lib/galeria.ts`, palavra por palavra: a foto está na parede
        da galeria e as duas descrições da mesma imagem não podem divergir. */
     alt: "Salão lotado visto de trás, com dezenas de jovens de pé e de mãos erguidas",
-  },
-  alta: {
-    src: "/radicais/assistindo-ao-culto.jpg",
-    w: 1066,
-    h: 1600,
-    alt: "Jovem de boné e óculos, de casaco preto e com a mão no queixo, assistindo ao culto no meio de várias fileiras de outros jovens sentados atrás dele",
   },
 } satisfies Record<string, Foto>;
 

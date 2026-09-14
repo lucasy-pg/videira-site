@@ -607,7 +607,7 @@ export const acervo: FotoGaleria[] = [
      Entraram por pedido do Lucas, direto de `material/radicais/`, e são o
      primeiro lote a chegar DEPOIS do redesenho da página. Seis delas estão
      espalhadas por este acervo daqui para baixo; a sétima (`assistindo-ao-culto`)
-     não está aqui — ela foi para a seção 07 e mora no `lib/radicais.ts`.
+     nunca esteve aqui — foi para a seção 07 e saiu do site em 14/09/2026.
 
      ⚠️ NENHUMA DELAS ENTRA EM CENA NO PALCO, e isso é decisão, não esquecimento.
      O Ato II é uma partitura fechada: cada foto tem quadro, camada e cena, e

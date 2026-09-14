@@ -1355,26 +1355,10 @@
   object-fit: cover;
 }
 
-/* O INSET DO CULTO espelha o das células: sangra pela quina de baixo à
-   ESQUERDA, é um retrato (2:3, o formato do arquivo) e a moldura é da tinta da
-   própria seção. O espelhamento existe porque as duas seções são a mesma
-   composição em temperaturas opostas — se o inset caísse do mesmo lado nas
-   duas, elas leriam como o mesmo bloco repetido. */
-.encontroInsetEsquerda {
-  right: auto;
-  left: -1.5rem;
-  bottom: -3rem;
-  max-width: 210px;
-  aspect-ratio: 2 / 3;
-  border-color: var(--color-plum-deep);
-}
-
 /* ⚠️ A COLAGEM VALE NO CELULAR TAMBÉM, e isto substitui um desenho que
    quebrava a segunda foto. O inset virava uma FAIXA de largura cheia embaixo
-   da grande, em 16:9 fixo — e 16:9 é o pior quadro possível para o retrato do
-   culto, que é 1066×1600: sobrava uma tira do meio do rosto e sumia o resto.
-   A foto existe para mostrar alguém PRESTANDO ATENÇÃO, de mão no queixo; sem
-   o queixo e sem o boné ela não mostra nada.
+   da grande, em 16:9 fixo, e cortava a foto da frente até ela não dizer mais
+   nada. (Hoje só a seção de células tem inset; o do culto saiu em 14/09/2026.)
 
    O motivo escrito para a faixa era que a 42% de uma tela de 390px o inset
    cobriria parte de quem está no canto da foto grande. Ele cobre mesmo — e
@@ -1391,35 +1375,6 @@
 @media (max-width: 640px) {
   .encontroInset {
     right: 0;
-  }
-
-  .encontroInsetEsquerda {
-    right: auto;
-    left: 0;
-  }
-
-  /* ⚠️ O RECORTE DA LARGA DO CULTO FOGE DO INSET, e é conta, não gosto.
-
-     A `culto-lotado` é 3:2 (1600×1068) e o quadro é 4:3, então o `cover` corta
-     11% da LARGURA — 88px de cada lado no centro. Nessa posição a quina do
-     inset caía exatamente sobre o menino erguido nos ombros, que é o assunto
-     da foto: sobrava metade dele à direita da moldura.
-
-     `left center` gasta os 11% todos de um lado só. O conteúdo anda 88px de
-     origem para a direita (~6% do quadro), o menino inteiro sai de trás do
-     inset — corpo, braço que o levanta e os tênis vermelhos — e o que se perde
-     é a borda direita da foto, que é fila de gente e não tem assunto.
-
-     ⚠️ NÃO SUBIR ISTO PARA A `.encontroFoto`. As duas seções compartilham essa
-     classe e o inset delas cai em quinas OPOSTAS: aqui ele é o de baixo à
-     esquerda, na de células é o de baixo à direita. A mesma correção lá
-     empurraria a foto PARA CIMA do inset em vez de para longe dele.
-
-     E não vale do `sm` para cima: lá o inset tem no máximo 210px num vão de
-     52vw — não chega perto do menino, e o recorte central é o melhor
-     enquadramento da foto quando nada a cobre. */
-  .encontroFotoCulto {
-    object-position: left center;
   }
 }
 
