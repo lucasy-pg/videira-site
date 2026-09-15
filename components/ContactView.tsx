@@ -53,13 +53,14 @@ const contactInfo = [
     lines: [WHATSAPP_IGREJA.exibicao],
   },
   {
-    /* Endereço real, informado pela igreja. Os dois anteriores
-       (contato@ e celulas@igrejavideira.com.br) vinham do rascunho do design e
-       não existiam — mandar alguém escrever para uma caixa inexistente é pior
-       do que não publicar e-mail nenhum. Só há UM endereço; não invente o
-       segundo para preencher a coluna. */
+    /* Endereço real, informado pela igreja; substituiu o antigo
+       igrejavideiraindaituba@hotmail.com. Os dois do rascunho do design
+       (contato@ e celulas@igrejavideira.com.br) não existiam — mandar alguém
+       escrever para uma caixa inexistente é pior do que não publicar e-mail
+       nenhum. Só há UM endereço; não invente o segundo para preencher a
+       coluna. */
     label: "E-mail",
-    lines: ["igrejavideiraindaituba@hotmail.com"],
+    lines: ["videiraindaiatuba@outlook.com.br"],
   },
   {
     /* O horário de secretaria ("Seg–Sex, 9h–17h") saiu daqui: era do rascunho e

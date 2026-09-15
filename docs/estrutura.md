@@ -180,7 +180,7 @@ risco de credibilidade, não um to-do de conteúdo.**
 
 | Pendência | Onde | Situação |
 |---|---|---|
-| E-mail `igrejavideiraindaituba@hotmail.com` | rodapé, /contato | Informado pela igreja. Grafia sem o 2º "a" de Indaiatuba — **testar envio antes do lançamento** |
+| E-mail `videiraindaiatuba@outlook.com.br` | rodapé, /contato | Informado pela igreja em 15/09/2026, no lugar do `igrejavideiraindaituba@hotmail.com` — **testar envio antes do lançamento** |
 | Lista de células | [`lib/cells.ts`](../lib/cells.ts) | Provisória, herdada do site antigo. Mantida por decisão consciente. Faltam jovens e juvenis |
 | "Juvenis" como quarto público | `lib/cells.ts` só conhece Adultos/Jovens/Kids | A igreja tem quatro; o site tem três |
 | Prosa das seis etapas | /trilho-do-vencedor | Formato e duração são fatos conferidos. **O texto que descreve cada etapa é nosso** e não passou pela liderança |

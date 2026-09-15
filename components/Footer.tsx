@@ -123,16 +123,16 @@ export function Footer() {
                 <br />
                 Indaiatuba/SP
               </li>
-              {/* Endereço real, informado pela igreja — substituiu o
-                  "contato@igrejavideira.com.br" do rascunho, que não existia.
-                  Repare que é "indaituba", sem o segundo "a": é assim mesmo na
-                  conta. Clicável, igual ao telefone logo abaixo. */}
+              {/* Endereço real, informado pela igreja — substituiu o antigo
+                  igrejavideiraindaituba@hotmail.com, que por sua vez tinha
+                  substituído o "contato@igrejavideira.com.br" do rascunho, que
+                  não existia. Clicável, igual ao telefone logo abaixo. */}
               <li className="pt-1">
                 <a
-                  href="mailto:igrejavideiraindaituba@hotmail.com"
+                  href="mailto:videiraindaiatuba@outlook.com.br"
                   className="break-all transition-colors hover:text-white"
                 >
-                  igrejavideiraindaituba@hotmail.com
+                  videiraindaiatuba@outlook.com.br
                 </a>
               </li>
               {/* Era "(19) 99999-9999", placeholder do rascunho, num rodapé que
