@@ -158,7 +158,19 @@ export function Footer() {
           <span>
             © 2026 Igreja Videira Indaiatuba. Todos os direitos reservados.
           </span>
-          <span>Feito com amor e graça.</span>
+          {/* Crédito de quem fez o site. Substituiu o "Feito com amor e graça."
+              que ocupava este lado da linha. */}
+          <span>
+            Desenvolvido por{" "}
+            <a
+              href="https://www.instagram.com/lucasbaptistawb/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline"
+            >
+              Lucas Baptista
+            </a>
+          </span>
         </Reveal>
       </div>
     </footer>
