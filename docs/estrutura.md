@@ -140,7 +140,7 @@ serve. Sem isso a página termina num curso, o que é anticlimático.
 
 | O que a igreja tem | Onde vive no site |
 |---|---|
-| Cultos, domingo 9h–11h e 18h–20h | Home, /contato, rodapé |
+| Cultos, domingo de manhã às 09h e à noite às 18h | Home, /contato, rodapé |
 | Células de adultos, jovens, juvenis e crianças | /celulas — **a definir com a igreja** |
 | Radicais Livres | página própria |
 | Radicais Kids | página própria |

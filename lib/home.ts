@@ -122,7 +122,7 @@ export const CULTOS = {
    *  que a igreja já disse é a copy dela, não um parágrafo novo. */
   texto:
     "Um tempo para adorar a Deus, ouvir Sua Palavra e celebrar como igreja. Se você ainda não conhece a Videira, será uma alegria receber você e sua família.",
-  horarios: { dia: "Domingo", faixas: ["09h — 11h", "18h — 20h"] },
+  horarios: { dia: "Domingo", faixas: ["Manhã às 09h", "Noite às 18h"] },
   acao: { rotulo: "Planeje sua visita", href: "/contato" },
   foto: {
     src: "/igreja/culto-todos-juntos.jpg",

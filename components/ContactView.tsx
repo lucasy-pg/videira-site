@@ -67,7 +67,7 @@ const contactInfo = [
        nunca foi confirmado. Numa página cujo assunto é como chegar até a
        igreja, um expediente inventado faz alguém bater numa porta fechada. */
     label: "Horários",
-    lines: ["Domingos: 9h–11h e 18h–20h", "Células: durante a semana"],
+    lines: ["Domingos: manhã às 09h e noite às 18h", "Células: durante a semana"],
   },
 ];
 

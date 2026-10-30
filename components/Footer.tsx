@@ -117,7 +117,7 @@ export function Footer() {
               Visite
             </h3>
             <ul className="space-y-3 text-white/60">
-              <li className="text-white/85">Domingo · 9h e 18h</li>
+              <li className="text-white/85">Domingo · 09h e 18h</li>
               <li>
                 R. Augusto de Oliveira Camargo, 257 - Centro
                 <br />

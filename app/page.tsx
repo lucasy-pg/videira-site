@@ -387,11 +387,11 @@ export default function Home() {
                   className="aspect-[4/5] w-full rounded-[1.5rem] sm:aspect-[3/2] lg:aspect-[4/5] lg:rounded-[2rem]"
                 />
 
-                {/* `sm:max-w-[20rem]` só existe para a faixa entre `sm` e
+                {/* `sm:max-w-[22rem]` só existe para a faixa entre `sm` e
                     `lg`, onde a laje está no fluxo mas a coluna já é larga:
                     sem teto ela vira uma barra de 900px com duas linhas de
                     horário perdidas na ponta esquerda. */}
-                <div className="mt-6 sm:max-w-[20rem] lg:absolute lg:-left-10 lg:bottom-10 lg:mt-0 lg:w-[17rem] lg:max-w-none">
+                <div className="mt-6 sm:max-w-[22rem] lg:absolute lg:-left-10 lg:bottom-10 lg:mt-0 lg:w-[19rem] lg:max-w-none">
                   <div className="rounded-[1.25rem] bg-bone p-7 lg:rounded-[1.5rem] lg:p-8">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                       {CULTOS.horarios.dia}
