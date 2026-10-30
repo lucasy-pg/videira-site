@@ -1,0 +1,33 @@
+# Publica o site na Vercel da igreja a cada push no `main`.
+#
+# O projeto da Vercel (`videiraindaiatuba`) está na conta da igreja e não é
+# ligado ao GitHub: a conta do GitHub do Lucas já está presa à Vercel pessoal
+# dele, e uma conta do GitHub só pode estar ligada a uma Vercel. Então o deploy
+# sai daqui, com um token da conta da igreja, e ninguém precisa logar na
+# Vercel (o login pede um código que vai para o e-mail da igreja).
+#
+# Segredos do repositório: VERCEL_TOKEN, VERCEL_ORG_ID e VERCEL_PROJECT_ID.
+name: Deploy na Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-producao
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # O build roda na Vercel, igual ao `vercel --prod` feito à mão.
+      - run: npx --yes vercel@latest deploy --prod --yes --token="${{ secrets.VERCEL_TOKEN }}"
